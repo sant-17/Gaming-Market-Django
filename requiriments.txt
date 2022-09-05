@@ -1,0 +1,8 @@
+Initiate virtualenv
+
+> virtualenv env
+
+Install django
+
+> pip Install django
+
