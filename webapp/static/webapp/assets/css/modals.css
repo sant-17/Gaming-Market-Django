@@ -1,0 +1,46 @@
+/*Modal*/
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 400px;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #6253B5;
+        border-color: #6253B5;
+    }
+
+    .btn-info:hover {
+        color: #fff;
+        background-color: #463C82;
+        border-color: #463C82;
+    }
+
+    .text-info {
+        color: #6253B5 !important;
+    }
+
+    .text-info:hover {
+        color: #463C82 !important;
+    }
+
+    .text-info:active {
+        color: #463C82 !important;
+    }
+}
+
+.form-title {
+    margin: -2rem 0rem 2rem;
+}
+
+.btn-round {
+    border-radius: 3rem;
+}
+
+.delimiter {
+    padding: 1rem;
+}
+
+.signup-section {
+    padding: 0.3rem 0rem;
+}

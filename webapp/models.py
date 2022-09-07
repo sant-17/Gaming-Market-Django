@@ -42,7 +42,7 @@ class Rol(models.Model):
 
 class Usuario(models.Model):
     email = models.EmailField(max_length=100)
-    clave = models.CharField(50)
+    clave = models.CharField(max_length=50)
     id_permiso = models.ForeignKey(Rol, on_delete=models.DO_NOTHING)
 
 class Empleado(models.Model):
