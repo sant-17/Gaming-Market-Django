@@ -6,13 +6,15 @@ class Proveedor(models.Model):
     email = models.EmailField(max_length=100)
     telefono = models.IntegerField(null=True)
 
-class Compra(models.Model):
-    fecha = models.DateField()
-    valor = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
-    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.DO_NOTHING)
+    def __str__(self) -> str:
+        return f"{self.nombre}"
+
 
 class Genero(models.Model):
     nombre = models.CharField(max_length=30)
+
+    def __str__(self) -> str:
+        return f"{self.nombre}"
 
 class Juego(models.Model):
     titulo = models.CharField(max_length=100)
@@ -28,22 +30,46 @@ class Juego(models.Model):
     habilitado = models.BooleanField()
     generos = models.ManyToManyField(Genero)
 
+    def __str__(self) -> str:
+        return f"{self.titulo}"
+
+class Compra(models.Model):
+    fecha = models.DateField()
+    valor = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.DO_NOTHING)
+    juegos = models.ManyToManyField(Juego, through='Compra_detalle', blank=True)
+
+    def __str__(self) -> str:
+        return f"{self.fecha} {self.valor}"
+
 class Compra_detalle(models.Model):
     id_compra = models.ForeignKey(Compra, on_delete=models.DO_NOTHING)
     id_juego = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
     cantidad = models.PositiveIntegerField()
 
+    def __str__(self) -> str:
+        return f"{self.id_compra} - {self.id_juego.titulo}"
+
 class Permiso(models.Model):
     nombre = models.CharField(max_length=20)
+
+    def __str__(self) -> str:
+        return f"{self.nombre}"
 
 class Rol(models.Model):
     nombre = models.CharField(max_length=20)
     permisos = models.ManyToManyField(Permiso)
 
+    def __str__(self) -> str:
+        return f"{self.nombre}"
+
 class Usuario(models.Model):
     email = models.EmailField(max_length=100)
     clave = models.CharField(max_length=50)
     id_permiso = models.ForeignKey(Rol, on_delete=models.DO_NOTHING)
+
+    def __str__(self) -> str:
+        return f"{self.email}"
 
 class Empleado(models.Model):
     cedula = models.IntegerField()
@@ -55,20 +81,32 @@ class Empleado(models.Model):
     direccion_residencia = models.TextField()
     id_usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
 
+    def __str__(self) -> str:
+        return f"{self.cedula} - {self.nombre}"
+
 class Cliente(models.Model):
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
     id_usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)
 
+    def __str__(self) -> str:
+        return f"{self.nombre} {self.apellido}"
+
 class Venta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.DO_NOTHING)
     total = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
 
+    def __str__(self) -> str:
+        return f"{self.fecha} - {self.id_cliente.nombre} {self.id_cliente.apellido}"
+
 class Venta_detalle(models.Model):
-    id_producto = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
+    id_juego = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
     cantidad = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=15, decimal_places=2)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     id_venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
+
+    def __str__(self) -> str:
+        return f"{self.id_juego.titulo} - {self.cantidad}"
