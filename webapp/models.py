@@ -11,7 +11,7 @@ class Proveedor(models.Model):
 
 
 class Genero(models.Model):
-    nombre = models.CharField(max_length=30)
+    nombre = models.CharField(max_length=30, unique=True)
 
     def __str__(self) -> str:
         return f"{self.nombre}"
@@ -24,10 +24,11 @@ class Juego(models.Model):
     descripcion = models.TextField()
     ESRB_CHOISES = (('E', 'Everyone'), ('E10', 'Everyone 10+'), ('T', 'Teen'), ('M', 'Mature 17+'), ('AO', 'Adults Only 18+'), ('RP', 'Rating Pending'))
     esrb = models.CharField(max_length=30, choices=ESRB_CHOISES, default='RP')
+    multijugador = models.BooleanField(default=False)
     stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     imagen = models.URLField(null=True, blank=True)
-    habilitado = models.BooleanField()
+    habilitado = models.BooleanField(default=False)
     generos = models.ManyToManyField(Genero)
 
     def __str__(self) -> str:
@@ -37,10 +38,9 @@ class Compra(models.Model):
     fecha = models.DateField()
     valor = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     id_proveedor = models.ForeignKey(Proveedor, on_delete=models.DO_NOTHING)
-    juegos = models.ManyToManyField(Juego, through='Compra_detalle', blank=True)
 
     def __str__(self) -> str:
-        return f"{self.fecha} {self.valor}"
+        return f"{self.fecha} - {self.valor}"
 
 class Compra_detalle(models.Model):
     id_compra = models.ForeignKey(Compra, on_delete=models.DO_NOTHING)
@@ -66,7 +66,7 @@ class Rol(models.Model):
 class Usuario(models.Model):
     email = models.EmailField(max_length=100)
     clave = models.CharField(max_length=50)
-    id_permiso = models.ForeignKey(Rol, on_delete=models.DO_NOTHING)
+    id_rol = models.ForeignKey(Rol, on_delete=models.DO_NOTHING)
 
     def __str__(self) -> str:
         return f"{self.email}"

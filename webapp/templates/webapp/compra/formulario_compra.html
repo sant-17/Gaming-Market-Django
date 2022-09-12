@@ -1,0 +1,44 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de compra{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de compra{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:guardarCompra' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <div class="form-row">
+                <!-- Valor total de la compra -->
+                <div class="col">
+                    <label for="valorCompra">Valor total de la compra</label>
+                    <input name="valor" type="number" class="form-control" placeholder="Valor total" required>
+                </div>
+                <!-- Fecha -->
+                <div class="col">
+                    <label for="fechaCompra">Fecha de la compra</label>
+                    <input name="fecha" type="date" class="form-control" placeholder="Proveedor" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="proveedorCompra">Proveedor</label>
+                    <select name="proveedor" class="form-control" id="proveedorJuego" required>
+                        <option disabled selected value>- Elija un proveedor -</option>
+                        {% for proveedor in proveedores %}
+                            <option value="{{proveedor.id}}">{{proveedor.nombre}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+            <br/>
+            <!-- Botón del enviar formulario-->
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock contenedor %}

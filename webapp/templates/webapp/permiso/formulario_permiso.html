@@ -1,0 +1,27 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de permiso{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de permiso{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:guardarPermiso' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <div class="form-group">
+                <!-- Nombre del permiso -->
+                <label for="nombrePermiso">Nombre del permiso</label>
+                <input name="nombre" type="text" class="form-control" placeholder="Nombre del permiso" required>
+            </div>
+            <br/>
+            <!-- Botón del enviar formulario-->
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenedor %}

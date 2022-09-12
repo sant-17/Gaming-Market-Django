@@ -1,0 +1,41 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de Usuario{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de usuario{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:guardarUsuario' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <div class="form-group">
+                <!-- Email Usuario -->
+                <label for="emailUsuario">Email</label>
+                <input name="email" type="email" class="form-control" placeholder="Ingrese su correo" required>
+            </div>
+            <div class="form-group">
+                <!-- Clave usuario -->
+                <label for="claveUsuario">Contraseña</label>
+                <input name="clave" type="password" class="form-control" placeholder="Ingrese contraseña" required>
+            </div>
+            <div class="form-group">
+                <label for="rolUsuario">Rol</label>
+                    <select name="rol" class="form-control" id="rolUsuario" required>
+                        <option disabled selected value>- Elija un rol -</option>
+                        {% for rol in roles %}
+                            <option value="{{rol.id}}">{{rol.nombre}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+            <br/>
+            <!-- Botón del enviar formulario-->
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenedor %}

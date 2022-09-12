@@ -1,0 +1,74 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de Empleado{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de Empleado{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:guardarEmpleado' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <div class="form-group">
+                <label for="cedulaEmpleado">Cédula del empleado</label>
+                <input name="cedula" type="number" class="form-control" placeholder="Cédula" min="10" max="10" required>
+            </div>
+            <br/>
+            <div class="form-row">
+                <!-- Nombre del empleado -->
+                <div class="col">
+                    <label for="nombreEmpleado">Nombre del empleado</label>
+                    <input name="nombre" type="text" class="form-control" placeholder="Nombres" required>
+                </div>
+                <!-- Apellidos del empleado -->
+                <div class="col">
+                    <label for="apellidosEmpleado">Apellidos del empleado</label>
+                    <input name="apellido" type="text" class="form-control" placeholder="Apellidos" required>
+                </div>
+            </div>
+            <br/>
+            <div class="form-row">
+                <!-- Teléfono del empleado-->
+                <div class="col">
+                    <label for="contactoEmpleado">Número de contacto del empleado</label>
+                    <input name="telefono" type="number" class="form-control" placeholder="Fijo/móvil" required>
+                </div>
+                <!-- Fecha de nacimiento del empleado -->
+                <div class="col">
+                    <label for="nacimientoEmpleado">Fecha de nacimiento del empleado</label>
+                    <input name="fecha_nacimiento" type="date" class="form-control" placeholder="Nacimiento" required>
+                </div>
+            </div>
+            <br/>
+            <!-- Dirección de residencia del empleado-->
+            <div class="form-row">
+                <div class="col">
+                    <label for="direccionEmpleado">Dirección de residencia del empleado</label>
+                    <input name="direccion_residencia" type="text" class="form-control" placeholder="Dirección" required>
+                </div>
+                <div class="col">
+                    <label for="direccionEmpleado">Municipio de residencia del empleado</label>
+                    <input name="municipio_residencia" type="text" class="form-control" placeholder="Municipio" required>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label for="usuarioEmpleado">Usuario</label>
+                    <select name="usuario" class="form-control" id="usuarioEmpleado" required>
+                        <option disabled selected value>- Elija un usuario -</option>
+                        {% for usuario in usuarios %}
+                            <option value="{{usuario.id}}">{{usuario.email}}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+            <br/>
+            <!-- Botón del enviar formulario-->
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenedor %}
