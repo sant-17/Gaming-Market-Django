@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+
+    <!-- title -->
+    <title>{% block titulo %}CRUD{% endblock titulo %}</title>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'webapp/assets/img/favicon.png' %}">
+    <!-- google font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/all.min.css' %}">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/bootstrap/css/bootstrap.min.css' %}">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/owl.carousel.css' %}">
+    <!-- magnific popup -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/magnific-popup.css' %}">
+    <!-- animate css -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/animate.css' %}">
+    <!-- mean menu css -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/meanmenu.min.css' %}">
+    <!-- main style -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/main.css' %}">
+    <!-- responsive -->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}">
+    <!-- modals-->
+    <link rel="stylesheet" href="{% static 'webapp/assets/css/modals.css' %}">
+	<!-- datatable -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' %}">
+
+</head>
+<body>
+	
+	<!--Pantalla de carga - Inicio -->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--Pantalla de carga - Final -->
+	
+	<!-- Encabezado - Inicio -->
+	<div class="top-header-area" id="sticker">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 text-center">
+					<div class="main-menu-wrap">
+						<!-- Logo - Inicio -->
+						<div class="site-logo">
+							<a href="#">
+								<img src="{% static 'webapp/assets/img/logo.png' %}" alt="">
+							</a>
+						</div>
+						<!-- Logo - Final -->
+
+						<!-- Navbar - Inicio -->
+						<nav class="main-menu">
+							<ul>
+								<li><a href="#">Proveedores</a>
+									<ul class="sub-menu">
+										<li><a href="{% url 'webapp:formularioProveedor' %}">Registrar Proveedor</a></li>
+										<li><a href="#">Listar Proveedores</a></li>
+									</ul>
+								</li>
+								<li><a href="#">Juegos</a>
+									<ul class="sub-menu">
+										<li><a href="registrar-juego.html">Registrar Juego</a></li>
+										<li><a href="listar-juegos.html">Listar Juegos</a></li>
+										<hr/>
+										<li><a href="{% url 'webapp:formularioGenero' %}">Registrar Género</a></li>
+										<li><a href="listar-generos-juegos.html">Listar Géneros</a></li>
+									</ul>
+								</li>
+								<li>
+                                    <div class="header-icons">
+                                    </div>
+                                </li>
+							</ul>
+						</nav>
+						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+						<div class="mobile-menu"></div>
+						<!-- Navbar - Final -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Encabezado - Final -->
+	
+	<!-- Letrero - Inicio -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>{% block encabezado %}Encabezado{% endblock encabezado %}</p>
+						<h1>{% block subencabezado %}Subencabezado{% endblock subencabezado %}</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Letrero - Final -->
+
+	<!-- Registro - Inicio -->
+	{% block contenedor %}{% endblock contenedor %}
+	<!-- Registro - Final -->
+
+	<!-- Footer - Inicio -->
+	<div class="footer-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box about-widget">
+						<h2 class="widget-title">Acerca de nosotros</h2>
+						<p>Somos una nueva compañía conformada por la gente más capacitada para traer los mejores juegos de consolas a nuestros clientes.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box get-in-touch">
+						<h2 class="widget-title">Ponte en contacto</h2>
+						<ul>
+							<li>Complejo Ruta N Calle 67 52-20 Piso 2 Torre A, Medellín, Antioquia</li>
+							<li>soporte@instantgamers.com</li>
+							<li>+57 313 679 3126</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box pages">
+						<h2 class="widget-title">Páginas</h2>
+						<ul>
+							<li><a href="index.html">Inicio</a></li>
+							
+							<li><a href="services.html">Juegos</a></li>
+							<li><a href="news.html">Usuarios</a></li>
+							<li><a href="contact.html">Ingresos/Egresos</a></li>
+							<li><a href="contact.html">Proveedores</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="footer-box subscribe">
+						<h2 class="widget-title">Suscríbete</h2>
+						<p>Suscríbete para estar al tanto de las novedades en la tienda</p>
+						<form action="index.html">
+							<input type="email" placeholder="Email">
+							<button type="submit"><i class="fas fa-paper-plane"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Footer - Final -->
+	
+	<!-- jquery -->
+    <script src="{% static 'webapp/assets/js/jquery-1.11.3.min.js' %}"></script>
+    <!-- bootstrap -->
+    <script src="{% static 'webapp/assets/bootstrap/js/bootstrap.min.js' %}"></script>
+    <!-- count down -->
+    <script src="{% static 'webapp/assets/js/jquery.countdown.js' %}"></script>
+    <!-- isotope -->
+    <script src="{% static 'webapp/assets/js/jquery.isotope-3.0.6.min.js' %}"></script>
+    <!-- waypoints -->
+    <script src="{% static 'webapp/assets/js/waypoints.js' %}"></script>
+    <!-- owl carousel -->
+    <script src="{% static 'webapp/assets/js/owl.carousel.min.js' %}"></script>
+    <!-- magnific popup -->
+    <script src="{% static 'webapp/assets/js/jquery.magnific-popup.min.js' %}"></script>
+    <!-- mean menu -->
+    <script src="{% static 'webapp/assets/js/jquery.meanmenu.min.js' %}"></script>
+    <!-- sticker js -->
+    <script src="{% static 'webapp/assets/js/sticker.js' %}"></script>
+    <!-- main js -->
+    <script src="{% static 'webapp/assets/js/main.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- DATA TABLE -->
+    <script src="{% static 'webapp/assets/js/data-table-mod.js' %}"></script>
+    <!-- MODAL LOGIN -->
+    <script src="{% static 'webapp/assets/js/modal-login.js' %}"></script>
+	
+</body>
+</html>

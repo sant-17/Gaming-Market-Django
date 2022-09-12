@@ -1,0 +1,38 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de Proveedor{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de Proveedor{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:guardarProveedor' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <!-- Nombre completo del Proveedor -->
+            <div class="form-group">
+                <label for="nombreProveedor">Nombre completo del proveedor</label>
+                <input name="nombre" type="text" class="form-control" placeholder="Nombre completo" required>
+            </div>
+            <br/>
+
+            <div class="form-row">
+                <div class="col">
+                    <label for="correoProveedor">Email del proveedor</label>
+                    <input name="email" type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="col">
+                    <label for="telefonoProveedor">Número de contacto del proveedor</label>
+                    <input name="telefono" type="number" class="form-control" placeholder="Número">
+                </div>
+            </div>
+            <br/>
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenedor %}
