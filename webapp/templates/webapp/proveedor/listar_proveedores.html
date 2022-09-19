@@ -1,0 +1,49 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Lista de proveedores{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Lista de Proveedores{% endblock subencabezado %}
+
+{% block contenedor %}
+
+{% if proveedores %}
+<div class="listar-generos-juegos mt-150 mb-150">
+    <div class="contenedor">
+        <h3>Listado de proveedores</h3>
+		<br/>
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proveedor in proveedores %}
+                    <tr>
+                        <td> {{proveedor.id}} </td>
+                        <td> {{proveedor.nombre}}</td>
+                        <td> {{proveedor.email}}</td>
+                        <td> {{proveedor.telefono}}</td>
+                        <td>
+                            <a href="" class="btn btn-info">Editar</a>
+                            <a href="../eliminarProveedor/{{proveedor.id}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+
+{% endblock contenedor %}

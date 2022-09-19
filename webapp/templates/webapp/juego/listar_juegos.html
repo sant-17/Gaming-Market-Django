@@ -1,0 +1,71 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Lista de juegos{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Lista de Juegos{% endblock subencabezado %}
+
+{% block contenedor %}
+
+{% if juegos %}
+<div class="listar-generos-juegos mt-150 mb-150">
+    <div class="contenedor">
+        <h3>Listado de Juegos</h3>
+		<br/>
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Desarrollador</th>
+                        <th>Editor</th>
+                        <th>ESRB</th>
+                        <th>Online</th>
+                        <th>Precio</th>
+                        <!--
+                        <th>Imágen</th>
+                        -->
+                        <th>Stock</th>
+                        <th>Habilitado</th>
+                        <th>Géneros</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for juego in juegos %}
+                    <tr>
+                        <td> {{juego.id}} </td>
+                        <td> {{juego.titulo}}</td>
+                        <td> {{juego.fecha_lanzamiento}}</td>
+                        <td> {{juego.desarrollador}}</td>
+                        <td> {{juego.editor}}</td>
+                        <td> {{juego.get_esrb_display}}</td>
+                        <td> {{juego.multijugador}}</td>
+                        <td> {{juego.stock}}</td>
+                        <td> {{juego.precio}}</td>
+                        <td> {{juego.habilitado}}</td>
+                        <td> 
+                            {% for genero in juego.generos.all %}
+                            {{genero}}
+                            <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a href="" class="btn btn-info">Editar</a>
+                            <a href="../eliminarJuego/{{juego.id}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+
+{% endblock contenedor %}

@@ -1,0 +1,49 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Lista de Ventas{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Lista de Ventas{% endblock subencabezado %}
+
+{% block contenedor %}
+
+{% if ventas %}
+<div class="listar-generos-juegos mt-150 mb-150">
+    <div class="contenedor">
+        <h3>Listado de Ventas</h3>
+		<br/>
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Cliente</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venta in ventas %}
+                    <tr>
+                        <td> {{venta.id}} </td>
+                        <td> {{venta.fecha}} </td>
+                        <td> {{venta.total}} </td>
+                        <td> {{venta.id_cliente}} </td>
+                        <td>
+                            <a href="" class="btn btn-info">Editar</a>
+                            <a href="../eliminarVenta/{{venta.id}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+
+{% endblock contenedor %}

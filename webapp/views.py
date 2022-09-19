@@ -10,6 +10,9 @@ from django.contrib import messages
 def index(request):
     return render(request, 'webapp/index.html')
 
+def listarProveedores(request):
+    return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': Proveedor.objects.all()})
+
 def formularioProveedor(request):
     return render(request, 'webapp/proveedor/formulario_proveedor.html')
 
@@ -29,6 +32,33 @@ def guardarProveedor(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioProveedor')
 
+def listarGeneros(request):
+    return render(request, 'webapp/genero/listar_generos.html', {'generos': Genero.objects.all()})
+
+def eliminarGenero(request, id):
+    genero = Genero.objects.get(id = id)
+    genero.delete()
+    return redirect('webapp:listarGeneros')
+
+def edicionGenero(request, id):
+    genero = Genero.objects.get(id = id)
+    return render(request, 'webapp/genero/edicion_genero.html', {'genero': genero})
+
+def editarGenero(request):
+    try:
+        if request.method == "POST":
+            genero = Genero(
+                id = request.POST['id'],
+                nombre=request.POST['nombre'],
+            )
+            genero.save()
+            messages.success(request, "Genero editado correctamente")
+        else:
+            messages.warning(request, "Usted no ha enviado datos")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarGeneros')
+
 def formularioGenero(request):
     return render(request, 'webapp/genero/formulario_genero.html')
 
@@ -45,6 +75,9 @@ def guardarGenero(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioGenero')
+
+def listarJuegos(request):
+    return render(request, 'webapp/juego/listar_juegos.html', {'juegos': Juego.objects.all()})
 
 def formularioJuego(request):
     return render(request, 'webapp/juego/formulario_juego.html', {"generos": Genero.objects.all()})
@@ -78,6 +111,9 @@ def guardarJuego(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioJuego')
 
+def listarCompras(request):
+    return render(request, 'webapp/compra/listar_compras.html', {'compras': Compra.objects.all()})
+
 def formularioCompra(request):
     return render(request, 'webapp/compra/formulario_compra.html', {"proveedores": Proveedor.objects.all()})
 
@@ -100,6 +136,9 @@ def guardarCompra(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioCompra')
 
+def listarPermisos(request):
+    return render(request, 'webapp/permiso/listar_permisos.html', {'permisos': Permiso.objects.all()})
+
 def formularioPermiso(request):
     return render(request, 'webapp/permiso/formulario_permiso.html')
 
@@ -116,6 +155,9 @@ def guardarPermiso(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioPermiso')
+
+def listarRoles(request):
+    return render(request, 'webapp/rol/listar_roles.html', {'roles': Rol.objects.all()})
 
 def formularioRol(request):
     return render(request, 'webapp/rol/formulario_rol.html', {"permisos": Permiso.objects.all()})
@@ -139,6 +181,9 @@ def guardarRol(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioRol')
 
+def listarUsuarios(request):
+    return render(request, 'webapp/usuario/listar_usuarios.html', {'usuarios': Usuario.objects.all()})
+
 def formularioUsuario(request):
     return render(request, 'webapp/usuario/formulario_usuario.html', {"roles": Rol.objects.all()})
 
@@ -160,6 +205,9 @@ def guardarUsuario(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioUsuario')
+
+def listarEmpleados(request):
+    return render(request, 'webapp/empleado/listar_empleados.html', {'empleados': Empleado.objects.all()})
 
 def formularioEmpleado(request):
     return render(request, 'webapp/empleado/formulario_empleado.html', {"usuarios": Usuario.objects.all()})
@@ -188,6 +236,9 @@ def guardarEmpleado(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioEmpleado')
 
+def listarClientes(request):
+    return render(request, 'webapp/cliente/listar_clientes.html', {'clientes': Cliente.objects.all()})
+
 def formularioCliente(request):
     return render(request, 'webapp/cliente/formulario_cliente.html', {"usuarios": Usuario.objects.all()})
 
@@ -210,6 +261,9 @@ def guardarCliente(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioCliente')
+
+def listarVentas(request):
+    return render(request, 'webapp/venta/listar_ventas.html', {'ventas': Venta.objects.all()})
 
 def formularioVenta(request):
     return render(request, 'webapp/venta/formulario_venta.html', {"clientes": Cliente.objects.all()})

@@ -1,0 +1,59 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Lista de Empleados{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Lista de Empleados{% endblock subencabezado %}
+
+{% block contenedor %}
+
+{% if empleados %}
+<div class="listar-generos-juegos mt-150 mb-150">
+    <div class="contenedor">
+        <h3>Listado de Empleados</h3>
+		<br/>
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Teléfono</th>
+                        <th>Nacimiento</th>
+                        <th>Municipio</th>
+                        <th>Dirección</th>
+                        <th>Usuario</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleado in empleados %}
+                    <tr>
+                        <td> {{empleado.id}} </td>
+                        <td> {{empleado.cedula}} </td>
+                        <td> {{empleado.nombre}} </td>
+                        <td> {{empleado.apellido}} </td>
+                        <td> {{empleado.telefono}} </td>
+                        <td> {{empleado.fecha_nacimiento}} </td>
+                        <td> {{empleado.municipio_residencia}} </td>
+                        <td> {{empleado.direccion_residencia}} </td>
+                        <td> {{empleado.id_usuario}} </td>
+                        <td>
+                            <a href="" class="btn btn-info">Editar</a>
+                            <a href="../eliminarEmpleado/{{empleado.id}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+
+{% endblock contenedor %}

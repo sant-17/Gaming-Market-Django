@@ -1,0 +1,45 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Lista de géneros{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Lista de Géneros{% endblock subencabezado %}
+
+{% block contenedor %}
+
+{% if generos %}
+<div class="listar-generos-juegos mt-150 mb-150">
+    <div class="contenedor">
+        <h3>Lista de géneros de juegos</h3>
+		<br/>
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for genero in generos %}
+                    <tr>
+                        <td> {{genero.id}} </td>
+                        <td> {{genero.nombre}}</td>
+                        <td>
+                            <a href="../edicionGenero/{{genero.id}}" class="btn btn-info">Editar</a>
+                            <a href="../eliminarGenero/{{genero.id}}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+
+{% endblock contenedor %}
