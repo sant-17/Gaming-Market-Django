@@ -5,6 +5,9 @@ from .models import *
 # Mensajes tipo cookies temporales
 from django.contrib import messages
 
+# Gestión de errores de base de datos
+from django.db import IntegrityError    
+
 # Create your views here.
 
 def index(request):
@@ -12,6 +15,35 @@ def index(request):
 
 def listarProveedores(request):
     return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': Proveedor.objects.all()})
+
+def eliminarProveedor(request, id):
+    try:
+        proveedor = Proveedor.objects.get(id = id)
+        proveedor.delete()
+    except IntegrityError:
+        messages.warning(request, "No puede eliminar este proveedor ya que está relacionado con otros registros")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarProveedores')
+
+def edicionProveedor(request, id):
+    proveedor = Proveedor.objects.get(id = id)
+    return render(request, 'webapp/proveedor/edicion_proveedor.html', {'proveedor': proveedor})
+
+def editarProveedor(request):
+    try:
+        if request.method == "POST":
+            proveedor = Proveedor.objects.get(id = request.POST['id'])
+            proveedor.nombre = request.POST['nombre']
+            proveedor.email = request.POST['email']
+            proveedor.telefono = request.POST['telefono']
+            proveedor.save()
+            messages.success(request, "Proveedor editado correctamente")
+        else:
+            messages.warning(request, "Usted no ha enviado datos")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarProveedores')
 
 def formularioProveedor(request):
     return render(request, 'webapp/proveedor/formulario_proveedor.html')
@@ -36,8 +68,13 @@ def listarGeneros(request):
     return render(request, 'webapp/genero/listar_generos.html', {'generos': Genero.objects.all()})
 
 def eliminarGenero(request, id):
-    genero = Genero.objects.get(id = id)
-    genero.delete()
+    try:
+        genero = Genero.objects.get(id = id)
+        genero.delete()
+    except IntegrityError:
+        pass
+    except Exception as e:
+        pass
     return redirect('webapp:listarGeneros')
 
 def edicionGenero(request, id):
@@ -47,10 +84,8 @@ def edicionGenero(request, id):
 def editarGenero(request):
     try:
         if request.method == "POST":
-            genero = Genero(
-                id = request.POST['id'],
-                nombre=request.POST['nombre'],
-            )
+            genero = Genero.objects.get(id = request.POST['id'])
+            genero.nombre = request.POST['nombre']
             genero.save()
             messages.success(request, "Genero editado correctamente")
         else:
@@ -78,6 +113,47 @@ def guardarGenero(request):
 
 def listarJuegos(request):
     return render(request, 'webapp/juego/listar_juegos.html', {'juegos': Juego.objects.all()})
+
+def eliminarJuego(request, id):
+    try:
+        juego = Juego.objects.get(id = id)
+        juego.delete()
+    except IntegrityError:
+        messages.warning(request, "No puede eliminar este juego ya que está relacionado con otros registros")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarJuegos')
+
+def edicionJuego(request, id):
+    juego = Juego.objects.get(id = id)
+    generos = Genero.objects.all()
+    return render(request, 'webapp/juego/edicion_juego.html', {'juego': juego, 'generos': generos})
+
+def editarJuego(request):
+    try:
+        if request.method == "POST":
+            juego = Juego.objects.get(id = request.POST['id'])
+            juego.titulo = request.POST['titulo']
+            juego.fecha_lanzamiento = request.POST['fecha_lanzamiento']
+            juego.desarrollador = request.POST['desarrollador']
+            juego.editor = request.POST['editor']
+            juego.esrb = request.POST['esrb']
+            juego.multijugador = request.POST['multijugador']
+            juego.stock = request.POST['stock']
+            juego.precio = request.POST['precio']
+            juego.imagen = request.POST['imagen']
+            juego.habilitado = request.POST['habilitado']
+            generos = request.POST.getlist('generos')
+            for generoID in generos:
+                genero = Genero.objects.get(id=int(generoID))
+                juego.generos.add(genero)
+            juego.save()
+            messages.success(request, "Juego editado correctamente")
+        else:
+            messages.warning(request, "Usted no ha enviado datos")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarJuegos')
 
 def formularioJuego(request):
     return render(request, 'webapp/juego/formulario_juego.html', {"generos": Genero.objects.all()})
@@ -109,7 +185,7 @@ def guardarJuego(request):
             messages.warning(request, "Usted no ha enviado datos")
     except Exception as e:
         messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioJuego')
+    return redirect('webapp:listarJuegos')
 
 def listarCompras(request):
     return render(request, 'webapp/compra/listar_compras.html', {'compras': Compra.objects.all()})
@@ -138,6 +214,33 @@ def guardarCompra(request):
 
 def listarPermisos(request):
     return render(request, 'webapp/permiso/listar_permisos.html', {'permisos': Permiso.objects.all()})
+
+def eliminarPermiso(request, id):
+    try:
+        permiso = Permiso.objects.get(id = id)
+        permiso.delete()
+    except IntegrityError:
+        messages.warning(request, "No puede eliminar este permiso ya que está relacionado con otros registros")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarPermisos')
+
+def edicionPermiso(request, id):
+    permiso = Permiso.objects.get(id = id)
+    return render(request, 'webapp/permiso/edicion_permiso.html', {'permiso': permiso})
+
+def editarPermiso(request):
+    try:
+        if request.method == "POST":
+            permiso = Permiso.objects.get(id = request.POST['id'])
+            permiso.nombre = request.POST['nombre']
+            permiso.save()
+            messages.success(request, "Permiso editado correctamente")
+        else:
+            messages.warning(request, "Usted no ha enviado datos")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarPermisos')
 
 def formularioPermiso(request):
     return render(request, 'webapp/permiso/formulario_permiso.html')

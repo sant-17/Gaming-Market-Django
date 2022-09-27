@@ -32,8 +32,8 @@
                         <td> {{proveedor.email}}</td>
                         <td> {{proveedor.telefono}}</td>
                         <td>
-                            <a href="" class="btn btn-info">Editar</a>
-                            <a href="../eliminarProveedor/{{proveedor.id}}" class="btn btn-danger">Eliminar</a>
+                            <a href="{% url 'webapp:edicionProveedor' proveedor.id %}" class="btn btn-info">Editar</a>
+                            <a href="{% url 'webapp:eliminarProveedor' proveedor.id %}" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}

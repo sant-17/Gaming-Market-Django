@@ -28,8 +28,8 @@
                         <td> {{genero.id}} </td>
                         <td> {{genero.nombre}}</td>
                         <td>
-                            <a href="../edicionGenero/{{genero.id}}" class="btn btn-info">Editar</a>
-                            <a href="../eliminarGenero/{{genero.id}}" class="btn btn-danger">Eliminar</a>
+                            <a href="{% url 'webapp:edicionGenero' genero.id %}" class="btn btn-info">Editar</a>
+                            <a href="{% url 'webapp:eliminarGenero' genero.id %}" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}

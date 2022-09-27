@@ -7,6 +7,9 @@ urlpatterns = [
     path('', views.index, name = 'index'),
 
     path('listarProveedores/', views.listarProveedores, name="listarProveedores"),
+    path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
+    path('edicitaProveedor/', views.editarProveedor, name="editarProveedor"),
+    path('eliminarProveedor/<id>', views.eliminarProveedor, name="eliminarProveedor"),
     path('formularioProveedor/', views.formularioProveedor, name="formularioProveedor"),
     path('guardarProveedor/', views.guardarProveedor, name="guardarProveedor"),
 
@@ -18,6 +21,9 @@ urlpatterns = [
     path('guardarGenero/', views.guardarGenero, name="guardarGenero"),
 
     path('listarJuegos/', views.listarJuegos, name="listarJuegos"),
+    path('edicionJuego/<id>', views.edicionJuego, name="edicionJuego"),
+    path('edicitaJuego/', views.editarJuego, name="editarJuego"),
+    path('eliminarJuego/<id>', views.eliminarJuego, name="eliminarJuego"),
     path('formularioJuego/', views.formularioJuego, name="formularioJuego"),
     path('guardarJuego/', views.guardarJuego, name="guardarJuego"),
 
@@ -26,6 +32,9 @@ urlpatterns = [
     path('guardarCompra/', views.guardarCompra, name="guardarCompra"),
 
     path('listarPermisos/', views.listarPermisos, name="listarPermisos"),
+    path('edicionPermiso/<id>', views.edicionPermiso, name="edicionPermiso"),
+    path('edicitaPermiso/', views.editarPermiso, name="editarPermiso"),
+    path('eliminarPermiso/<id>', views.eliminarPermiso, name="eliminarPermiso"),
     path('formularioPermiso/', views.formularioPermiso, name="formularioPermiso"),
     path('guardarPermiso/', views.guardarPermiso, name="guardarPermiso"),
 

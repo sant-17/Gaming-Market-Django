@@ -28,8 +28,8 @@
                         <td> {{permiso.id}} </td>
                         <td> {{permiso.nombre}}</td>
                         <td>
-                            <a href="" class="btn btn-info">Editar</a>
-                            <a href="../eliminarPermiso/{{permiso.id}}" class="btn btn-danger">Eliminar</a>
+                            <a href="{% url 'webapp:edicionPermiso' permiso.id %}" class="btn btn-info">Editar</a>
+                            <a href="{% url 'webapp:eliminarPermiso' permiso.id %}" class="btn btn-danger">Eliminar</a>
                         </td>
                     </tr>
                     {% endfor %}
