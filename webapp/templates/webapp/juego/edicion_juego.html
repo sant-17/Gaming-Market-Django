@@ -10,10 +10,7 @@
 <div class="contact-from-section mt-150 mb-150">
     <div class="container">
         <form action="{% url 'webapp:editarJuego' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
-            <div class="form-group">
-                <label for="idJuego">ID</label>
-                <input value="{{juego.id}}" readonly name="id" type="text" class="form-control" placeholder="ID" required>
-            </div>
+            <input value="{{juego.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
             <div class="form-row">
                 <!-- Nombre del juego -->
                 <div class="col">
@@ -23,7 +20,7 @@
                 <!-- Fecha de lanzamiento del juego -->
                 <div class="col">
                     <label for="lanzamiendoJuego">Fecha de lanzamiento</label>
-                    <input value="{{juego.fecha_lanzamiento}}" name="fecha_lanzamiento" type="date" class="form-control" placeholder="Lanzamiento" required>
+                    <input value="{{juego.fecha_lanzamiento}}" name="fecha_lanzamiento" type="date" class="form-control" placeholder="{{juego.fecha_lanzamiento}}" required>
                 </div>
             </div>
             <br/>
@@ -112,7 +109,7 @@
                       </div>
                       <div class="form-check-inline">
                         <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="habilitado" {% if not juego.multijugador %} checked {% endif %} value="False">No
+                            <input type="radio" class="form-check-input" name="habilitado" {% if not juego.habilitado %} checked {% endif %} value="False">No
                         </label>
                     </div>
                 </div>

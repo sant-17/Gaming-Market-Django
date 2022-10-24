@@ -33,8 +33,6 @@
     <link rel="stylesheet" href="{% static 'webapp/assets/css/responsive.css' %}">
     <!-- modals-->
     <link rel="stylesheet" href="{% static 'webapp/assets/css/modals.css' %}">
-	<!-- datatable -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css' %}">
 
 </head>
 <body>
@@ -67,16 +65,25 @@
 								<li><a href="#">Proveedores</a>
 									<ul class="sub-menu">
 										<li><a href="{% url 'webapp:formularioProveedor' %}">Registrar Proveedor</a></li>
-										<li><a href="#">Listar Proveedores</a></li>
+										<li><a href="{% url 'webapp:listarProveedores' %}">Listar Proveedores</a></li>
 									</ul>
 								</li>
 								<li><a href="#">Juegos</a>
 									<ul class="sub-menu">
-										<li><a href="registrar-juego.html">Registrar Juego</a></li>
-										<li><a href="listar-juegos.html">Listar Juegos</a></li>
+										<li><a href="{% url 'webapp:formularioJuego' %}">Registrar Juego</a></li>
+										<li><a href="{% url 'webapp:listarJuegos' %}">Listar Juegos</a></li>
 										<hr/>
 										<li><a href="{% url 'webapp:formularioGenero' %}">Registrar Género</a></li>
-										<li><a href="listar-generos-juegos.html">Listar Géneros</a></li>
+										<li><a href="{% url 'webapp:listarGeneros' %}">Listar Géneros</a></li>
+									</ul>
+								</li>
+								<li><a href="#">Usuarios</a>
+									<ul class="sub-menu">
+										<li><a href="{% url 'webapp:formularioCliente' %}">Registrar Cliente</a></li>
+										<li><a href="{% url 'webapp:listarClientes' %}">Listar Clientes</a></li>
+										<hr/>
+										<li><a href="{% url 'webapp:formularioEmpleado' %}">Registrar Empleados</a></li>
+										<li><a href="{% url 'webapp:listarEmpleados' %}">Listar Empleados</a></li>
 									</ul>
 								</li>
 								<li>
@@ -183,8 +190,6 @@
     <!-- main js -->
     <script src="{% static 'webapp/assets/js/main.js' %}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <!-- DATA TABLE -->
-    <script src="{% static 'webapp/assets/js/data-table-mod.js' %}"></script>
     <!-- MODAL LOGIN -->
     <script src="{% static 'webapp/assets/js/modal-login.js' %}"></script>
 	
