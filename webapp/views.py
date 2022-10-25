@@ -213,94 +213,26 @@ def guardarCompra(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioCompra')
 
-def listarPermisos(request):
-    return render(request, 'webapp/permiso/listar_permisos.html', {'permisos': Permiso.objects.all()})
-
-def eliminarPermiso(request, id):
-    try:
-        permiso = Permiso.objects.get(id = id)
-        permiso.delete()
-    except IntegrityError:
-        messages.warning(request, "No puede eliminar este permiso ya que está relacionado con otros registros")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:listarPermisos')
-
-def edicionPermiso(request, id):
-    permiso = Permiso.objects.get(id = id)
-    return render(request, 'webapp/permiso/edicion_permiso.html', {'permiso': permiso})
-
-def editarPermiso(request):
-    try:
-        if request.method == "POST":
-            permiso = Permiso.objects.get(id = request.POST['id'])
-            permiso.nombre = request.POST['nombre']
-            permiso.save()
-            messages.success(request, "Permiso editado correctamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:listarPermisos')
-
-def formularioPermiso(request):
-    return render(request, 'webapp/permiso/formulario_permiso.html')
-
-def guardarPermiso(request):
-    try:
-        if request.method == "POST":
-            permiso = Permiso(
-                nombre=request.POST['nombre'],
-            )
-            permiso.save()
-            messages.success(request, "Permiso guardado correctamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioPermiso')
-
-def listarRoles(request):
-    return render(request, 'webapp/rol/listar_roles.html', {'roles': Rol.objects.all()})
-
-def formularioRol(request):
-    return render(request, 'webapp/rol/formulario_rol.html', {"permisos": Permiso.objects.all()})
-
-def guardarRol(request):
-    try:
-        if request.method == "POST":
-            rol = Rol(
-                nombre = request.POST['nombre'],
-            )
-            rol.save()
-            permisos = request.POST.getlist('permisos')
-            for permisoID in permisos:
-                permiso = Permiso.objects.get(id=int(permisoID))
-                rol.permisos.add(permiso)
-            rol.save()
-            messages.success(request, "Rol guardado correctamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioRol')
-
 def listarUsuarios(request):
     return render(request, 'webapp/usuario/listar_usuarios.html', {'usuarios': Usuario.objects.all()})
 
 def formularioUsuario(request):
-    return render(request, 'webapp/usuario/formulario_usuario.html', {"roles": Rol.objects.all()})
+    return render(request, 'webapp/usuario/formulario_usuario.html')
 
 def guardarUsuario(request):
     try:
         if request.method == "POST":
-            rolID = request.POST['rol']
-            rol = Rol.objects.get(id=int(rolID))
+           
 
             usuario = Usuario(
                 email = request.POST['email'],
                 clave = request.POST['clave'],
-                id_rol = rol,
+                rol = 'E',
+                nombre = request.POST['nombre'],
+                apellido = request.POST['apellido'],
+                telefono = request.POST['telefono'],
+                fecha_nacimiento = request.POST['fecha_nacimiento'],
+
             )
             usuario.save()
             messages.success(request, "Usuario guardado correctamente")
@@ -310,61 +242,6 @@ def guardarUsuario(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:formularioUsuario')
 
-def listarEmpleados(request):
-    return render(request, 'webapp/empleado/listar_empleados.html', {'empleados': Empleado.objects.all()})
-
-def formularioEmpleado(request):
-    return render(request, 'webapp/empleado/formulario_empleado.html', {"usuarios": Usuario.objects.all()})
-
-def guardarEmpleado(request):
-    try:
-        if request.method == "POST":
-            usuarioID = request.POST['usuario']
-            usuario = Usuario.objects.get(id=int(usuarioID))
-
-            empleado = Empleado(
-                cedula = request.POST['cedula'],
-                nombre = request.POST['nombre'],
-                apellido = request.POST['apellido'],
-                telefono = request.POST['telefono'],
-                fecha_nacimiento = request.POST['fecha_nacimiento'],
-                municipio_residencia = request.POST['municipio_residencia'],
-                direccion_residencia = request.POST['direccion_residencia'],
-                id_usuario = usuario,
-            )
-            empleado.save()
-            messages.success(request, "Empleado guardado correctamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioEmpleado')
-
-def listarClientes(request):
-    return render(request, 'webapp/cliente/listar_clientes.html', {'clientes': Cliente.objects.all()})
-
-def formularioCliente(request):
-    return render(request, 'webapp/cliente/formulario_cliente.html', {"usuarios": Usuario.objects.all()})
-
-def guardarCliente(request):
-    try:
-        if request.method == "POST":
-            usuarioID = request.POST['usuario']
-            usuario = Usuario.objects.get(id=int(usuarioID))
-
-            cliente = Cliente(
-                nombre = request.POST['nombre'],
-                apellido = request.POST['apellido'],
-                fecha_nacimiento = request.POST['fecha_nacimiento'],
-                id_usuario = usuario,
-            )
-            cliente.save()
-            messages.success(request, "Cliente guardado correctamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioCliente')
 
 def listarVentas(request):
     return render(request, 'webapp/venta/listar_ventas.html', {'ventas': Venta.objects.all()})
@@ -375,12 +252,12 @@ def formularioVenta(request):
 def guardarVenta(request):
     try:
         if request.method == "POST":
-            clienteID = request.POST['cliente']
-            cliente = Cliente.objects.get(id=int(clienteID))
+            usuarioID = request.POST['usuario']
+            usuario = Usuario.objects.get(id=int(usuarioID))
 
             venta = Venta(
                 total = request.POST['total'],
-                id_cliente = cliente
+                id_usuario = usuario
             )
             venta.save()
             messages.success(request, "Venta guardado correctamente")
