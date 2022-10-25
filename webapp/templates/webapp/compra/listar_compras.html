@@ -1,17 +1,17 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Lista de compras{% endblock titulo %}
+{% block titulo %}Compras{% endblock titulo %}
 
 {% block encabezado %}Listado{% endblock encabezado %}
-{% block subencabezado %}Lista de compras{% endblock subencabezado %}
+{% block subencabezado %}Lista de Compras{% endblock subencabezado %}
 
 {% block contenedor %}
 
 {% if compras %}
 <div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
-        <h3>Listado de Compras</h3>
+        <h3>Compras</h3>
 		<br/>
         <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">
@@ -21,7 +21,9 @@
                         <th>Fecha</th>
                         <th>Valor</th>
                         <th>Proveedor</th>
+                        <!--
                         <th colspan="2">Opciones</th>
+                        -->
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +33,12 @@
                         <td> {{compra.fecha}} </td>
                         <td> {{compra.valor}} </td>
                         <td> {{compra.id_proveedor}} </td>
+                        <!--
                         <td>
                             <a href="" class="btn btn-info">Editar</a>
-                            <a href="../eliminarJuego/{{juego.id}}" class="btn btn-danger">Eliminar</a>
+                            <a href="" class="btn btn-danger">Eliminar</a>
                         </td>
+                        -->
                     </tr>
                     {% endfor %}
                 </tbody>

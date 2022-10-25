@@ -6,36 +6,45 @@ app_name = "webapp"
 urlpatterns = [
     path('', views.index, name = 'index'),
 
-    path('listarProveedores/', views.listarProveedores, name="listarProveedores"),
-    path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
-    path('edicitaProveedor/', views.editarProveedor, name="editarProveedor"),
-    path('eliminarProveedor/<id>', views.eliminarProveedor, name="eliminarProveedor"),
+    # PROVEEDORES
+    path('proveedores/', views.listarProveedores, name="listarProveedores"),
     path('formularioProveedor/', views.formularioProveedor, name="formularioProveedor"),
     path('guardarProveedor/', views.guardarProveedor, name="guardarProveedor"),
-
-    path('listarGeneros/', views.listarGeneros, name="listarGeneros"),
-    path('edicionGenero/<id>', views.edicionGenero, name="edicionGenero"),
-    path('edicitarGenero/', views.editarGenero, name="editarGenero"),
-    path('eliminarGenero/<id>', views.eliminarGenero, name="eliminarGenero"),
+    path('eliminarProveedor/<id>', views.eliminarProveedor, name="eliminarProveedor"),
+    path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
+    path('editarProveedor/', views.editarProveedor, name="editarProveedor"),
+    
+    # GENEROS
+    path('generos/', views.listarGeneros, name="listarGeneros"),
     path('formularioGenero/', views.formularioGenero, name="formularioGenero"),
     path('guardarGenero/', views.guardarGenero, name="guardarGenero"),
-
-    path('listarJuegos/', views.listarJuegos, name="listarJuegos"),
-    path('edicionJuego/<id>', views.edicionJuego, name="edicionJuego"),
-    path('edicitaJuego/', views.editarJuego, name="editarJuego"),
-    path('eliminarJuego/<id>', views.eliminarJuego, name="eliminarJuego"),
+    path('eliminarGenero/<id>', views.eliminarGenero, name="eliminarGenero"),
+    path('edicionGenero/<id>', views.edicionGenero, name="edicionGenero"),
+    path('editarGenero/', views.editarGenero, name="editarGenero"),
+    
+    # JUEGOS
+    path('juegos/', views.listarJuegos, name="listarJuegos"),
     path('formularioJuego/', views.formularioJuego, name="formularioJuego"),
     path('guardarJuego/', views.guardarJuego, name="guardarJuego"),
-
-    path('listarCompras/', views.listarCompras, name="listarCompras"),
+    path('eliminarJuego/<id>', views.eliminarJuego, name="eliminarJuego"),
+    path('edicionJuego/<id>', views.edicionJuego, name="edicionJuego"),
+    path('editarJuego/', views.editarJuego, name="editarJuego"),
+    
+    # COMPRAS
+    path('compras/', views.listarCompras, name="listarCompras"),
     path('formularioCompra/', views.formularioCompra, name="formularioCompra"),
     path('guardarCompra/', views.guardarCompra, name="guardarCompra"),
 
-    path('listarUsuarios/', views.listarUsuarios, name="listarUsuarios"),
-    path('formularioUsuario/', views.formularioUsuario, name="formularioUsuario"),
-    path('guardarUsuario/', views.guardarUsuario, name="guardarUsuario"),
-
-    path('listarVentas/', views.listarVentas, name="listarVentas"),
+    # EMPLEADOS
+    path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
+    path('formularioEmpleado/', views.formularioUsuarioEmpleado, name="formularioUsuarioEmpleado"),
+    path('guardarEmpleado/', views.guardarUsuarioEmpleado, name="guardarUsuarioEmpleado"),
+    path('eliminarEmpleado/<id>', views.eliminarUsuarioEmpleado, name="eliminarUsuarioEmpleado"),
+    path('edicionEmpleado/<id>', views.edicionUsuarioEmpleado, name="edicionUsuarioEmpleado"),
+    path('editarEmpleado/', views.editarUsuarioEmpleado, name="editarUsuarioEmpleado"),
+    
+    # VENTAS
+    path('ventas/', views.listarVentas, name="listarVentas"),
     path('formularioVenta/', views.formularioVenta, name="formularioVenta"),
     path('guardarVenta/', views.guardarVenta, name="guardarVenta"),
 ]

@@ -10,9 +10,9 @@
 <div class="contact-from-section mt-150 mb-150">
     <div class="container">
         <form action="{% url 'webapp:editarProveedor' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            
             <div class="form-group">
-                <label for="idProveedor">ID</label>
-                <input value="{{proveedor.id}}" readonly name="id" type="text" class="form-control" placeholder="ID" required>
+                <input value="{{proveedor.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
             </div>
             <!-- Nombre completo del Proveedor -->
             <div class="form-group">

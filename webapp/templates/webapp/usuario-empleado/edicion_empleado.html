@@ -1,0 +1,60 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Formulario de Usuario{% endblock titulo %}
+
+{% block encabezado %}Formulario{% endblock encabezado %}
+{% block subencabezado %}Registro de usuario{% endblock subencabezado %}
+
+{% block contenedor %}
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+        <form action="{% url 'webapp:editarUsuarioEmpleado' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+
+            <div class="form-group">
+                <input value="{{usuario.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
+            </div>
+
+            <div class="form-group">
+                <!-- Email Usuario -->
+                <label for="emailUsuario">Email del empleado</label>
+                <input name="email" value="{{usuario.email}}" type="email" class="form-control" placeholder="Ingrese su correo" required>
+            </div>
+            <br />
+
+            <!-- Nombre del empleado -->
+            <div class="form-row">
+                <div class="col">
+                    <label for="nombreEmpleado">Nombre del empleado</label>
+                    <input value="{{usuario.nombre}}" name="nombre" type="text" class="form-control" placeholder="Nombres" required>
+                </div>
+                <!-- Apellidos del empleado -->
+                <div class="col">
+                    <label for="apellidosEmpleado">Apellidos del empleado</label>
+                    <input value="{{usuario.apellido}}" name="apellido" type="text" class="form-control" placeholder="Apellidos" required>
+                </div>
+            </div>
+            <br />
+
+            <div class="form-row">
+                <!-- Fecha de nacimiento del empleado -->
+                <div class="col">
+                    <label for="nacimientoCliente">Fecha de nacimiento del empleado</label>
+                    <input value="{{usuario.fecha_nacimiento|date:'Y-m-d'}}" name="fecha_nacimiento" type="date" class="form-control" required>
+                </div>
+                <div class="col">
+                    <label for="usuarioEmpleado">Número de teléfono del empleado</label>
+                    <input value="{{usuario.telefono}}" type="number" name="telefono" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <br />
+            <!-- Botón del enviar formulario-->
+            <div class="form-btns">
+                <button type="submit">Enviar formulario</button>
+                <button type="reset">Limpiar formulario</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenedor %}
