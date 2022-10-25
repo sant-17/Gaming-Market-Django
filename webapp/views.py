@@ -143,6 +143,7 @@ def editarJuego(request):
             juego.precio = request.POST['precio']
             juego.imagen = request.POST['imagen']
             juego.habilitado = request.POST['habilitado']
+            juego.generos.clear()
             generos = request.POST.getlist('generos')
             for generoID in generos:
                 genero = Genero.objects.get(id=int(generoID))

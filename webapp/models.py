@@ -107,6 +107,6 @@ class Venta_detalle(models.Model):
     precio = models.DecimalField(max_digits=15, decimal_places=2)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
     id_venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
-
+    
     def __str__(self) -> str:
         return f"{self.id_juego.titulo} - {self.cantidad}"

@@ -20,7 +20,7 @@
                 <!-- Fecha de lanzamiento del juego -->
                 <div class="col">
                     <label for="lanzamiendoJuego">Fecha de lanzamiento</label>
-                    <input value="{{juego.fecha_lanzamiento}}" name="fecha_lanzamiento" type="date" class="form-control" placeholder="{{juego.fecha_lanzamiento}}" required>
+                    <input value="{{juego.fecha_lanzamiento|date:'Y-m-d'}}" name="fecha_lanzamiento" type="date" class="form-control" placeholder="{{juego.fecha_lanzamiento}}" required>
                 </div>
             </div>
             <br/>
@@ -118,11 +118,11 @@
             <div class="form-row">
                 <!-- Genero -->
                 <div class="col">
-                    <label for="generoJuego">Género del juego</label>
+                    <label for="generoJuego">Género del juego </label>
                     <br>
 
                     {% for genero in generos %}
-                        <input type="checkbox" name="generos" id="option{{genero.id}}" value={{genero.id}} />
+                        <input type="checkbox" name="generos" id="option{{genero.id}}" value={{genero.id}} {% if genero in juego.generos.all %} checked {% endif %}/>
                         <label for="option{{genero.id}}"><b>{{genero.nombre}}</b></label><br />
                     {% endfor %}
 
