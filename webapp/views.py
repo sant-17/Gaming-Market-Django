@@ -138,7 +138,7 @@ def editarGenero(request):
 
 # JUEGOS
 def listarJuegos(request):
-    juegos = Juego.objects.all()
+    juegos = Juego.objects.order_by('-habilitado')
     return render(request, 'webapp/juego/listar_juegos.html', {'juegos': juegos})
 
 def formularioJuego(request):
