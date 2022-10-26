@@ -17,7 +17,11 @@ def index(request):
 
 # PROVEEDORES
 def listarProveedores(request):
-    proveedores = Proveedor.objects.all()
+    proveedores = Proveedor.objects.filter(habilitado = True)
+    return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': proveedores})
+
+def listarProveedoresDeshabilitados(request):
+    proveedores = Proveedor.objects.filter(habilitado = False)
     return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': proveedores})
 
 def formularioProveedor(request):
@@ -39,14 +43,22 @@ def guardarProveedor(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarProveedores')
 
-def eliminarProveedor(request, id):
+def deshabilitarProveedor(request, id):
     try:
         proveedor = Proveedor.objects.get(id = id)
-        proveedor_nombre = proveedor.nombre
-        proveedor.delete()
-        messages.success(request, f"Proveedor ({proveedor_nombre}) eliminado exitosamente")
-    except IntegrityError:
-        messages.warning(request, "No puede eliminar este proveedor ya que está relacionado con otros registros")
+        proveedor.habilitado = False
+        proveedor.save()
+        messages.success(request, f"Proveedor ({proveedor.nombre}) deshabilitado exitosamente")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarProveedores')
+
+def habilitarProveedor(request, id):
+    try:
+        proveedor = Proveedor.objects.get(id = id)
+        proveedor.habilitado = True
+        proveedor.save()
+        messages.success(request, f"Proveedor ({proveedor.nombre}) habilitado exitosamente")
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarProveedores')
@@ -235,7 +247,7 @@ def guardarCompra(request):
 
 # USUARIO-EMPLEADOS
 def listarUsuariosEmpleados(request):
-    usuarios = Usuario.objects.all()
+    usuarios = Usuario.objects.filter(rol = 'E').filter(habilitado = True)
     return render(request, 'webapp/usuario-empleado/listar_empleados.html', {'usuarios': usuarios})
 
 def formularioUsuarioEmpleado(request):
@@ -261,14 +273,22 @@ def guardarUsuarioEmpleado(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
 
-def eliminarUsuarioEmpleado(request, id):
+def deshabilitarUsuarioEmpleado(request, id):
     try:
         usuario = Usuario.objects.get(id = id)
-        usuario_nombre = usuario.nombre + " " + usuario.apellido
-        usuario.delete()
-        messages.success(request, f"Empleado ({usuario_nombre}) creado exitosamente")
-    except IntegrityError:
-        messages.warning(request, "No puede eliminar este juego ya que está relacionado con otros registros")
+        usuario.habilitado = False
+        usuario.save()
+        messages.success(request, f"Empleado ({usuario.nombre}) deshabilitado exitosamente")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarEmpleados')
+
+def habilitarUsuarioEmpleado(request, id):
+    try:
+        usuario = Usuario.objects.get(id = id)
+        usuario.habilitado = True
+        usuario.save()
+        messages.success(request, f"Empleado ({usuario.nombre}) habilitado exitosamente")
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
@@ -294,7 +314,9 @@ def editarUsuarioEmpleado(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
 
-
+def listarUsuariosEmpleadosDeshabilitados(request):
+    usuarios = Usuario.objects.filter(rol = 'E').filter(habilitado = False)
+    return render(request, 'webapp/usuario-empleado/listar_empleados_desh.html', {'usuarios': usuarios})
 
 # VENTAS
 def listarVentas(request):

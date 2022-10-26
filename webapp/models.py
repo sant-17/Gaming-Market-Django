@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 
 # Create your models here.
@@ -5,6 +6,7 @@ class Proveedor(models.Model):
     nombre = models.CharField(max_length=50)
     email = models.EmailField(max_length=100)
     telefono = models.IntegerField(null=True)
+    habilitado = models.BooleanField(default = True)
 
     def __str__(self) -> str:
         return f"{self.nombre}"
@@ -61,6 +63,7 @@ class Usuario(models.Model):
     apellido = models.CharField(max_length=50)
     telefono = models.IntegerField()
     fecha_nacimiento = models.DateField()
+    habilitado = models.BooleanField(default = True)
 
     def __str__(self) -> str:
         return f"{self.email}"

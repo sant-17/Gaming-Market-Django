@@ -10,9 +10,11 @@ urlpatterns = [
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
     path('formularioProveedor/', views.formularioProveedor, name="formularioProveedor"),
     path('guardarProveedor/', views.guardarProveedor, name="guardarProveedor"),
-    path('eliminarProveedor/<id>', views.eliminarProveedor, name="eliminarProveedor"),
+    path('deshabilitarProveedor/<id>', views.deshabilitarProveedor, name="deshabilitarProveedor"),
+    path('habilitarProveedor/<id>', views.habilitarProveedor, name="habilitarProveedor"),
     path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
     path('editarProveedor/', views.editarProveedor, name="editarProveedor"),
+    path('proveedoresDeshabilitados/', views.listarProveedoresDeshabilitados, name="listarProveedoresDeshabilitados"),
     
     # GENEROS
     path('generos/', views.listarGeneros, name="listarGeneros"),
@@ -39,9 +41,11 @@ urlpatterns = [
     path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
     path('formularioEmpleado/', views.formularioUsuarioEmpleado, name="formularioUsuarioEmpleado"),
     path('guardarEmpleado/', views.guardarUsuarioEmpleado, name="guardarUsuarioEmpleado"),
-    path('eliminarEmpleado/<id>', views.eliminarUsuarioEmpleado, name="eliminarUsuarioEmpleado"),
+    path('deshabilitarEmpleado/<id>', views.deshabilitarUsuarioEmpleado, name="deshabilitarUsuarioEmpleado"),
+    path('habilitarEmpleado/<id>', views.habilitarUsuarioEmpleado, name="habilitarUsuarioEmpleado"),
     path('edicionEmpleado/<id>', views.edicionUsuarioEmpleado, name="edicionUsuarioEmpleado"),
     path('editarEmpleado/', views.editarUsuarioEmpleado, name="editarUsuarioEmpleado"),
+    path('empleadosDeshabilitados/', views.listarUsuariosEmpleadosDeshabilitados, name="listarEmpleadosDeshabilitados"),
     
     # VENTAS
     path('ventas/', views.listarVentas, name="listarVentas"),

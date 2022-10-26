@@ -32,8 +32,7 @@
                         <td> {{proveedor.email}}</td>
                         <td> {{proveedor.telefono}}</td>
                         <td>
-                            <a href="{% url 'webapp:edicionProveedor' proveedor.id %}" class="btn btn-info">Editar</a>
-                            <a href="{% url 'webapp:deshabilitarProveedor' proveedor.id %}" class="btn btn-danger">Deshabilitar</a>
+                            <a href="{% url 'webapp:habilitarProveedor' proveedor.id %}" class="btn btn-danger">Habilitar</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -46,7 +45,7 @@
 No hay datos
 {% endif %}
 <div class="contenedor">
-    <a href="{% url 'webapp:listarProveedoresDeshabilitados' %}" class="boxed-btn mt-4">Ir a la lista de proveedores deshabilitados</a>
+    <a href="{% url 'webapp:listarProveedores' %}" class="boxed-btn mt-4">Ir a la lista de empleados habilitados</a>
 </div>
 <br>
 {% endblock contenedor %}
