@@ -8,6 +8,9 @@ from django.contrib import messages
 # Gestión de errores de base de datos
 from django.db import IntegrityError    
 
+# Paginador
+from django.core.paginator import Paginator
+
 # Create your views here.
 
 def index(request):
@@ -18,7 +21,14 @@ def index(request):
 # PROVEEDORES
 def listarProveedores(request):
     proveedores = Proveedor.objects.filter(habilitado = True)
-    return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': proveedores})
+    paginator = Paginator(proveedores, 1)
+    page_number = request.GET.get('page')
+
+    #Sobreescribiendo la salida de la consulta
+    proveedores = paginator.get_page(page_number)
+
+    contexto = {"proveedores": proveedores}
+    return render(request, 'webapp/proveedor/listar_proveedores.html', contexto)
 
 def listarProveedoresDeshabilitados(request):
     proveedores = Proveedor.objects.filter(habilitado = False)
@@ -83,11 +93,17 @@ def editarProveedor(request):
     return redirect('webapp:listarProveedores')
 
 
-
 # GENEROS
 def listarGeneros(request):
     generos = Genero.objects.all()
-    return render(request, 'webapp/genero/listar_generos.html', {'generos': generos})
+    paginator = Paginator(generos, 1)
+    page_number = request.GET.get('page')
+
+    #Sobreescribiendo la salida de la consulta
+    generos = paginator.get_page(page_number)
+
+    contexto = {"generos": generos}
+    return render(request, 'webapp/genero/listar_generos.html', contexto)
 
 def formularioGenero(request):
     return render(request, 'webapp/genero/formulario_genero.html')
@@ -139,6 +155,12 @@ def editarGenero(request):
 # JUEGOS
 def listarJuegos(request):
     juegos = Juego.objects.order_by('-habilitado')
+    paginator = Paginator(juegos, 1)
+    page_number = request.GET.get('page')
+
+    #Sobreescribiendo la salida de la consulta
+    juegos = paginator.get_page(page_number)
+
     return render(request, 'webapp/juego/listar_juegos.html', {'juegos': juegos})
 
 def formularioJuego(request):
@@ -218,6 +240,12 @@ def editarJuego(request):
 # COMPRAS
 def listarCompras(request):
     compras = Compra.objects.all()
+    paginator = Paginator(compras, 1)
+    page_number = request.GET.get('page')
+
+    #Sobreescribiendo la salida de la consulta
+    compras = paginator.get_page(page_number)
+
     return render(request, 'webapp/compra/listar_compras.html', {'compras': compras})
 
 def formularioCompra(request):
@@ -242,7 +270,6 @@ def guardarCompra(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarCompras')
-
 
 
 # USUARIO-EMPLEADOS
@@ -318,9 +345,17 @@ def listarUsuariosEmpleadosDeshabilitados(request):
     usuarios = Usuario.objects.filter(rol = 'E').filter(habilitado = False)
     return render(request, 'webapp/usuario-empleado/listar_empleados_desh.html', {'usuarios': usuarios})
 
+
 # VENTAS
 def listarVentas(request):
     ventas = Venta.objects.all()
+
+    paginator = Paginator(ventas, 1)
+    page_number = request.GET.get('page')
+
+    #Sobreescribiendo la salida de la consulta
+    ventas = paginator.get_page(page_number)
+
     return render(request, 'webapp/venta/listar_ventas.html', {'ventas': ventas})
 
 def formularioVenta(request):

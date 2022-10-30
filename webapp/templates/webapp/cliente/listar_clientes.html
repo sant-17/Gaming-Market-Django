@@ -42,6 +42,23 @@
                 </tbody>
             </table>
         </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="pagination-wrap">
+                    <ul>
+                        <li><a href="?page=1">&laquo;</a></li>
+                        <li><a {% if clientes.has_previous %} href="?page={{ clientes.previous_page_number }}" {% endif %}>Anterior</a></li>
+
+                        {% for i in "x"|rjust:clientes.paginator.num_pages|make_list %}
+                        <li><a {% if forloop.counter == clientes.number %} class="active" {% endif %} href="?page={{ forloop.counter }}"> {{ forloop.counter }} </a></li>
+                        {% endfor %}
+
+                        <li><a {% if clientes.has_next %} href="?page={{clientes.next_page_number }}" {% endif %}>Siguiente</a></li>
+                        <li><a {% if clientes.has_next %} href="?page={{clientes.paginator.num_pages }}" {% endif %}>&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% else %}
