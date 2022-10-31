@@ -9,18 +9,13 @@
 {% block contenedor %}
 
 {% if proveedores %}
-<form action="{% url 'webapp:buscarProveedor' %}" method="post">
-    {% csrf_token %}
-    <div class="search-bar">
-        <div class="search-bar-tablecell">
-            <input onkeyup="buscar('{% url 'webapp:buscarProveedor' %}');" type="search" placeholder="Buscar" id="buscar">
-        </div>
-    </div>
-</form>
+<br>
 
 <div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
-        <div class="table-responsive" id="respuesta">
+        <h3>Proveedores</h3>
+		<br/>
+        <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>

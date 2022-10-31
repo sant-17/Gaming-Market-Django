@@ -843,7 +843,7 @@ a.mobile-show {
     font-size: 50px;
     font-weight: 700;
     margin-bottom: 40px;
-    color: #fff;
+    color: var(--purple);
 }
 
 .search-bar-tablecell button[type=submit] {
@@ -885,19 +885,19 @@ a.mobile-show {
 }
 
 .search-bar-tablecell input::-webkit-input-placeholder {
-    color: #fff;
+    color: var(--purple);
 }
 
 .search-bar-tablecell input:-ms-input-placeholder {
-    color: #fff;
+    color: var(--purple);
 }
 
 .search-bar-tablecell input::-ms-input-placeholder {
-    color: #fff;
+    color: var(--purple);
 }
 
 .search-bar-tablecell input::placeholder {
-    color: #fff;
+    color: var(--purple);
 }
 
 .search-bar-tablecell button[type=submit] i {

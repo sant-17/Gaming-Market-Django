@@ -1,4 +1,5 @@
 
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from .models import *
 
@@ -92,7 +93,21 @@ def editarProveedor(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarProveedores')
 
+def buscarProveedor(request):
+    from django.db.models import Q
 
+    if request.method == "POST":
+        resultado = request.POST["buscar"]
+        proveedores = Proveedor.objects.filter(Q(nombre__icontains = resultado) | Q(email__icontains = resultado) | Q(telefono__icontains = resultado))
+        paginator = Paginator(proveedores, 10)
+        page_number = request.GET.get('page')
+        proveedores = paginator.get_page(page_number)
+        contexto = {"proveedores" : proveedores}
+        return render(request, 'webapp/proveedor/listar_proveedores_ajax.html', contexto)
+    else:
+        messages.error(request, "No envió datos")
+        return redirect('webapp:listarProveedores')
+        
 # GENEROS
 def listarGeneros(request):
     generos = Genero.objects.all()

@@ -15,6 +15,7 @@ urlpatterns = [
     path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
     path('editarProveedor/', views.editarProveedor, name="editarProveedor"),
     path('proveedoresDeshabilitados/', views.listarProveedoresDeshabilitados, name="listarProveedoresDeshabilitados"),
+    path('buscarProveedor/', views.buscarProveedor, name="buscarProveedor"),
     
     # GENEROS
     path('generos/', views.listarGeneros, name="listarGeneros"),
