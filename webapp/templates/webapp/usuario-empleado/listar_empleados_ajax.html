@@ -1,18 +1,16 @@
-{% extends 'webapp/base-crud.html' %}
+{% extends 'webapp/base-busqueda.html' %}
 {% load static %}
 
-{% block titulo %}Empleados Deshabilitados{% endblock titulo %}
+{% block titulo %}Empleados{% endblock titulo %}
 
 {% block encabezado %}Listado{% endblock encabezado %}
-{% block subencabezado %}Lista de Empleados Deshabilitados{% endblock subencabezado %}
+{% block subencabezado %}Lista de Empleados{% endblock subencabezado %}
 
 {% block contenedor %}
 
 {% if usuarios %}
 <div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
-        <h1>Empleados deshabilitados</h1>
-		<br/>
         <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">
                 <thead>
@@ -23,6 +21,7 @@
                         <th>Apellido</th>
                         <th>Teléfono</th>
                         <th>Fecha de Nacimiento</th>
+                        <th>Estado</th>
                         <th colspan="2">Opciones</th>
                     </tr>
                 </thead>
@@ -35,8 +34,14 @@
                         <td> {{usuario.apellido}} </td>
                         <td> {{usuario.telefono}} </td>
                         <td> {{usuario.fecha_nacimiento}} </td>
+                        <td> {% if usuario.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
                         <td>
-                            <a href="{% url 'webapp:habilitarUsuarioEmpleado' usuario.id %}" class="btn btn-danger">Habilitar</a>
+                            <a href="{% url 'webapp:edicionUsuarioEmpleado' usuario.id %}" class="btn btn-info">Editar</a>
+                            {% if usuario.habilitado %}
+                            <a href="{% url 'webapp:deshabilitarEmpleado' usuario.id %}" class="btn btn-danger">Deshabilitar</a>
+                            {% else %}
+                            <a href="{% url 'webapp:habilitarEmpleado' usuario.id %}" class="btn btn-danger">Habilitar</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -45,11 +50,8 @@
         </div>
     </div>
 </div>
+
 {% else %}
 No hay datos
 {% endif %}
-<div class="contenedor">
-    <a href="{% url 'webapp:listarEmpleados' %}" class="boxed-btn mt-4">Volver a la lista de empleados habilitados</a>
-</div>
-<br>
 {% endblock contenedor %}

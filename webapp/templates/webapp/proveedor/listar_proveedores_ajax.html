@@ -1,4 +1,4 @@
-{% extends 'webapp/base-crud.html' %}
+{% extends 'webapp/base-busqueda.html' %}
 {% load static %}
 
 {% block titulo %}Proveedores{% endblock titulo %}
@@ -9,12 +9,8 @@
 {% block contenedor %}
 
 {% if proveedores %}
-<br>
-
 <div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
-        <h3>Proveedores</h3>
-		<br/>
         <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">
                 <thead>
@@ -23,6 +19,7 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Teléfono</th>
+                        <th>Estado</th>
                         <th colspan="2">Opciones</th>
                     </tr>
                 </thead>
@@ -33,9 +30,14 @@
                         <td> {{proveedor.nombre}}</td>
                         <td> {{proveedor.email}}</td>
                         <td> {{proveedor.telefono}}</td>
+                        <th> {% if proveedor.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</th>
                         <td>
                             <a href="{% url 'webapp:edicionProveedor' proveedor.id %}" class="btn btn-info">Editar</a>
+                            {% if proveedor.habilitado %}
                             <a href="{% url 'webapp:deshabilitarProveedor' proveedor.id %}" class="btn btn-danger">Deshabilitar</a>
+                            {% else %}
+                            <a href="{% url 'webapp:habilitarProveedor' proveedor.id %}" class="btn btn-danger">Habilitar</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -65,8 +67,4 @@
 {% else %}
 No hay datos
 {% endif %}
-<div class="contenedor">
-    <a href="{% url 'webapp:listarProveedoresDeshabilitados' %}" class="boxed-btn mt-4">Ir a la lista de proveedores deshabilitados</a>
-</div>
-<br>
 {% endblock contenedor %}

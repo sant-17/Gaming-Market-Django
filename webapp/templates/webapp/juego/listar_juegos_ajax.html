@@ -1,4 +1,4 @@
-{% extends 'webapp/base-crud.html' %}
+{% extends 'webapp/base-busqueda.html' %}
 {% load static %}
 
 {% block titulo %}Juegos{% endblock titulo %}
@@ -9,16 +9,7 @@
 {% block contenedor %}
 
 {% if juegos %}
-<form action="{% url 'webapp:buscarJuego' %}" method="post">
-    {% csrf_token %}
-    <div class="search-bar">
-        <div class="search-bar-tablecell">
-            <input onkeyup="busqueda_ajax('{% url 'webapp:buscarJuego' %}');" type="search" placeholder="Buscar" id="buscar" name="buscar">
-        </div>
-    </div>
-</form>
-
-<div class="listar-generos-juegos mt-150 mb-150" id="respuesta">
+<div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
         <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">

@@ -14,7 +14,6 @@ urlpatterns = [
     path('habilitarProveedor/<id>', views.habilitarProveedor, name="habilitarProveedor"),
     path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
     path('editarProveedor/', views.editarProveedor, name="editarProveedor"),
-    path('proveedoresDeshabilitados/', views.listarProveedoresDeshabilitados, name="listarProveedoresDeshabilitados"),
     path('buscarProveedor/', views.buscarProveedor, name="buscarProveedor"),
     
     # GENEROS
@@ -32,6 +31,7 @@ urlpatterns = [
     path('eliminarJuego/<id>', views.eliminarJuego, name="eliminarJuego"),
     path('edicionJuego/<id>', views.edicionJuego, name="edicionJuego"),
     path('editarJuego/', views.editarJuego, name="editarJuego"),
+    path('buscarJuego/', views.buscarJuego, name="buscarJuego"),
     
     # COMPRAS
     path('compras/', views.listarCompras, name="listarCompras"),
@@ -42,11 +42,11 @@ urlpatterns = [
     path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
     path('formularioEmpleado/', views.formularioUsuarioEmpleado, name="formularioUsuarioEmpleado"),
     path('guardarEmpleado/', views.guardarUsuarioEmpleado, name="guardarUsuarioEmpleado"),
-    path('deshabilitarEmpleado/<id>', views.deshabilitarUsuarioEmpleado, name="deshabilitarUsuarioEmpleado"),
-    path('habilitarEmpleado/<id>', views.habilitarUsuarioEmpleado, name="habilitarUsuarioEmpleado"),
+    path('deshabilitarEmpleado/<id>', views.deshabilitarUsuarioEmpleado, name="deshabilitarEmpleado"),
+    path('habilitarEmpleado/<id>', views.habilitarUsuarioEmpleado, name="habilitarEmpleado"),
     path('edicionEmpleado/<id>', views.edicionUsuarioEmpleado, name="edicionUsuarioEmpleado"),
     path('editarEmpleado/', views.editarUsuarioEmpleado, name="editarUsuarioEmpleado"),
-    path('empleadosDeshabilitados/', views.listarUsuariosEmpleadosDeshabilitados, name="listarEmpleadosDeshabilitados"),
+    path('buscarEmpleado/', views.buscarEmpleado, name="buscarEmpleado"),
     
     # VENTAS
     path('ventas/', views.listarVentas, name="listarVentas"),

@@ -21,8 +21,8 @@ def index(request):
 
 # PROVEEDORES
 def listarProveedores(request):
-    proveedores = Proveedor.objects.filter(habilitado = True)
-    paginator = Paginator(proveedores, 1)
+    proveedores = Proveedor.objects.order_by('-habilitado')
+    paginator = Paginator(proveedores, 10)
     page_number = request.GET.get('page')
 
     #Sobreescribiendo la salida de la consulta
@@ -30,10 +30,6 @@ def listarProveedores(request):
 
     contexto = {"proveedores": proveedores}
     return render(request, 'webapp/proveedor/listar_proveedores.html', contexto)
-
-def listarProveedoresDeshabilitados(request):
-    proveedores = Proveedor.objects.filter(habilitado = False)
-    return render(request, 'webapp/proveedor/listar_proveedores.html', {'proveedores': proveedores})
 
 def formularioProveedor(request):
     return render(request, 'webapp/proveedor/formulario_proveedor.html')
@@ -98,7 +94,7 @@ def buscarProveedor(request):
 
     if request.method == "POST":
         resultado = request.POST["buscar"]
-        proveedores = Proveedor.objects.filter(Q(nombre__icontains = resultado) | Q(email__icontains = resultado) | Q(telefono__icontains = resultado))
+        proveedores = Proveedor.objects.order_by('-habilitado').filter(Q(nombre__icontains = resultado) | Q(email__icontains = resultado) | Q(telefono__icontains = resultado))
         paginator = Paginator(proveedores, 10)
         page_number = request.GET.get('page')
         proveedores = paginator.get_page(page_number)
@@ -170,7 +166,7 @@ def editarGenero(request):
 # JUEGOS
 def listarJuegos(request):
     juegos = Juego.objects.order_by('-habilitado')
-    paginator = Paginator(juegos, 1)
+    paginator = Paginator(juegos, 10)
     page_number = request.GET.get('page')
 
     #Sobreescribiendo la salida de la consulta
@@ -251,6 +247,20 @@ def editarJuego(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarJuegos')
 
+def buscarJuego(request):
+    from django.db.models import Q
+
+    if request.method == "POST":
+        resultado = request.POST["buscar"]
+        juegos = Juego.objects.filter(Q(titulo__icontains = resultado) | Q(desarrollador__icontains = resultado) | Q(editor__icontains = resultado))
+        paginator = Paginator(juegos, 10)
+        page_number = request.GET.get('page')
+        juegos = paginator.get_page(page_number)
+        contexto = {"juegos" : juegos}
+        return render(request, 'webapp/juego/listar_juegos_ajax.html', contexto)
+    else:
+        messages.error(request, "No envió datos")
+        return redirect('webapp:juegos')
 
 # COMPRAS
 def listarCompras(request):
@@ -289,7 +299,7 @@ def guardarCompra(request):
 
 # USUARIO-EMPLEADOS
 def listarUsuariosEmpleados(request):
-    usuarios = Usuario.objects.filter(rol = 'E').filter(habilitado = True)
+    usuarios = Usuario.objects.order_by('-habilitado').filter(rol = 'E')
     return render(request, 'webapp/usuario-empleado/listar_empleados.html', {'usuarios': usuarios})
 
 def formularioUsuarioEmpleado(request):
@@ -356,9 +366,20 @@ def editarUsuarioEmpleado(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
 
-def listarUsuariosEmpleadosDeshabilitados(request):
-    usuarios = Usuario.objects.filter(rol = 'E').filter(habilitado = False)
-    return render(request, 'webapp/usuario-empleado/listar_empleados_desh.html', {'usuarios': usuarios})
+def buscarEmpleado(request):
+    from django.db.models import Q
+
+    if request.method == "POST":
+        resultado = request.POST["buscar"]
+        empleados = Usuario.objects.order_by('-habilitado').filter(Q(email__icontains = resultado) | Q(nombre__icontains = resultado) | Q(apellido__icontains = resultado)).filter(rol = 'E')
+        paginator = Paginator(empleados, 10)
+        page_number = request.GET.get('page')
+        empleados = paginator.get_page(page_number)
+        contexto = {"usuarios" : empleados}
+        return render(request, 'webapp/usuario-empleado/listar_empleados_ajax.html', contexto)
+    else:
+        messages.error(request, "No envió datos")
+        return redirect('webapp:listarEmpleados')
 
 
 # VENTAS

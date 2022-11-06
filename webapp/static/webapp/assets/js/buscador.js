@@ -1,4 +1,4 @@
-function buscar(url){
+function busqueda_ajax(url){
     respuesta = $('#respuesta');
     buscar = $('#buscar').val();
     token = $('input[name="csrfmiddlewaretoken"]').val();
