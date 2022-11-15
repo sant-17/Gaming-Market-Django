@@ -14,10 +14,41 @@ from django.core.paginator import Paginator
 
 # Create your views here.
 
+def loginFormulario(request):
+    pass
+
+def login(request):
+    if request.method == "POST":
+        try:
+            email = request.POST['email']
+            clave = request.POST['clave']
+
+            usuario = Usuario.objects.get(email = email, clave = clave)
+            # Crear sesión
+            request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
+            # -------------
+            messages.success(request, "Bienvenido")
+            return redirect('webapp:index')
+        except Usuario.DoesNotExist:
+            messages.warning(request, "El usuario no existe")
+            return redirect('webapp:index')
+        except Exception as e:
+            messages.warning(request, e)
+            return redirect('webapp:index')
+    else:
+        messages.warning(request, "Usted no ha enviado datos")
+        return redirect('webapp:index')
+
+def logout(request):
+    try:
+        del request.session["logueo"]
+        return redirect('webapp:index')
+    except Exception as e:
+        messages.error(request, e)
+        return redirect('webapp:index')
+
 def index(request):
     return render(request, 'webapp/index.html')
-
-
 
 # PROVEEDORES
 def listarProveedores(request):

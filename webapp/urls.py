@@ -6,6 +6,10 @@ app_name = "webapp"
 urlpatterns = [
     path('', views.index, name = 'index'),
 
+    path('loginFormulario/', views.loginFormulario, name = 'loginFormulario'),
+    path('login/', views.login, name = 'login'),
+    path('logout', views.logout, name = 'logout'),
+
     # PROVEEDORES
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
     path('formularioProveedor/', views.formularioProveedor, name="formularioProveedor"),

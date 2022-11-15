@@ -55,8 +55,8 @@ class Compra_detalle(models.Model):
 
 
 class Usuario(models.Model):
-    email = models.EmailField(max_length=100)
-    clave = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100, unique = True)
+    clave = models.CharField(max_length=254)
     roles_CHOISES = (('A', 'Administrados'), ('C', 'Cliente'), ('E', 'Empleado'))
     rol = models.CharField(max_length=30, choices=roles_CHOISES, default='C')
     nombre = models.CharField(max_length=50)

@@ -113,8 +113,10 @@
                                 
                                 </li>
                                 -->
-                                <li>
                                 
+                                
+                                <li>
+                                    {% if not request.session.logueo %}
                                     <div class="header-icons">
                                         <!--
                                         <a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
@@ -126,7 +128,14 @@
                                             <li><a href="sign-up.html">Registrarse</a></li>
                                         </ul>
                                     </div>
+                                    {% else %}
+                                    <a class="user" href=""><i class="fas fa-user"></i></a>
+                                    <ul class="sub-menu">
+                                        <li><a href="{% url 'webapp:logout' %}">Cerrar sesión</a></li>
+                                    </ul>
+                                    {% endif %}
                                 </li>
+                                
                                 
                             </ul>
                         </nav>
@@ -154,14 +163,14 @@
                         <h4>Logueate</h4>
                     </div>
                     <div class="d-flex flex-column text-center">
-                        <form name="login">
+                        <form action="{% url 'webapp:login' %}" method="post">{% csrf_token %}
                             <div class="form-group">
-                                <input type="email" name="usuario" class="form-control" id="usuario" placeholder="Tu correo...">
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Tu correo...">
                             </div>
                             <div class="form-group">
-                                <input type="password" name="password" class="form-control" id="password1" placeholder="Tu contraseña...">
+                                <input type="password" name="clave" class="form-control" id="clave" placeholder="Tu contraseña...">
                             </div>
-                            <button type="button" onclick="Login()" class="btn btn-info btn-block btn-round">Ingresar</button>
+                            <button type="submit" class="btn btn-info btn-block btn-round">Ingresar</button>
                         </form>
                     </div>
                 </div>
