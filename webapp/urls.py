@@ -36,11 +36,6 @@ urlpatterns = [
     path('edicionJuego/<id>', views.edicionJuego, name="edicionJuego"),
     path('editarJuego/', views.editarJuego, name="editarJuego"),
     path('buscarJuego/', views.buscarJuego, name="buscarJuego"),
-    
-    # COMPRAS
-    path('compras/', views.listarCompras, name="listarCompras"),
-    path('formularioCompra/', views.formularioCompra, name="formularioCompra"),
-    path('guardarCompra/', views.guardarCompra, name="guardarCompra"),
 
     # EMPLEADOS
     path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
@@ -51,9 +46,4 @@ urlpatterns = [
     path('edicionEmpleado/<id>', views.edicionUsuarioEmpleado, name="edicionUsuarioEmpleado"),
     path('editarEmpleado/', views.editarUsuarioEmpleado, name="editarUsuarioEmpleado"),
     path('buscarEmpleado/', views.buscarEmpleado, name="buscarEmpleado"),
-    
-    # VENTAS
-    path('ventas/', views.listarVentas, name="listarVentas"),
-    path('formularioVenta/', views.formularioVenta, name="formularioVenta"),
-    path('guardarVenta/', views.guardarVenta, name="guardarVenta"),
 ]

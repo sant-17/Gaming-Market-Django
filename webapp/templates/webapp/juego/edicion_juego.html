@@ -83,7 +83,7 @@
                 <!-- Precio de venta -->
                 <div class="col">
                     <label for="precioJuego">Precio de venta</label>
-                    <input value="{{juego.precio}}" name="precio" type="number" class="form-control" placeholder="Precio" required>
+                    <input value="{{juego.precio|floatformat}}" name="precio" type="number" class="form-control" placeholder="Precio" required>
                 </div>
                 <!-- URL Imágen -->
                 <div class="col">
@@ -114,7 +114,15 @@
                     </div>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label for="proveedorJuego">Proveedor</label>
+                <select name="proveedor" id="" class="form-control" required>
+                    <option disabled>Seleccione un proveedor</option>
+                    {% for proveedor in proveedores %}
+                    <option value="{{proveedor.id}}" {% if juego.proveedor.id == proveedor.id %} selected {% endif %}> {{proveedor.id}} - {{proveedor.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="form-row">
                 <!-- Genero -->
                 <div class="col">

@@ -39,6 +39,7 @@
                         
                         <th>Habilitado</th>
                         <th>Géneros</th>
+                        <th>Proveedor</th>
                         <th colspan="2">Opciones</th>
                     </tr>
                 </thead>
@@ -53,7 +54,7 @@
                         <td> {{juego.get_esrb_display}}</td>
                         <td> {{juego.multijugador}}</td>
                         <td> {{juego.stock}}</td>
-                        <td> {{juego.precio}}</td>
+                        <td> ${{juego.precio|floatformat}}</td>
                         <td> {% if juego.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
                         <td> 
                             {% for genero in juego.generos.all %}
@@ -61,6 +62,7 @@
                             <br>
                             {% endfor %}
                         </td>
+                        <td> {{juego.proveedor.nombre }}</td>
                         <td>
                             <a href="{% url 'webapp:edicionJuego' juego.id %}" class="btn btn-info">Editar</a>
                             <a href="{% url 'webapp:eliminarJuego' juego.id %}" class="btn btn-danger">Eliminar</a>

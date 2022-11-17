@@ -207,11 +207,13 @@ def listarJuegos(request):
 
 def formularioJuego(request):
     generos = Genero.objects.all()
-    return render(request, 'webapp/juego/formulario_juego.html', {"generos": generos})
+    proveedores = Proveedor.objects.filter(habilitado = True)
+    return render(request, 'webapp/juego/formulario_juego.html', {"generos": generos, "proveedores": proveedores})
 
 def guardarJuego(request):
     try:
         if request.method == "POST":
+            proveedor = Proveedor.objects.get(pk = request.POST["proveedor"])
             juego = Juego(
                 titulo = request.POST['titulo'],
                 fecha_lanzamiento = request.POST['fecha_lanzamiento'],
@@ -223,7 +225,8 @@ def guardarJuego(request):
                 stock = request.POST['stock'],
                 precio = request.POST['precio'],
                 imagen = request.POST['imagen'],
-                habilitado = request.POST['habilitado']
+                habilitado = request.POST['habilitado'],
+                proveedor = proveedor
             )
             juego.save()
             generos = request.POST.getlist('generos')
@@ -251,11 +254,13 @@ def eliminarJuego(request, id):
 def edicionJuego(request, id):
     juego = Juego.objects.get(id = id)
     generos = Genero.objects.all()
-    return render(request, 'webapp/juego/edicion_juego.html', {'juego': juego, 'generos': generos})
+    proveedores = Proveedor.objects.filter(habilitado = True)
+    return render(request, 'webapp/juego/edicion_juego.html', {'juego': juego, 'generos': generos, "proveedores": proveedores})
 
 def editarJuego(request):
     try:
         if request.method == "POST":
+            proveedor = Proveedor.objects.get(pk = request.POST["proveedor"])
             juego = Juego.objects.get(id = request.POST['id'])
             juego.titulo = request.POST['titulo']
             juego.fecha_lanzamiento = request.POST['fecha_lanzamiento']
@@ -267,6 +272,7 @@ def editarJuego(request):
             juego.precio = request.POST['precio']
             juego.imagen = request.POST['imagen']
             juego.habilitado = request.POST['habilitado']
+            juego.proveedor = proveedor
             juego.generos.clear()
             generos = request.POST.getlist('generos')
             juego.generos.add(*generos)
@@ -292,40 +298,6 @@ def buscarJuego(request):
     else:
         messages.error(request, "No envió datos")
         return redirect('webapp:juegos')
-
-# COMPRAS
-def listarCompras(request):
-    compras = Compra.objects.all()
-    paginator = Paginator(compras, 1)
-    page_number = request.GET.get('page')
-
-    #Sobreescribiendo la salida de la consulta
-    compras = paginator.get_page(page_number)
-
-    return render(request, 'webapp/compra/listar_compras.html', {'compras': compras})
-
-def formularioCompra(request):
-    proveedores = Proveedor.objects.all()
-    return render(request, 'webapp/compra/formulario_compra.html', {"proveedores": proveedores})
-
-def guardarCompra(request):
-    try:
-        if request.method == "POST":
-            proveedorID = request.POST['proveedor']
-            proveedor = Proveedor.objects.get(id=int(proveedorID))
-
-            compra = Compra(
-                fecha = request.POST['fecha'],
-                valor = request.POST['valor'],
-                id_proveedor = proveedor
-            )
-            compra.save()
-            messages.success(request, "Compra guardada exitosamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:listarCompras')
 
 
 # USUARIO-EMPLEADOS
@@ -411,38 +383,3 @@ def buscarEmpleado(request):
     else:
         messages.error(request, "No envió datos")
         return redirect('webapp:listarEmpleados')
-
-
-# VENTAS
-def listarVentas(request):
-    ventas = Venta.objects.all()
-
-    paginator = Paginator(ventas, 1)
-    page_number = request.GET.get('page')
-
-    #Sobreescribiendo la salida de la consulta
-    ventas = paginator.get_page(page_number)
-
-    return render(request, 'webapp/venta/listar_ventas.html', {'ventas': ventas})
-
-def formularioVenta(request):
-    clientes = Usuario.objects.all()
-    return render(request, 'webapp/venta/formulario_venta.html', {"clientes": Usuario.objects.all()})
-
-def guardarVenta(request):
-    try:
-        if request.method == "POST":
-            usuarioID = request.POST['usuario']
-            usuario = Usuario.objects.get(id=int(usuarioID))
-
-            venta = Venta(
-                total = request.POST['total'],
-                id_usuario = usuario
-            )
-            venta.save()
-            messages.success(request, "Venta guardada exitosamente")
-        else:
-            messages.warning(request, "Usted no ha enviado datos")
-    except Exception as e:
-        messages.error(request, f"Error: {e}")
-    return redirect('webapp:formularioVenta')

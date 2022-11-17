@@ -113,6 +113,15 @@
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="proveedorJuego">Proveedor</label>
+                <select name="proveedor" id="" class="form-control" required>
+                    <option disabled selected>Seleccione un proveedor</option>
+                    {% for proveedor in proveedores %}
+                    <option value="{{proveedor.id}}"> {{proveedor.id}} - {{proveedor.nombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
             <div class="form-row">
                 <!-- Genero -->

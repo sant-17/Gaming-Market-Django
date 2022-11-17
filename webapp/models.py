@@ -1,5 +1,6 @@
 from email.policy import default
 from django.db import models
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Proveedor(models.Model):
@@ -28,31 +29,14 @@ class Juego(models.Model):
     esrb = models.CharField(max_length=30, choices=ESRB_CHOISES, default='RP')
     multijugador = models.BooleanField(default=False)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     imagen = models.URLField(null=True, blank=True)
     habilitado = models.BooleanField(default=False)
     generos = models.ManyToManyField(Genero)
+    proveedor = models.ForeignKey(Proveedor, on_delete= models.DO_NOTHING)
 
     def __str__(self) -> str:
         return f"{self.titulo}"
-
-class Compra(models.Model):
-    fecha = models.DateField()
-    valor = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
-    id_proveedor = models.ForeignKey(Proveedor, on_delete=models.DO_NOTHING)
-
-    def __str__(self) -> str:
-        return f"{self.fecha} - {self.valor}"
-
-class Compra_detalle(models.Model):
-    id_compra = models.ForeignKey(Compra, on_delete=models.DO_NOTHING)
-    id_juego = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
-    cantidad = models.PositiveIntegerField()
-
-    def __str__(self) -> str:
-        return f"{self.id_compra} - {self.id_juego.titulo}"
-
-
 
 class Usuario(models.Model):
     email = models.EmailField(max_length=100, unique = True)
