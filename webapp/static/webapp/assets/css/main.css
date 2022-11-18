@@ -2789,3 +2789,27 @@ table.order-details tbody td {
   border-radius: 50px;
   font-weight: 700;
 }
+
+.formulario {
+    padding: 20px;
+}
+  
+.formulario form p input {
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 100%;
+    border-radius: 3px;
+}
+  
+.formulario form p textarea {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    height: 120px;
+    resize: none;
+}
+
+.formulario form p:last-child {
+    margin-bottom: 0;
+}

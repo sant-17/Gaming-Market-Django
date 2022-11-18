@@ -13,11 +13,11 @@ urlpatterns = [
 
     # PROVEEDORES
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
-    path('formularioProveedor/', views.formularioProveedor, name="formularioProveedor"),
+    path('proveedores/nuevo', views.formularioProveedor, name="formularioProveedor"),
     path('guardarProveedor/', views.guardarProveedor, name="guardarProveedor"),
     path('deshabilitarProveedor/<id>', views.deshabilitarProveedor, name="deshabilitarProveedor"),
     path('habilitarProveedor/<id>', views.habilitarProveedor, name="habilitarProveedor"),
-    path('edicionProveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
+    path('proveedores/actualizar-proveedor/<id>', views.edicionProveedor, name="edicionProveedor"),
     path('editarProveedor/', views.editarProveedor, name="editarProveedor"),
     path('buscarProveedor/', views.buscarProveedor, name="buscarProveedor"),
     
