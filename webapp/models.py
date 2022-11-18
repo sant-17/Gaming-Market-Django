@@ -30,7 +30,7 @@ class Juego(models.Model):
     multijugador = models.BooleanField(default=False)
     stock = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
-    imagen = models.URLField(null=True, blank=True)
+    imagen = models.ImageField(upload_to= 'webapp/images', default='webapp/images/default.jpg')
     habilitado = models.BooleanField(default=False)
     generos = models.ManyToManyField(Genero)
     proveedor = models.ForeignKey(Proveedor, on_delete= models.DO_NOTHING)
@@ -64,10 +64,11 @@ class Venta(models.Model):
 
 class Venta_detalle(models.Model):
     id_juego = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
+    id_venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
     cantidad = models.PositiveIntegerField()
     precio = models.DecimalField(max_digits=15, decimal_places=2)
     subtotal = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
-    id_venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
+    
     
     def __str__(self) -> str:
         return f"{self.id_juego.titulo} - {self.cantidad}"

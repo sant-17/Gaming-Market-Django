@@ -33,10 +33,7 @@
                         <th>Online</th>
                         <th>Stock</th>
                         <th>Precio</th>
-                        <!--
                         <th>Imágen</th>
-                        -->
-                        
                         <th>Habilitado</th>
                         <th>Géneros</th>
                         <th>Proveedor</th>
@@ -55,6 +52,7 @@
                         <td> {{juego.multijugador}}</td>
                         <td> {{juego.stock}}</td>
                         <td> ${{juego.precio|floatformat}}</td>
+                        <th><img src="{{juego.imagen.url}}" alt=""></th>
                         <td> {% if juego.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
                         <td> 
                             {% for genero in juego.generos.all %}

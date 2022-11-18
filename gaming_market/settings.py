@@ -122,3 +122,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Configuración para fotos en DB y rutas
+MEDIA_ROOT = BASE_DIR / 'uploads'
+MEDIA_URL = 'uploads/'
+STATIC_ROOT = 'static/'

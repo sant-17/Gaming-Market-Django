@@ -1,0 +1,70 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block titulo %}Nuestros juegos{% endblock titulo %}
+
+
+
+{% block contenedor %}
+<!-- Letrero - Inicio -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Store</p>
+                    <h1>Nuestros Juegos</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Letrero - Final -->
+
+<div class="product-section mt-150 mb-150">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product-filters">
+                    <ul>
+                        <li class="active" data-filter="*">All</li>
+                        <li data-filter=".strawberry">Strawberry</li>
+                        <li data-filter=".berry">Berry</li>
+                        <li data-filter=".lemon">Lemon</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row product-lists">
+            {% for juego in juegos %}
+            <div class="col-lg-4 col-md-6 text-center">
+                <div class="single-product-item">
+                    <div class="product-image">
+                        <a href=""><img src="{{juego.imagen.url}}" alt=""></a>
+                    </div>
+                    <h3> {{juego.titulo}}</h3>
+                    <p class="product-price"><span>Precio</span> ${{juego.precio|floatformat}} </p>
+                    <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="pagination-wrap">
+                    <ul>
+                        <li><a href="#">Prev</a></li>
+                        <li><a class="disabled" href="#">1</a></li>
+                        <li><a class="active" href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">Next</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenedor %}

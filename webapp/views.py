@@ -50,6 +50,10 @@ def logout(request):
 def index(request):
     return render(request, 'webapp/index.html')
 
+def tienda(request):
+    juegos = Juego.objects.filter(habilitado = True)
+    return render(request, 'webapp/tienda/productos.html', {"juegos": juegos})
+
 # PROVEEDORES
 def listarProveedores(request):
     proveedores = Proveedor.objects.order_by('-habilitado')
@@ -383,3 +387,4 @@ def buscarEmpleado(request):
     else:
         messages.error(request, "No envió datos")
         return redirect('webapp:listarEmpleados')
+

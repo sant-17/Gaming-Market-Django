@@ -8,7 +8,8 @@ urlpatterns = [
 
     path('loginFormulario/', views.loginFormulario, name = 'loginFormulario'),
     path('login/', views.login, name = 'login'),
-    path('logout', views.logout, name = 'logout'),
+    path('logout/', views.logout, name = 'logout'),
+    path('tienda/', views.tienda, name = 'tienda'),
 
     # PROVEEDORES
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
