@@ -48,7 +48,8 @@ def logout(request):
         return redirect('webapp:index')
 
 def index(request):
-    return render(request, 'webapp/index.html')
+    juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
+    return render(request, 'webapp/index.html', {"juegos": juegos})
 
 def tienda(request):
     juegos = Juego.objects.filter(habilitado = True)
