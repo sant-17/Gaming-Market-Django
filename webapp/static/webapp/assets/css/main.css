@@ -2762,6 +2762,12 @@ table.order-details tbody td {
 
 ----------------------------------------------------------------------------- */
 
+.form-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .form-btns button[type=submit] {
   border: none;
   background-color: #F28123;
