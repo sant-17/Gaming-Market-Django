@@ -143,7 +143,7 @@ def buscarProveedor(request):
 # GENEROS
 def listarGeneros(request):
     generos = Genero.objects.all()
-    paginator = Paginator(generos, 1)
+    paginator = Paginator(generos, 10)
     page_number = request.GET.get('page')
 
     #Sobreescribiendo la salida de la consulta

@@ -16,7 +16,7 @@
                     <input name="nombre" type="text" placeholder="Ingrese el nombre" required>
                 </p>
                 <p>Email del proveedor
-                    <input name="email" type="email" placeholder="Ingrese el email" required>
+                    <input name="email" type="email" placeholder="Ingrese el email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
                 </p>
                 <p>Número de contacto del proveedor
                     <input name="telefono" type="number" placeholder="Ingrese el número telefónico" min="0" oninput="validity.valid||(value='');" required>

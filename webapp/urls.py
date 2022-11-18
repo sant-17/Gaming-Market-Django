@@ -23,7 +23,7 @@ urlpatterns = [
     
     # GENEROS
     path('generos/', views.listarGeneros, name="listarGeneros"),
-    path('formularioGenero/', views.formularioGenero, name="formularioGenero"),
+    path('generos/nuevo', views.formularioGenero, name="formularioGenero"),
     path('guardarGenero/', views.guardarGenero, name="guardarGenero"),
     path('eliminarGenero/<id>', views.eliminarGenero, name="eliminarGenero"),
     path('edicionGenero/<id>', views.edicionGenero, name="edicionGenero"),
