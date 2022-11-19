@@ -158,7 +158,7 @@
 
 	.sticky-wrapper.is-sticky .top-header-area {
 	    position: absolute!important;
-	    background-color: black;
+	    background-color: transparent;
 	}
 	.featured-box {
 	    padding: 30px;
@@ -409,7 +409,7 @@
 
 	.sticky-wrapper.is-sticky .top-header-area {
 	    position: absolute!important;
-	    background-color: black;
+	    background-color: transparent;
 	    padding: 25px 0;
 	}
 	.featured-box {

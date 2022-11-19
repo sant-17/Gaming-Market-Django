@@ -41,7 +41,7 @@ class Juego(models.Model):
 class Usuario(models.Model):
     email = models.EmailField(max_length=100, unique = True)
     clave = models.CharField(max_length=254)
-    roles_CHOISES = (('A', 'Administrados'), ('C', 'Cliente'), ('E', 'Empleado'))
+    roles_CHOISES = (('A', 'Administrador'), ('C', 'Cliente'), ('E', 'Empleado'))
     rol = models.CharField(max_length=30, choices=roles_CHOISES, default='C')
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
@@ -51,8 +51,6 @@ class Usuario(models.Model):
 
     def __str__(self) -> str:
         return f"{self.email}"
-
-
 
 class Venta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True, blank=True)

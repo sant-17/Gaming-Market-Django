@@ -1,5 +1,3 @@
-
-from multiprocessing import context
 from django.shortcuts import render, redirect
 from .models import *
 
@@ -11,6 +9,9 @@ from django.db import IntegrityError
 
 # Paginador
 from django.core.paginator import Paginator
+
+#Almacenamiento de archivos
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
@@ -48,7 +49,8 @@ def logout(request):
         return redirect('webapp:index')
 
 def index(request):
-    return render(request, 'webapp/index.html')
+    juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
+    return render(request, 'webapp/index.html', {"juegos": juegos})
 
 def tienda(request):
     juegos = Juego.objects.filter(habilitado = True)
@@ -142,7 +144,7 @@ def buscarProveedor(request):
 # GENEROS
 def listarGeneros(request):
     generos = Genero.objects.all()
-    paginator = Paginator(generos, 1)
+    paginator = Paginator(generos, 10)
     page_number = request.GET.get('page')
 
     #Sobreescribiendo la salida de la consulta
@@ -217,6 +219,14 @@ def formularioJuego(request):
 def guardarJuego(request):
     try:
         if request.method == "POST":
+
+            if request.FILES:
+                fss = FileSystemStorage()
+                i = request.FILES["imagen"]
+                file = fss.save("webapp/images/" + i.name, i)
+            else:
+                file = 'webapp/images/default.jpg'
+
             proveedor = Proveedor.objects.get(pk = request.POST["proveedor"])
             juego = Juego(
                 titulo = request.POST['titulo'],
@@ -228,9 +238,10 @@ def guardarJuego(request):
                 multijugador = request.POST['multijugador'],
                 stock = request.POST['stock'],
                 precio = request.POST['precio'],
-                imagen = request.POST['imagen'],
                 habilitado = request.POST['habilitado'],
-                proveedor = proveedor
+                proveedor = proveedor,
+                imagen = file
+
             )
             juego.save()
             generos = request.POST.getlist('generos')
@@ -264,6 +275,13 @@ def edicionJuego(request, id):
 def editarJuego(request):
     try:
         if request.method == "POST":
+            if request.FILES:
+                fss = FileSystemStorage()
+                i = request.FILES["imagen"]
+                file = fss.save("webapp/images/" + i.name, i)
+            else:
+                juegoTemp = Juego.objects.get(id = request.POST['id'])
+                file = juegoTemp.imagen
             proveedor = Proveedor.objects.get(pk = request.POST["proveedor"])
             juego = Juego.objects.get(id = request.POST['id'])
             juego.titulo = request.POST['titulo']
@@ -274,7 +292,7 @@ def editarJuego(request):
             juego.multijugador = request.POST['multijugador']
             juego.stock = request.POST['stock']
             juego.precio = request.POST['precio']
-            juego.imagen = request.POST['imagen']
+            juego.imagen = file
             juego.habilitado = request.POST['habilitado']
             juego.proveedor = proveedor
             juego.generos.clear()
@@ -307,6 +325,11 @@ def buscarJuego(request):
 # USUARIO-EMPLEADOS
 def listarUsuariosEmpleados(request):
     usuarios = Usuario.objects.order_by('-habilitado').filter(rol = 'E')
+    paginator = Paginator(usuarios, 10)
+    page_number = request.GET.get('page')
+
+    usuarios = paginator.get_page(page_number)
+
     return render(request, 'webapp/usuario-empleado/listar_empleados.html', {'usuarios': usuarios})
 
 def formularioUsuarioEmpleado(request):
