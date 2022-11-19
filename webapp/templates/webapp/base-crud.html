@@ -53,29 +53,25 @@
 						<!-- Navbar - Inicio -->
 						<nav class="main-menu">
 							<ul>
-								<li><a href="#">Proveedores</a>
-									<ul class="sub-menu">
-										<li><a href="{% url 'webapp:formularioProveedor' %}">Registrar Proveedor</a></li>
-										<li><a href="{% url 'webapp:listarProveedores' %}">Listar Proveedores</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Juegos</a>
-									<ul class="sub-menu">
-										<li><a href="{% url 'webapp:formularioJuego' %}">Registrar Juego</a></li>
-										<li><a href="{% url 'webapp:listarJuegos' %}">Listar Juegos</a></li>
-										<hr/>
-										<li><a href="{% url 'webapp:formularioGenero' %}">Registrar Género</a></li>
-										<li><a href="{% url 'webapp:listarGeneros' %}">Listar Géneros</a></li>
-									</ul>
-								</li>						
+								<li>
+                                    <a href="{% url 'webapp:listarProveedores' %}">Proveedores</a>
+                                </li>
+								<li>
+                                    <a href="{% url 'webapp:listarGeneros' %}">Generos</a>
+                                </li>
+								<li>
+                                    <a href="{% url 'webapp:listarJuegos' %}">Juegos</a>
+                                </li>
+								<li>
+                                    <a href="{% url 'webapp:listarEmpleados' %}">Empleados</a>
+                                </li>						
 								<li>
                                     <div class="header-icons">
+										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
                                     </div>
                                 </li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-						<div class="mobile-menu"></div>
 						<!-- Navbar - Final -->
 					</div>
 				</div>
@@ -92,6 +88,9 @@
 					<div class="breadcrumb-text">
 						<p>{% block encabezado %}Encabezado{% endblock encabezado %}</p>
 						<h1>{% block subencabezado %}Subencabezado{% endblock subencabezado %}</h1>
+						<div class="hero-btns">
+							<a href="{% block agregarUrl %}BtnHref{% endblock agregarUrl %}" class="boxed-btn">{% block btnTitulo %}BtnTitulo{% endblock btnTitulo %}</a>
+						</div>
 					</div>
 				</div>
 			</div>

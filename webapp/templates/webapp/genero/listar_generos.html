@@ -1,10 +1,12 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Géneros de Juegos{% endblock titulo %}
+{% block titulo %}Géneros{% endblock titulo %}
 
-{% block encabezado %}Lista{% endblock encabezado %}
+{% block encabezado %}Listado{% endblock encabezado %}
 {% block subencabezado %}Géneros de Juegos{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioGenero' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar género{% endblock btnTitulo %}
 
 {% block contenedor %}
 

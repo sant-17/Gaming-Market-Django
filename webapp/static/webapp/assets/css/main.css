@@ -494,7 +494,7 @@ a.boxed-btn, a.bordered-btn, a.cart-btn {
 }
 
 .breadcrumb-section {
-  padding: 150px 0;
+  padding: 50px 0;
   background-size: cover;
   background-position: center center;
   position: relative;
@@ -791,7 +791,7 @@ a.mobile-show {
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 40px;
-  color: #fff;
+  color: #F28123;
 }
 
 .search-bar-tablecell button[type=submit] {
@@ -805,19 +805,19 @@ a.mobile-show {
 }
 
 .search-bar-tablecell input::-webkit-input-placeholder {
-  color: #fff;
+  color: #F28123;
 }
 
 .search-bar-tablecell input:-ms-input-placeholder {
-  color: #fff;
+  color: #F28123;
 }
 
 .search-bar-tablecell input::-ms-input-placeholder {
-  color: #fff;
+  color: #F28123;
 }
 
 .search-bar-tablecell input::placeholder {
-  color: #fff;
+  color: #F28123;
 }
 
 .search-bar-tablecell button[type=submit] i {
@@ -1687,7 +1687,7 @@ p.excerpt {
 }
 
 .pagination-wrap ul li a {
-  color: #6f6f6f;
+  color: #000000;
   font-size: 15px;
   background-color: #f3f3f3;
   display: inline-block;
@@ -2800,6 +2800,7 @@ table.order-details tbody td {
     width: 100%;
     border-radius: 3px;
 }
+
   
 .formulario form p textarea {
     width: 100%;

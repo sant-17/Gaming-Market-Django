@@ -1,10 +1,12 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Formulario de Género{% endblock titulo %}
+{% block titulo %}Nuevo Género{% endblock titulo %}
 
 {% block encabezado %}Formulario{% endblock encabezado %}
-{% block subencabezado %}Registro de género de juego{% endblock subencabezado %}
+{% block subencabezado %}Nuevo Proveedor{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioProveedor' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar proveedor{% endblock btnTitulo %}
 
 {% block contenedor %}
 <br>

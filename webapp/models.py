@@ -52,8 +52,6 @@ class Usuario(models.Model):
     def __str__(self) -> str:
         return f"{self.email}"
 
-
-
 class Venta(models.Model):
     fecha = models.DateTimeField(auto_now_add=True, blank=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.DO_NOTHING)

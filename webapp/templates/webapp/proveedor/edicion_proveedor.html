@@ -1,23 +1,25 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Edición de Proveedor{% endblock titulo %}
+{% block titulo %}Actualizando Proveedor{% endblock titulo %}
 
 {% block encabezado %}Edición{% endblock encabezado %}
-{% block subencabezado %}Ediión de Proveedor{% endblock subencabezado %}
+{% block subencabezado %}Actualizando Proveedor{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioProveedor' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar proveedor{% endblock btnTitulo %}
 
 {% block contenedor %}
 <br>
 <div class="contact-from-section mb-100">
     <div class="container">
         <div class="formulario">
-            <form action="{% url 'webapp:editarProveedor' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <form action="{% url 'webapp:editarProveedor' %}" class="needs-validation" enctype="multipart/form-data" method="post">{% csrf_token %}
                 <input value="{{proveedor.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
                 <p>Nombre completo del proveedor
                     <input value="{{proveedor.nombre}}" name="nombre" type="text" placeholder="Ingrese el nombre" required>
                 </p>
                 <p>Email del proveedor
-                    <input value="{{proveedor.email}}" name="email" type="email" placeholder="Ingrese el email" required>
+                    <input value="{{proveedor.email}}" name="email" type="email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" placeholder="Ingrese el email" required>
                 </p>
                 <p>Número de contacto del proveedor
                     <input value="{{proveedor.telefono}}" name="telefono" type="number" placeholder="Ingrese el número telefónico" min="0" oninput="validity.valid||(value='');" required>

@@ -1,26 +1,29 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Formulario de Proveedor{% endblock titulo %}
+{% block titulo %}Nuevo Proveedor{% endblock titulo %}
 
 {% block encabezado %}Formulario{% endblock encabezado %}
-{% block subencabezado %}Registro de Proveedor{% endblock subencabezado %}
+{% block subencabezado %}Nuevo Género{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioGenero' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar género{% endblock btnTitulo %}
 
 {% block contenedor %}
-<div class="contact-from-section mt-150 mb-150">
+<br>
+<div class="contact-from-section mb-150">
     <div class="container">
-        <form action="{% url 'webapp:guardarGenero' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
-            <div class="form-group">
-                <label for="nombreGenero">Nombre del género del juego</label>
-                    <input name="nombre" type="text" class="form-control" placeholder="Nombre" required>
-            </div>
-            <br/>
-            <!-- Botón del enviar formulario-->
-            <div class="form-btns">
-                <button type="submit">Enviar formulario</button>
-                <button type="reset">Limpiar formulario</button>
-            </div>
-        </form>
+        <div class="formulario">
+            <form action="{% url 'webapp:guardarGenero' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+                <p>Nombre del género
+                    <input name="nombre" type="text" placeholder="Ingrese el nombre" required>
+                </p>
+                <!-- Botón del enviar formulario-->
+                <div class="form-btns">
+                    <button type="submit">Enviar formulario</button>
+                    <button type="reset">Limpiar formulario</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock contenedor %}

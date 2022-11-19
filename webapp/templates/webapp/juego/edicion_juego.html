@@ -1,53 +1,78 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Formulario de Juego{% endblock titulo %}
+{% block titulo %}Actualizando Juego{% endblock titulo %}
 
-{% block encabezado %}Formulario{% endblock encabezado %}
-{% block subencabezado %}Registro de juego{% endblock subencabezado %}
+{% block encabezado %}Edición{% endblock encabezado %}
+{% block subencabezado %}Actualizando Juego{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioJuego' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar juego{% endblock btnTitulo %}
 
 {% block contenedor %}
-<div class="contact-from-section mt-150 mb-150">
+<br>
+<div class="contact-from-section mb-150">
     <div class="container">
-        <form action="{% url 'webapp:editarJuego' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
-            <input value="{{juego.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
-            <div class="form-row">
-                <!-- Nombre del juego -->
-                <div class="col">
-                    <label for="nombreJuego">Nombre del juego</label>
-                    <input value="{{juego.titulo}}" name="titulo" type="text" class="form-control" placeholder="Nombre" required>
-                </div>
-                <!-- Fecha de lanzamiento del juego -->
-                <div class="col">
-                    <label for="lanzamiendoJuego">Fecha de lanzamiento</label>
-                    <input value="{{juego.fecha_lanzamiento|date:'Y-m-d'}}" name="fecha_lanzamiento" type="date" class="form-control" placeholder="{{juego.fecha_lanzamiento}}" required>
-                </div>
-            </div>
-            <br/>
-            <div class="form-row">
-                <!-- Desarrollador del juego -->
-                <div class="col">
-                    <label for="desarrolladorJuego">Desarrollador del juego</label>
-                    <input value="{{juego.desarrollador}}" name="desarrollador" type="text" class="form-control" placeholder="Desarrollador" required>
-                </div>
-                <!-- Editor del juego -->
-                <div class="col">
-                    <label for="editorJuego">Editor del juego</label>
-                    <input value="{{juego.editor}}" name="editor" type="text" class="form-control" placeholder="Editor" required>
-                </div>
-            </div>
-            <br/>
-            <!-- Descripción del juego -->
-            <div class="form-group">
-                <label for="descripcionJuego">Descripción del juego</label>
-                <textarea name="descripcion" class="form-control" id="descripcionJuego" placeholder="Ingrese una descripción"
-                    name="descripcionTitulo" rows="2" required>{{juego.descripcion}}</textarea>
-            </div>
-            <div class="row">
-                <!-- ESRB -->
-                
-                <div class="col">
-                    <label for="esrbJuego">Clasificación ESRB</label>
+        <div class="formulario">
+            <form action="{% url 'webapp:editarJuego' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+                <input value="{{juego.id}}" readonly name="id" type="hidden" class="form-control" placeholder="ID" required>
+                <p>Título del juego
+                    <input value="{{juego.titulo}}" name="titulo" type="text" placeholder="Título" required>
+                </p>
+                <p>Fecha de lanzamiento
+                    <input value="{{juego.fecha_lanzamiento|date:'Y-m-d'}}" name="fecha_lanzamiento" type="date" required>
+                </p>
+                <p>Desarrollador del juego
+                    <input value="{{juego.desarrollador}}" name="desarrollador" type="text" placeholder="Desarrollador" required>
+                </p>
+                <p>Editor del juego
+                    <input value="{{juego.editor}}" name="editor" type="text" placeholder="Editor" required>
+                </p>
+                <p>Descripción del juego
+                    <textarea name="descripcion" cols="30" rows="10" placeholder="Descripción">{{juego.descripcion}}</textarea>
+                </p>
+                <strong><span> - actual: {{juego.imagen}}</span></strong>
+                <p>Imágen del juego
+                    <input type="file" name="imagen" accept="image/*">
+                </p>
+                <p>Precio de venta del juego
+                    <input value="{{juego.precio|floatformat}}" type="number" name="precio" placeholder="Precio" min="0" oninput="validity.valid||(value='');">
+                </p>
+                <p>Stock del juego
+                    <input value="{{juego.stock}}" type="number" name="stock" placeholder="Stock" min="0" oninput="validity.valid||(value='');">
+                </p>
+                <p><!-- Multijugador y habilitado -->
+                    <div class="row">
+                        <div class="col">
+                            <label for="multijugadorJuego">¿Es multijugador? (Online)</label>
+                            <br/>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input name="multijugador" type="radio" class="form-check-input" {% if juego.multijugador %} checked {% endif %} value="True">Sí
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input name="multijugador" type="radio" class="form-check-input" {% if not juego.multijugador %} checked {% endif %} value="False">No
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="habilitadoJuego">¿Habilitado para la venta?</label>
+                            <br>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="habilitado" {% if juego.habilitado %} checked {% endif %} value="True">Sí
+                                </label>
+                              </div>
+                              <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="habilitado" {% if not juego.habilitado %} checked {% endif %}value="False">No
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+                <p>Clasificación ESRB del juego
                     <select name="esrb" class="form-control" id="esrbJuego" required>
                         <option disabled selected value>- Elija una clasificación -</option>
                         <option {% if juego.esrb == 'E' %} selected {% endif %} value="E">Everyone</option>
@@ -57,92 +82,33 @@
                         <option {% if juego.esrb == 'AO' %} selected {% endif %} value="AO">Adults Only +18</option>
                         <option {% if juego.esrb == 'RP' %} selected {% endif %} value="RP">Rating Pending</option>
                     </select>
-                </div>
-                
-                
-                <!-- Multijugador -->
-                <div class="col">
-                    <label for="multijugadorJuego">¿Es multijugador? (Online)</label>
-                    <br/>
-                    <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input name="multijugador" type="radio" class="form-check-input" {% if juego.multijugador %} checked {% endif %} value="True">Sí
-                        </label>
-                      </div>
-                      <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input name="multijugador" type="radio" class="form-check-input" {% if not juego.multijugador %} checked {% endif %} value="False">No
-                        </label>
-                    </div>
-                </div>
-            
-            </div>
-            <br/>
-
-            <div class="form-row">
-                <!-- Precio de venta -->
-                <div class="col">
-                    <label for="precioJuego">Precio de venta</label>
-                    <input value="{{juego.precio|floatformat}}" name="precio" type="number" class="form-control" placeholder="Precio" required>
-                </div>
-                <!-- URL Imágen -->
-                <div class="col">
-                    <label for="imagenJuego">URL de la imágen del juego</label>
-                    <input value="{{juego.imagen}}" name="imagen" type="url" class="form-control" placeholder="URL" required>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <!-- Stock -->
-                <div class="col">
-                    <label for="stockJuego">Stock</label>
-                    <input value="{{juego.stock}}" name="stock" type="number" class="form-control" placeholder="Cantidad">
-                </div>
-                <!-- Habilitado -->
-                <div class="col">
-                    <label for="habilitadoJuego">¿Habilitado para la venta?</label>
-                    <br>
-                    <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="habilitado" {% if juego.habilitado %} checked {% endif %} value="True">Sí
-                        </label>
-                      </div>
-                      <div class="form-check-inline">
-                        <label class="form-check-label">
-                            <input type="radio" class="form-check-input" name="habilitado" {% if not juego.habilitado %} checked {% endif %} value="False">No
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="proveedorJuego">Proveedor</label>
-                <select name="proveedor" id="" class="form-control" required>
-                    <option disabled>Seleccione un proveedor</option>
-                    {% for proveedor in proveedores %}
-                    <option value="{{proveedor.id}}" {% if juego.proveedor.id == proveedor.id %} selected {% endif %}> {{proveedor.id}} - {{proveedor.nombre}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-row">
-                <!-- Genero -->
-                <div class="col">
-                    <label for="generoJuego">Género del juego </label>
-                    <br>
-
-                    {% for genero in generos %}
+                </p>
+                <p>Último proveedor del juego
+                    <select name="proveedor" id="" class="form-control" required>
+                        <option disabled>Seleccione un proveedor</option>
+                        {% for proveedor in proveedores %}
+                        <option value="{{proveedor.id}}" {% if juego.proveedor.id == proveedor.id %} selected {% endif %}> {{proveedor.id}} - {{proveedor.nombre}}</option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <div class="form-row"><!--Géneros del juego-->
+                    <!-- Genero -->
+                    <div class="col">
+                        <label for="generoJuego">Géneros del juego</label>
+                        <br>
+                        {% for genero in generos %}
                         <input type="checkbox" name="generos" id="option{{genero.id}}" value={{genero.id}} {% if genero in juego.generos.all %} checked {% endif %}/>
                         <label for="option{{genero.id}}"><b>{{genero.nombre}}</b></label><br />
-                    {% endfor %}
-
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-            <br>
-
-            <div class="form-btns">
-                <button type="submit">Enviar formulario</button>
-                <button type="reset">Limpiar formulario</button>
-            </div>
-        </form>
+                <br>
+                <div class="form-btns">
+                    <button type="submit">Enviar formulario</button>
+                    <button type="reset">Limpiar formulario</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock contenedor %}
