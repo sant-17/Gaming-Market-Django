@@ -57,14 +57,13 @@
                                 </li>
 								<li><a href="{% url 'webapp:tienda' %}">Juegos</a></li>
 								<li>
+									
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 										{% if not request.session.logueo %}
-                                        <a class="user" href=""><i class="fas fa-user"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="#" data-toggle="modal" data-target="#loginModal">Ingresar</a></li>
-                                            <li><a href="sign-up.html">Registrarse</a></li>
-                                        </ul>
+										<a href="" data-toggle="modal" data-target="#loginModal">Ingresar</a>
+										<a href="{% url 'webapp:signup' %}">Registrarse</a>
+
 										{% else %}
 										<a class="user" href=""><i class="fas fa-user"></i></a>
                                     	<ul class="sub-menu">
@@ -95,7 +94,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-title text-center">
-                        <h4>Logueate</h4>
+                        <h2>Logueate</h2>
                     </div>
                     <div class="d-flex flex-column text-center">
                         <form action="{% url 'webapp:login' %}" method="post">{% csrf_token %}
@@ -105,12 +104,17 @@
                             <div class="form-group">
                                 <input type="password" name="clave" class="form-control" id="clave" placeholder="Tu contraseña...">
                             </div>
-                            <button type="submit" class="btn btn-info btn-block btn-round">Ingresar</button>
+                            <div class="form-btns">
+								<button type="submit">Enviar formulario</button>
+							</div>
+							
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <div class="signup-section">¿Aún no tienes una cuenta? <a href="sign-up.html" class="text-info"> Registrate</a>.</div>
+					<div class="registrarse-link">
+						<p>¿Aún no tienes cuenta? <a href="{% url 'webapp:signup' %}">Registrate aquí</a></p>
+					</div>
                 </div>
             </div>
         </div>

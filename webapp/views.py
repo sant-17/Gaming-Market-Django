@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+from datetime import date
 
 # Mensajes tipo cookies temporales
 from django.contrib import messages
@@ -15,8 +16,30 @@ from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 
-def loginFormulario(request):
-    pass
+def signup(request):
+    return render(request, 'webapp/tienda/sign-up.html')
+
+def guardarCliente(request):
+    try:
+        if request.method == "POST":
+            usuario = Usuario(
+                nombre=request.POST['nombre'],
+                apellido=request.POST['apellido'],
+                fecha_nacimiento=request.POST['fecha_nacimiento'],
+                email=request.POST['email'],
+                clave=request.POST['clave'],
+            )
+            usuario.full_clean()
+            if usuario.esMayorDeEdad():
+                usuario.save()
+                messages.success(request, f"Su usuario ha sido creado con éxito")
+            else:
+                messages.warning(request, "Lo sentimos, no admitimos menores de edad")
+        else:
+            messages.warning(request, "Usted no ha enviado datos")
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:index')
 
 def login(request):
     if request.method == "POST":
@@ -50,11 +73,12 @@ def logout(request):
 
 def index(request):
     juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
-    return render(request, 'webapp/index.html', {"juegos": juegos})
+    return render(request, 'webapp/tienda/landing-page.html', {"juegos": juegos})
 
 def tienda(request):
     juegos = Juego.objects.filter(habilitado = True)
     return render(request, 'webapp/tienda/productos.html', {"juegos": juegos})
+
 
 # PROVEEDORES
 def listarProveedores(request):

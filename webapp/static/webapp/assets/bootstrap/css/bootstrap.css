@@ -2669,8 +2669,8 @@ fieldset:disabled a.btn {
 
 .btn-info {
   color: #fff;
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  background-color: #F28123;
+  border-color: #F28123;
 }
 
 .btn-info:hover {
@@ -10059,7 +10059,7 @@ a.text-success:hover, a.text-success:focus {
 }
 
 .text-info {
-  color: #17a2b8 !important;
+  color: #F28123 !important;
 }
 
 a.text-info:hover, a.text-info:focus {

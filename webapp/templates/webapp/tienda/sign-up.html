@@ -1,0 +1,79 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block titulo %}Gaming Market - Store{% endblock titulo %}
+
+
+
+{% block contenedor %}
+<!-- Letrero - Inicio -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Para acceder a nuestros productos</p>
+                    <h1>Registrate</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Letrero - Final -->
+
+<!-- contact form -->
+<br>
+<div class="contact-from-section mb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5 mb-lg-0">
+                <div class="form-title">
+                    <h2>¡Registrate y hazte miembro!</h2>
+                    <p>Es rápido y fácil</p>
+                </div>
+                
+                <div>
+                    <form action="{% url 'webapp:save' %}" class="needs-validation" method="post">
+                        {% csrf_token %}
+                        <p>
+                            <input type="text" placeholder="Nombre" name="nombre" class="formularioDoble" required>
+                            <input type="text" placeholder="Apellidos" name="apellido" class="formularioDoble" required>
+                        </p>
+                        <p>Fecha de nacimiento
+                            <input type="date" name="fecha_nacimiento" class="formularioSolo" required>
+                        </p>
+                        <p>
+                            <input type="email" placeholder="Correo electrónico" name="email" class="formularioSolo" required>
+                        </p>
+                        <p>
+                            <input type="password" placeholder="Contraseña nueva" name="clave" class="formularioSolo" required>
+                        </p>
+                        <br>
+                        <div class="form-btns">
+                            <button type="submit">Crear cuenta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="contact-form-wrap">
+                    <div class="contact-form-box">
+                        <h4><i class="fas fa-shopping-cart"></i> Usa el carrito</h4>
+                        <p>Para agregar los juegos <br> que quieres comprar</p>
+                    </div>
+                    <div class="contact-form-box">
+                        <h4><i class="far fa-clock"></i> Rapidez</h4>
+                        <p>Te llegan los detalles de <br> tu compra de forma rápida </p>
+                    </div>
+                    <div class="contact-form-box">
+                        <h4><i class="fas fa-address-book"></i> Soporte 24/7</h4>
+                        <p>Nuestro equipo está siempre <br> disponible para ayudarte</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end contact form -->
+
+{% endblock contenedor %}

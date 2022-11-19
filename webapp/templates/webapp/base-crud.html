@@ -97,6 +97,11 @@
 		</div>
 	</div>
 	<!-- Letrero - Final -->
+	{% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags != 'error' %}{{ message.tags }}{% elif message.tags == 'error' %}danger{% endif %}" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
 	<!-- Registro - Inicio -->
 	{% block contenedor %}{% endblock contenedor %}

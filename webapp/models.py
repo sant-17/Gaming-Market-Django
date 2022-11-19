@@ -1,6 +1,7 @@
 from email.policy import default
 from django.db import models
 from django.core.validators import MinValueValidator
+from datetime import date
 
 # Create your models here.
 class Proveedor(models.Model):
@@ -45,9 +46,17 @@ class Usuario(models.Model):
     rol = models.CharField(max_length=30, choices=roles_CHOISES, default='C')
     nombre = models.CharField(max_length=50)
     apellido = models.CharField(max_length=50)
-    telefono = models.IntegerField()
+    telefono = models.IntegerField(blank=True, null=True, default=None)
     fecha_nacimiento = models.DateField()
     habilitado = models.BooleanField(default = True)
+
+    def esMayorDeEdad(self):
+        hoy = date.today()
+        edad = int(hoy.year) - int(self.fecha_nacimiento.year) - ((int(hoy.month), int(hoy.day)) < (int(self.fecha_nacimiento.month), int(self.fecha_nacimiento.day)))
+        if int(edad) < 18:
+            return False
+        else:
+            return True
 
     def __str__(self) -> str:
         return f"{self.email}"

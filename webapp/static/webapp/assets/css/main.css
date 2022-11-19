@@ -2261,7 +2261,7 @@ ul.social-link-team li a {
   line-height: 1.8;
 }
 
-.contact-form form p input[type=text], .contact-form form p input[type=tel], .contact-form form p input[type=email] {
+.contact-form form p input[type=text], .contact-form form p input[type=number], .contact-form form p input[type=email], .contact-form form p input[type=password] {
   width: 49%;
   padding: 15px;
   border: 1px solid #ddd;
@@ -2779,6 +2779,11 @@ table.order-details tbody td {
   font-weight: 700;
 }
 
+.form-btns button[type=submit]:hover {
+  background-color: #051922;
+  color: #F28123;
+}
+
 .form-btns button[type=reset] {
   border: 2px solid #F28123;
   background-color: white;
@@ -2790,6 +2795,8 @@ table.order-details tbody td {
   font-weight: 700;
 }
 
+
+
 .formulario {
     padding: 20px;
 }
@@ -2799,6 +2806,13 @@ table.order-details tbody td {
     padding: 15px;
     width: 100%;
     border-radius: 3px;
+}
+
+.formulario form p.doble input {
+  border: 1px solid #ddd;
+  padding: 15px;
+  width: 49%;
+  border-radius: 3px;
 }
 
   
@@ -2813,4 +2827,26 @@ table.order-details tbody td {
 
 .formulario form p:last-child {
     margin-bottom: 0;
+}
+
+.registrarse-link a{
+  color: #F28123;
+}
+
+.registrarse-link a:hover{
+  color: #00700d;
+}
+
+input.formularioDoble{
+  width: 49%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+input.formularioSolo{
+  width: 98.5%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
