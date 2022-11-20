@@ -4,14 +4,21 @@ from . import views
 app_name = "webapp"
 
 urlpatterns = [
-    path('', views.index, name = 'index'),
 
+    # TIENDA
+    path('', views.index, name = 'index'),
     path('login/', views.login, name = 'login'),
     path('logout/', views.logout, name = 'logout'),
     path('sign-up/', views.signup, name = 'signup'),
     path('save/', views.guardarCliente, name = 'save'),
-    path('tienda/', views.tienda, name = 'tienda'),
-    
+    path('shop/', views.tienda, name = 'tienda'),
+    path('product/<id>', views.producto, name = 'producto'),
+
+    # INICIO DE SESIÓN CRUD
+    path('login-empleados/', views.formLoginCrud, name = 'loginEmpleados'),
+    path('login-crud/', views.loginCrud, name = 'loginCrud'),
+    path('logout-crud/', views.logoutCrud, name = 'logoutCrud'),
+    path('inicio-crud/', views.inicioCrud, name = 'inicioCrud'),
 
     # PROVEEDORES
     path('proveedores/', views.listarProveedores, name="listarProveedores"),

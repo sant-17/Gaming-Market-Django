@@ -9,6 +9,9 @@
 {% block btnTitulo %}Agregar empleado{% endblock btnTitulo %}
 
 {% block contenedor %}
+
+{% if request.session.logueo %}
+{% if request.session.logueo.4 == 'A' %}
 <br>
 <div class="contact-from-section mb-150">
     <div class="container">
@@ -47,4 +50,6 @@
         
     </div>
 </div>
+{% endif %}
+{% endif %}
 {% endblock contenedor %}

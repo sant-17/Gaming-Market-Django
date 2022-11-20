@@ -1,0 +1,18 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Gaming Market{% endblock titulo %}
+
+{% block encabezado %}Inicio{% endblock encabezado %}
+{% block subencabezado %}Gaming Market - CRUD{% endblock subencabezado %}
+
+{% block contenedor %}
+<br>
+<div class="container">
+    {% if request.session.logueo %}
+        <h1>Bienvenid@, {{request.session.logueo.1}}</h1>
+    {% else %}
+        <h1>No ha iniciado sesión</h1>
+    {% endif %}
+</div>
+{% endblock contenedor %}

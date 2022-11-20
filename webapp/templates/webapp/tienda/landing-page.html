@@ -1,7 +1,7 @@
 {% extends 'webapp/base.html' %}
 {% load static %}
 
-{% block titulo %}Gaming Market - Inicio{% endblock titulo %}
+{% block titulo %}Gaming Market{% endblock titulo %}
 
 {% block contenedor %}
 	<!-- CARRUSEL - INICIO -->
@@ -16,7 +16,7 @@
 								<p class="subtitle">Bueno, bonito y barato</p>
 								<h1>Disfruta de los mejores precios</h1>
 								<div class="hero-btns">
-									<a href="#" class="boxed-btn">Ir a los juegos</a>
+									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ir a los juegos</a>
 								</div>
 							</div>
 						</div>
@@ -34,7 +34,7 @@
 								<p class="subtitle">Nuevos juegos</p>
 								<h1>Disfruta de lo nuevo</h1>
 								<div class="hero-btns">
-									<a href="#" class="boxed-btn">Visitar la tienda</a>
+									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Visitar la tienda</a>
 								</div>
 							</div>
 						</div>
@@ -52,7 +52,7 @@
 								<p class="subtitle">Adquiere lo nuevo</p>
 								<h1>Juega con tus amigos</h1>
 								<div class="hero-btns">
-									<a href="#" class="boxed-btn">Ver juegos</a>
+									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ver juegos</a>
 								</div>
 							</div>
 						</div>
@@ -80,11 +80,11 @@
 				<div class="col-lg-4 col-md-6 text-center">
 					<div class="single-product-item">
 						<div class="product-image">
-							<a href="single-product.html"><img src="{{juego.imagen.url}}" alt=""></a>
+							<a href="{% url 'webapp:producto' juego.id %}"><img src="{{juego.imagen.url}}" alt=""></a>
 						</div>
-						<h3>{{juego.titulo}}</h3>
-						<p class="product-price"><span>{{juego.generos.first}}</span> ${{juego.precio|floatformat}} </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Añadir</a>
+						<h3> {{juego.titulo}}</h3>
+						<p class="product-price"><span>Precio</span> ${{juego.precio|floatformat:"0g"}} </p>
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
 					</div>
 				</div>
 				{% endfor %}
@@ -125,7 +125,7 @@
     	<div class="container">
         	<h3>Nuevos juegos <br> llegan en <span class="orange-text">Diciembre!</span></h3>
             <div class="sale-percent"><span>Mira la tienda y descubre nuevos juegos</span></div>
-            <a href="" class="cart-btn btn-lg">Ir Ahora</a>
+            <a href="{% url 'webapp:tienda' %}" class="cart-btn btn-lg">Ir Ahora</a>
         </div>
     </section>
 	<!-- end shop banner -->

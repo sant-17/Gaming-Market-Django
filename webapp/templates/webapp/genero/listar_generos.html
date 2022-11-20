@@ -30,7 +30,11 @@
                         <td> {{genero.nombre}}</td>
                         <td>
                             <a href="{% url 'webapp:edicionGenero' genero.id %}" class="btn btn-info">Editar</a>
-                            <a href="{% url 'webapp:eliminarGenero' genero.id %}" class="btn btn-danger">Eliminar</a>
+                            {% if request.session.logueo %}
+                                {% if request.session.logueo.4 == 'A' %}
+                                <a href="{% url 'webapp:eliminarGenero' genero.id %}" class="btn btn-danger">Eliminar</a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

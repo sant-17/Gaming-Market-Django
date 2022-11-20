@@ -1,0 +1,119 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block titulo %}Gaming Market - Store{% endblock titulo %}
+
+{% block contenedor %}
+
+<!-- Letrero - Inicio -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Mira más detalles de...</p>
+                    <h1>{{juego.titulo}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Letrero - Final -->
+
+<!-- single product -->
+<div class="single-product mt-150 mb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="single-product-img">
+					<img src="{{juego.imagen.url}}" alt="">
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="single-product-content">
+					<h2>{{juego.titulo}}</h2>
+					<p class="single-product-pricing"><span>Precio/unidad</span> ${{juego.precio|floatformat:"0g"}}</p>
+					<p>{{juego.descripcion}}</p>
+					<p>
+						<strong>Fecha de lanzamiento: </strong>
+						{{juego.fecha_lanzamiento}}
+					</p>
+					<p><strong>Géneros: </strong>
+						{% for genero in juego.generos.all %}
+							{% if genero.id == juego.generos.last.id %}
+								{{genero}}
+							{% else %}
+								{{genero}},
+							{% endif %} 
+						{% endfor %}
+					</p>
+					<p>
+						<strong>Desarrollador: </strong>
+						{{juego.desarrollador}}
+					</p>
+					<p>
+						<strong>Editor: </strong>
+						{{juego.editor}}
+					</p>
+					<p>
+						<strong>ESRB: </strong>
+						{{juego.get_esrb_display}}
+					</p>
+					<div class="single-product-form">
+						<!--
+						<form action="index.html">
+							<input type="number" placeholder="1" value="1" min="1" oninput="validity.valid||(value='');">
+						</form>-->
+						
+						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Añadir al carrito</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end single product -->
+
+<!-- more products -->
+<div class="more-products mb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					{% if recomendacion == 'similares' %}
+					<h3>Juegos<span class="orange-text"> similares</span> </h3>
+					<p>Te recomendamos otros juegos del género {{juego.generos.first}} que te podrían gustar</p>
+					{% endif %}
+					{% if recomendacion == 'nuevos' %}
+					<h3>Juegos<span class="orange-text"> recientes</span> </h3>
+					<p>Hemos añadido estos tres nuevos juegos que te podrían gustar</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			{% for recomendado in recomendaciones %}
+			<div class="col-lg-4 col-md-6 text-center">
+                <div class="single-product-item">
+                    <div class="product-image">
+                        <a href="{% url 'webapp:producto' recomendado.id %}"><img src="{{recomendado.imagen.url}}" alt=""></a>
+                    </div>
+                    <h3> {{recomendado.titulo}}</h3>
+                    <p class="product-price"><span>
+						{% for genero in recomendado.generos.all %}
+							{% if genero.id == recomendado.generos.last.id %}
+								{{genero}}
+							{% else %}
+								{{genero}},
+							{% endif %}
+						{% endfor %}
+					</span> ${{recomendado.precio|floatformat:"0g"}} </p>
+                    <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Añadir al carrito</a>
+                </div>
+            </div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<!-- end more products -->
+{% endblock contenedor %}

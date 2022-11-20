@@ -11,7 +11,10 @@
     <title>{% block titulo %}CRUD{% endblock titulo %}</title>
 
     <!-- favicon -->
-    <link rel="shortcut icon" type="image/png" href="{% static 'webapp/assets/img/favicon.png' %}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static 'webapp/assets/favicon_io/apple-touch-icon.png' %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static 'webapp/assets/favicon_io/favicon-32x32.png' %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static 'webapp/assets/favicon_io/favicon-16x16.png' %}">
+	<link rel="manifest" href="{% static 'webapp/assets/favicon_io/site.webmanifest' %}">
     <!-- google font -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -62,12 +65,18 @@
 								<li>
                                     <a href="{% url 'webapp:listarJuegos' %}">Juegos</a>
                                 </li>
+								{% if request.session.logueo.4 == 'A' %}
 								<li>
                                     <a href="{% url 'webapp:listarEmpleados' %}">Empleados</a>
-                                </li>						
+                                </li>
+								{% endif %}					
 								<li>
                                     <div class="header-icons">
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+										{% if request.session.logueo %}
+										<a href="{% url 'webapp:logoutCrud' %}">Salir</a>
+										{% else %}
+										<a href="{% url 'webapp:loginEmpleados' %}">Iniciar sesión</a>
+										{% endif %}
                                     </div>
                                 </li>
 							</ul>
@@ -89,7 +98,7 @@
 						<p>{% block encabezado %}Encabezado{% endblock encabezado %}</p>
 						<h1>{% block subencabezado %}Subencabezado{% endblock subencabezado %}</h1>
 						<div class="hero-btns">
-							<a href="{% block agregarUrl %}BtnHref{% endblock agregarUrl %}" class="boxed-btn">{% block btnTitulo %}BtnTitulo{% endblock btnTitulo %}</a>
+							<a href="{% block agregarUrl %}{% endblock agregarUrl %}" class="boxed-btn">{% block btnTitulo %}{% endblock btnTitulo %}</a>
 						</div>
 					</div>
 				</div>
@@ -106,56 +115,6 @@
 	<!-- Registro - Inicio -->
 	{% block contenedor %}{% endblock contenedor %}
 	<!-- Registro - Final -->
-
-	<!-- Footer - Inicio -->
-	<!--
-	<div class="footer-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box about-widget">
-						<h2 class="widget-title">Acerca de nosotros</h2>
-						<p>Somos una nueva compañía conformada por la gente más capacitada para traer los mejores juegos de consolas a nuestros clientes.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Ponte en contacto</h2>
-						<ul>
-							<li>Complejo Ruta N Calle 67 52-20 Piso 2 Torre A, Medellín, Antioquia</li>
-							<li>soporte@instantgamers.com</li>
-							<li>+57 313 679 3126</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box pages">
-						<h2 class="widget-title">Páginas</h2>
-						<ul>
-							<li><a href="index.html">Inicio</a></li>
-							
-							<li><a href="services.html">Juegos</a></li>
-							<li><a href="news.html">Usuarios</a></li>
-							<li><a href="contact.html">Ingresos/Egresos</a></li>
-							<li><a href="contact.html">Proveedores</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box subscribe">
-						<h2 class="widget-title">Suscríbete</h2>
-						<p>Suscríbete para estar al tanto de las novedades en la tienda</p>
-						<form action="index.html">
-							<input type="email" placeholder="Email">
-							<button type="submit"><i class="fas fa-paper-plane"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	-->
-	<!-- Footer - Final -->
 	
 	<!-- jquery -->
     <script src="{% static 'webapp/assets/js/jquery-1.11.3.min.js' %}"></script>

@@ -9,6 +9,8 @@
 {% block contenedor %}
 
 {% if usuarios %}
+{% if request.session.logueo %}
+{% if request.session.logueo.4 == 'A' %}
 <div class="listar-generos-juegos mt-150 mb-150">
     <div class="contenedor">
         <div class="table-responsive">
@@ -50,7 +52,8 @@
         </div>
     </div>
 </div>
-
+{% endif %}
+{% endif %}
 {% else %}
 No hay datos
 {% endif %}
