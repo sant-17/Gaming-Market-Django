@@ -16,6 +16,8 @@ urlpatterns = [
     path('cart/', views.verCarrito, name = 'verCarrito'),
     path('agregarAlCarrito/<id>', views.agregarAlCarrito, name="agregarAlCarrito"),
     path('eliminarJuegoCarrito/<id>', views.eliminarJuegoDelCarrito, name="eliminarJuegoCarrito"),
+    path('cheackout/', views.checkout, name = 'checkout'),
+    path('venta/', views.venta, name = 'venta'),
 
     # INICIO DE SESIÓN CRUD
     path('login-empleados/', views.formLoginCrud, name = 'loginEmpleados'),

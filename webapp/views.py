@@ -70,6 +70,7 @@ def logout(request):
     try:
         del request.session["logueoCliente"]
         del request.session["carrito"]
+        del request.session["final"]
         return redirect('webapp:index')
     except Exception as e:
         messages.error(request, e)
@@ -149,6 +150,64 @@ def eliminarJuegoDelCarrito(request, id):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:tienda')
 
+def checkout(request):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            carrito = request.session["carrito"]
+            if len(carrito) > 0:
+                request.session["final"] = request.session["carrito"]
+                juegos = Juego.objects.filter(id__in=carrito)
+                total = 0
+                for juego in juegos:
+                    total += juego.precio
+                usuario = Usuario.objects.get(id = cliente[0])
+                return render(request, 'webapp/tienda/checkout.html', {'juegos': juegos, 'total': total, 'cliente': usuario})
+            else:
+                return redirect('webapp:verCarrito')
+        else:
+            messages.warning(request, "Inicia sesión primero")
+            return redirect('webapp:tienda')
+    except Exception as e:
+        del request.session["final"]
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def venta(request):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        idsJuegos = request.session.get('final', False)
+        if cliente and idsJuegos:
+            juegos = Juego.objects.filter(id__in=idsJuegos)
+            total = 0
+            cliente = Usuario.objects.get(id = cliente[0])
+            for juego in juegos:
+                total += juego.precio
+            venta = Venta(
+                id_usuario = cliente,
+                total = total
+            )
+            venta.save()
+            for juego in juegos:
+                venta_detalle = Venta_detalle(
+                    id_juego = juego,
+                    id_venta = venta,
+                    precio = juego.precio
+                )
+                venta_detalle.save()
+            del request.session["final"]
+            messages.success(request, "Tu compra ha sido un éxito")
+        if cliente and not idsJuegos:
+            messages.warning(request, "Complete la compra a travez del checkout")
+        if idsJuegos and not cliente:
+            messages.warning(request, "Inicie sesión")
+        else:
+            messages.error(request, "Error desconocido")
+        return redirect('webapp:tienda')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    del request.session["final"]
+    return redirect('webapp:tienda')
 
 # CRUD
 

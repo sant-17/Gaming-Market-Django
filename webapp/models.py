@@ -75,4 +75,4 @@ class Venta_detalle(models.Model):
     precio = models.DecimalField(max_digits=15, decimal_places=2)
     
     def __str__(self) -> str:
-        return f"{self.id_juego.titulo} - {self.cantidad}"
+        return f"{self.id_juego.titulo}"
