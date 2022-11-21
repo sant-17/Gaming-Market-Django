@@ -1,0 +1,88 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block titulo %}Carrito{% endblock titulo %}
+
+{% block contenedor %}
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="breadcrumb-text">
+					<p>¿No se te olvida algo?</p>
+					<h1>Carrito</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end breadcrumb section -->
+{% if juegos %}
+
+
+<!-- cart -->
+<br>
+<div class="cart-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12">
+				<div class="cart-table-wrap">
+					<table class="cart-table">
+						<thead class="cart-table-head">
+							<tr class="table-head-row">
+								<th class="product-remove"></th>
+								<th class="product-image">Imágen</th>
+								<th class="product-name">Título</th>
+								<th class="product-price">Precio</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for juego in juegos %}
+							<tr class="table-body-row">
+								<td class="product-remove"><a href="{% url 'webapp:eliminarJuegoCarrito' juego.id %}"><i class="far fa-window-close"></i></a></td>
+								<td class="product-image"><img src="{{juego.imagen.url}}"></td>
+								<td class="product-name">{{juego.titulo}}</td>
+								<td class="product-price">${{juego.precio|floatformat:"0g"}}</td>
+							</tr>
+							{% endfor %}
+							<tr>
+								<td colspan="3">Total</td>
+								<td>${{total|floatformat:"0g"}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="cart-buttons">
+						<a href="cart.html" class="boxed-btn">Update Cart</a>
+						<a href="checkout.html" class="boxed-btn black">Check Out</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<br>
+<!-- end cart -->
+{% else %}
+<!-- error section -->
+<div class="full-height-section error-section">
+	<div class="full-height-tablecell">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="error-text">
+						<i class="far fa-sad-cry"></i>
+						<h1>¡Oops! No hay juegos en el carrito</h1>
+						<p>Al parecer aún no has decidido qué juegos añadir al carrito. Dale un vistazo a la tienda:</p>
+						<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ir a la tienda</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end error section -->
+
+{% endif %}
+
+{% endblock contenedor %}

@@ -13,6 +13,9 @@ urlpatterns = [
     path('save/', views.guardarCliente, name = 'save'),
     path('shop/', views.tienda, name = 'tienda'),
     path('product/<id>', views.producto, name = 'producto'),
+    path('cart/', views.verCarrito, name = 'verCarrito'),
+    path('agregarAlCarrito/<id>', views.agregarAlCarrito, name="agregarAlCarrito"),
+    path('eliminarJuegoCarrito/<id>', views.eliminarJuegoDelCarrito, name="eliminarJuegoCarrito"),
 
     # INICIO DE SESIÓN CRUD
     path('login-empleados/', views.formLoginCrud, name = 'loginEmpleados'),

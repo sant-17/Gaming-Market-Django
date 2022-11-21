@@ -19,6 +19,12 @@
 </div>
 <!-- Letrero - Final -->
 
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{% if message.tags != 'error' %}{{ message.tags }}{% elif message.tags == 'error' %}danger{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
 <div class="product-section mt-100 mb-100">
     <div class="container">
         <!--
@@ -44,7 +50,7 @@
                     </div>
                     <h3> {{juego.titulo}}</h3>
                     <p class="product-price"><span>Precio</span> ${{juego.precio|floatformat:"0g"}} </p>
-                    <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                    <a href="{% url 'webapp:agregarAlCarrito' juego.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Agregar al carrito</a>
                 </div>
             </div>
             {% endfor %}

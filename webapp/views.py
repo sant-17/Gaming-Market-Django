@@ -50,8 +50,9 @@ def login(request):
             clave = request.POST['clave']
 
             usuario = Usuario.objects.get(email = email, clave = clave)
-            # Crear sesión
+
             request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
+            request.session["carrito"] = []
             # -------------
             messages.success(request, "Bienvenido")
             return redirect('webapp:index')
@@ -68,6 +69,7 @@ def login(request):
 def logout(request):
     try:
         del request.session["logueoCliente"]
+        del request.session["carrito"]
         return redirect('webapp:index')
     except Exception as e:
         messages.error(request, e)
@@ -81,9 +83,7 @@ def tienda(request):
     juegos = Juego.objects.filter(habilitado = True)
     paginator = Paginator(juegos, 15)
     page_number = request.GET.get('page')
-
     juegos = paginator.get_page(page_number)
-
     return render(request, 'webapp/tienda/shop.html', {"juegos": juegos})
 
 def producto(request, id):
@@ -99,6 +99,55 @@ def producto(request, id):
         return render(request, 'webapp/tienda/single-product.html', {'juego': juego, 'recomendacion': recomendacion,  'recomendaciones': recomendaciones})
     except:
         return render(request, 'webapp/tienda/404.html')
+
+def agregarAlCarrito(request, id):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            carrito = request.session["carrito"]
+            juego = Juego.objects.get(id = id)
+            if carrito.count(id):
+                messages.warning(request, f"{juego.titulo} ya estaba en el carrito")
+            else:
+                request.session['carrito'] += id
+                carrito = request.session["carrito"]
+                messages.warning(request, f"{carrito}")
+        else:
+            messages.warning(request, "Inicie sesión primero")
+    except Exception as e:
+        messages.warning(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def verCarrito(request):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            carrito = request.session["carrito"]
+            if len(carrito) > 0:
+                juegos = Juego.objects.filter(id__in=carrito)
+                total = 0
+                for juego in juegos:
+                    total += juego.precio
+                return render(request, 'webapp/tienda/cart.html', {'juegos': juegos, 'total': total})
+            else:
+                return render(request, 'webapp/tienda/cart.html')
+    except Exception as e:
+        messages.warning(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def eliminarJuegoDelCarrito(request, id):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            request.session["carrito"].remove(id)
+            request.session.modified = True
+            return redirect('webapp:verCarrito')
+        else:
+            messages.warning(request, "Inicia sesión primero")
+            return redirect('webapp:tienda')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
 
 
 # CRUD
@@ -119,8 +168,10 @@ def loginCrud(request):
                 return redirect('webapp:loginEmpleados')
             #Crear sesión
             request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
+
+            logueo = request.session.get("logueo", False)
             # -------------
-            messages.success(request, "Bienvenido")
+            messages.success(request, f"{logueo[5]}")
             return redirect('webapp:inicioCrud')
         else:
             messages.warning(request, "Usted no ha enviado datos")

@@ -66,11 +66,12 @@
 										<a href="" data-toggle="modal" data-target="#loginModal">Ingresar</a>
 										<a href="{% url 'webapp:signup' %}">Registrarse</a>
 										{% else %}
+										<a class="shopping-cart" href="{% url 'webapp:verCarrito' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="user" href=""><i class="fas fa-user"></i></a>
                                     	<ul class="sub-menu">
+											<li><a href="">Mi perfil</a></li>
                                         	<li><a href="{% url 'webapp:logout' %}">Cerrar sesión</a></li>
                                     	</ul>
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
 										{% endif %}
 									</div>
 								</li>
@@ -157,9 +158,11 @@
 					<div class="footer-box pages">
 						<h2 class="widget-title">Páginas</h2>
 						<ul>
-							<li><a href="index.html">Inicio</a></li>
-							<li><a href="about.html">Juegos</a></li>
-							<li><a href="services.html">Registrarse</a></li>
+							<li><a href="{% url 'webapp:index' %}">Inicio</a></li>
+							<li><a href="{% url 'webapp:tienda' %}">Juegos</a></li>
+							{% if not request.session.logueoCliente %}
+							<li><a href="{% url 'webapp:signup' %}">Registrarse</a></li>
+							{% endif %}
 						</ul>
 					</div>
 				</div>
