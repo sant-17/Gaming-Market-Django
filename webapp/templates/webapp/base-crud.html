@@ -65,7 +65,7 @@
 								<li>
                                     <a href="{% url 'webapp:listarJuegos' %}">Juegos</a>
                                 </li>
-								{% if request.session.logueo.4 == 'A' %}
+								{% if request.session.logueo.4 == 'Administrador' %}
 								<li>
                                     <a href="{% url 'webapp:listarEmpleados' %}">Empleados</a>
                                 </li>
