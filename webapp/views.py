@@ -231,7 +231,6 @@ def loginCrud(request):
 
             logueo = request.session.get("logueo", False)
             # -------------
-            messages.success(request, f"{logueo[5]}")
             return redirect('webapp:inicioCrud')
         else:
             messages.warning(request, "Usted no ha enviado datos")
@@ -637,14 +636,14 @@ def buscarJuego(request):
 def listarUsuariosEmpleados(request):
     login = request.session.get('logueo', False)
     if login:
-        if login[4] == "A":
+        if login[4] == "Administrador":
             usuarios = Usuario.objects.order_by('-habilitado').filter(rol = 'E')
             paginator = Paginator(usuarios, 10)
             page_number = request.GET.get('page')
             usuarios = paginator.get_page(page_number)
             return render(request, 'webapp/usuario-empleado/listar_empleados.html', {'usuarios': usuarios})
         else:
-            messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
+            messages.warning(request, f"{login[4]}")
             return redirect('webapp:inicioCrud')
     else:
         messages.warning(request, "Inicie sesión primero")

@@ -11,8 +11,6 @@
 {% block contenedor %}
 
 {% if usuarios %}
-{% if request.session.logueo %}
-{% if request.session.logueo.4 == 'A' %}
 <form action="{% url 'webapp:buscarEmpleado' %}" method="post">
     {% csrf_token %}
     <div class="search-bar">
@@ -81,8 +79,6 @@
         </div>
     </div>
 </div>
-{% endif %}
-{% endif %}
 {% else %}
 No hay datos
 {% endif %}
