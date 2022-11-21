@@ -157,6 +157,7 @@ def checkout(request):
             carrito = request.session["carrito"]
             if len(carrito) > 0:
                 request.session["final"] = request.session["carrito"]
+                
                 juegos = Juego.objects.filter(id__in=carrito)
                 total = 0
                 for juego in juegos:
@@ -178,6 +179,8 @@ def venta(request):
         cliente = request.session.get('logueoCliente', False)
         idsJuegos = request.session.get('final', False)
         if cliente and idsJuegos:
+            del request.session["carrito"]
+            request.session["carrito"] = []
             juegos = Juego.objects.filter(id__in=idsJuegos)
             total = 0
             cliente = Usuario.objects.get(id = cliente[0])
@@ -201,8 +204,6 @@ def venta(request):
             messages.warning(request, "Complete la compra a travez del checkout")
         if idsJuegos and not cliente:
             messages.warning(request, "Inicie sesión")
-        else:
-            messages.error(request, "Error desconocido")
         return redirect('webapp:tienda')
     except Exception as e:
         messages.error(request, f"Error: {e}")
