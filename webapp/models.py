@@ -73,6 +73,7 @@ class Venta_detalle(models.Model):
     id_juego = models.ForeignKey(Juego, on_delete=models.DO_NOTHING)
     id_venta = models.ForeignKey(Venta, on_delete=models.DO_NOTHING)
     precio = models.DecimalField(max_digits=15, decimal_places=2)
+    cantidad = models.PositiveIntegerField(default=0)
     
     def __str__(self) -> str:
         return f"{self.id_juego.titulo}"
