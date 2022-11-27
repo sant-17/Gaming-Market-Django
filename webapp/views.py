@@ -52,7 +52,11 @@ def login(request):
             usuario = Usuario.objects.get(email = email, clave = clave)
 
             request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
-            request.session["carrito"] = []
+            request.session["carrito"] = [[],[]]
+            #arrito = [[],[]]
+            #arrito[0].append()
+            
+            
             # -------------
             messages.success(request, "Bienvenido")
             return redirect('webapp:index')
@@ -103,6 +107,7 @@ def producto(request, id):
 
 """Carrito de compras
 Método para agregar los juegos al la lista de compras
+carrito: variable de sesión donde se almacenan las id de las selecciones
 Returns:
     _type_: _vacio_
 """
@@ -112,12 +117,26 @@ def agregarAlCarrito(request, id):
         if cliente:
             carrito = request.session["carrito"]
             juego = Juego.objects.get(id = id)
-            if carrito.count(id):
-                messages.warning(request, f"{juego.titulo} ya estaba en el carrito")
+            #if carrito.count(id):
+               # messages.warning(request, f"{juego.titulo} ya estaba en el carrito")
+            if id in carrito[1]:
+                
+                carrito = request.session["carrito"]
+                
+                
+                request.session['carrito'] 
+                messages.warning(request, f"{request.session['carrito']} if")
             else:
                 request.session['carrito'] += id
                 carrito = request.session["carrito"]
-                messages.warning(request, f"{carrito}")
+                carrito[0].append(id)
+                carrito[1].append(2)
+                
+                indice= carrito[0].index(id)
+                
+                request.session['carrito'] = carrito
+                request.session.modified = True
+                messages.warning(request, f"{request.session['carrito']} else {indice}")
         else:
             messages.warning(request, "Inicie sesión primero")
     except Exception as e:

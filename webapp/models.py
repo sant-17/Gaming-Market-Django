@@ -37,7 +37,7 @@ class Juego(models.Model):
     proveedor = models.ForeignKey(Proveedor, on_delete= models.DO_NOTHING)
 
     def __str__(self) -> str:
-        return f"{self.titulo}"
+        return f"{self.titulo, self.precio}"
 
 class Usuario(models.Model):
     email = models.EmailField(max_length=100, unique = True)
