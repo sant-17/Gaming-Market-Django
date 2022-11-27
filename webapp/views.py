@@ -101,6 +101,11 @@ def producto(request, id):
     except:
         return render(request, 'webapp/tienda/404.html')
 
+"""Carrito de compras
+Método para agregar los juegos al la lista de compras
+Returns:
+    _type_: _vacio_
+"""
 def agregarAlCarrito(request, id):
     try:
         cliente = request.session.get('logueoCliente', False)
