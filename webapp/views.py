@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from webapp.Carrito import Carrito
 from .models import *
 from datetime import date
 from django.db.models import Q
@@ -52,7 +54,7 @@ def login(request):
             usuario = Usuario.objects.get(email = email, clave = clave)
 
             request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
-            request.session["carrito"] = [[],[]]
+            
             #arrito = [[],[]]
             #arrito[0].append()
             
@@ -73,7 +75,8 @@ def login(request):
 def logout(request):
     try:
         del request.session["logueoCliente"]
-        del request.session["carrito"]
+        carrito = Carrito(request)
+        carrito.limpiar()
         del request.session["final"]
         return redirect('webapp:index')
     except Exception as e:
@@ -112,33 +115,16 @@ Returns:
     _type_: _vacio_
 """
 def agregarAlCarrito(request, id):
+    
     try:
-        cliente = request.session.get('logueoCliente', False)
-        if cliente:
-            carrito = request.session["carrito"]
-            juego = Juego.objects.get(id = id)
-            #if carrito.count(id):
-               # messages.warning(request, f"{juego.titulo} ya estaba en el carrito")
-            if id in carrito[1]:
-                
-                carrito = request.session["carrito"]
-                
-                
-                request.session['carrito'] 
-                messages.warning(request, f"{request.session['carrito']} if")
-            else:
-                request.session['carrito'] += id
-                carrito = request.session["carrito"]
-                carrito[0].append(id)
-                carrito[1].append(2)
-                
-                indice= carrito[0].index(id)
-                
-                request.session['carrito'] = carrito
-                request.session.modified = True
-                messages.warning(request, f"{request.session['carrito']} else {indice}")
-        else:
-            messages.warning(request, "Inicie sesión primero")
+        #cliente = request.session.get('logueoCliente')
+        #if cliente:
+        carrito = Carrito(request)
+        juego = Juego.objects.get(id = id)
+        
+        carrito.agregar(juego)
+            
+        messages.warning(request, f"{request.session['carrito']} agregado {juego.titulo}")
     except Exception as e:
         messages.warning(request, f"Error: {e}")
     return redirect('webapp:tienda')
@@ -147,13 +133,15 @@ def verCarrito(request):
     try:
         cliente = request.session.get('logueoCliente', False)
         if cliente:
-            carrito = request.session["carrito"]
-            if len(carrito) > 0:
+            
+            if request.session.get("carrito"):
+                carrito = request.session["carrito"]
+                            
                 juegos = Juego.objects.filter(id__in=carrito)
                 total = 0
                 for juego in juegos:
                     total += juego.precio
-                return render(request, 'webapp/tienda/cart.html', {'juegos': juegos, 'total': total})
+                return render(request, 'webapp/tienda/cart.html')  #{'juegos': juegos, 'total': total})
             else:
                 return render(request, 'webapp/tienda/cart.html')
     except Exception as e:
@@ -164,14 +152,40 @@ def eliminarJuegoDelCarrito(request, id):
     try:
         cliente = request.session.get('logueoCliente', False)
         if cliente:
-            request.session["carrito"].remove(id)
-            request.session.modified = True
+            carrito = Carrito(request)
+            juego = Juego.objects.get(id = id)
+            
+            carrito.eliminar(juego)
+            
             return redirect('webapp:verCarrito')
         else:
             messages.warning(request, "Inicia sesión primero")
             return redirect('webapp:tienda')
     except Exception as e:
         messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def restarJuego(request, id):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            carrito = Carrito(request)
+            juego = Juego.objects.get(id = id)
+            
+            carrito.restar(juego)
+            
+            return redirect('webapp:verCarrito')
+        else:
+            messages.warning(request, "Inicia sesión primero")
+            return redirect('webapp:tienda')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def vaciarCarrito(request):
+    carrito = Carrito(request)    
+    carrito.limpiar()
+    
     return redirect('webapp:tienda')
 
 def checkout(request):
@@ -203,8 +217,8 @@ def venta(request):
         cliente = request.session.get('logueoCliente', False)
         idsJuegos = request.session.get('final', False)
         if cliente and idsJuegos:
-            del request.session["carrito"]
-            request.session["carrito"] = []
+            #del request.session["carrito"]
+            #request.session["carrito"] = []
             juegos = Juego.objects.filter(id__in=idsJuegos)
             total = 0
             cliente = Usuario.objects.get(id = cliente[0])

@@ -18,7 +18,7 @@
 	</div>
 </div>
 <!-- end breadcrumb section -->
-{% if juegos %}
+
 
 
 <!-- cart -->
@@ -34,27 +34,37 @@
 								<th class="product-remove"></th>
 								<th class="product-image">Imágen</th>
 								<th class="product-name">Título</th>
+								<th class="product-price">Cantidad</th>
 								<th class="product-price">Precio</th>
 							</tr>
 						</thead>
 						<tbody>
-							{% for juego in juegos %}
-							<tr class="table-body-row">
-								<td class="product-remove"><a href="{% url 'webapp:eliminarJuegoCarrito' juego.id %}"><i class="far fa-window-close"></i></a></td>
-								<td class="product-image"><img src="{{juego.imagen.url}}"></td>
-								<td class="product-name">{{juego.titulo}}</td>
-								<td class="product-price">${{juego.precio|floatformat:"0g"}}</td>
-							</tr>
-							{% endfor %}
+							{% if request.session.carrito.items %}
+  								{% for key, value in request.session.carrito.items %}
+								<tr class="table-body-row">
+									<td class="product-remove"><a href="{% url 'webapp:restarJuego' value.juegoId %}"><i class="far fa-window-close"></i></a></td>
+									<!--<td class="product-image"><img src="{{value.imagen.url}}"></td>-->
+									<td class="product-name">{{value.titulo}}</td>
+									<td class="product-cant">{{value.cantidad|floatformat:"0g"}}
+										<a href="{% url 'webapp:agregarAlCarrito' value.juegoId %}" class="badge btn btn-dark badge-dark">+</a>
+        								<a href="{% url 'webapp:restarJuego' value.juegoId %}" class="badge btn btn-dark badge-dark">-</a>
+									</td>
+									<td class="product-price">${{value.precio|floatformat:"0g"}}</td>
+									
+								</tr>
+								{% endfor %}
 							<tr>
 								<td colspan="3">Total</td>
-								<td>${{total|floatformat:"0g"}}</td>
+								<td>${{totalCarrito|floatformat:"0g"}}</td>
 							</tr>
+							
 						</tbody>
 					</table>
 					<div class="cart-buttons">
+						<a href="{% url 'webapp:vaciar' %}" class="boxed-btn black">vaciar</a>
 						<a href="{% url 'webapp:checkout' %}" class="boxed-btn black">Comprar ahora</a>
 					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -81,6 +91,7 @@
 	</div>
 </div>
 <!-- end error section -->
+
 
 {% endif %}
 

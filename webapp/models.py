@@ -30,7 +30,7 @@ class Juego(models.Model):
     esrb = models.CharField(max_length=30, choices=ESRB_CHOISES, default='RP')
     multijugador = models.BooleanField(default=False)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    precio = models.FloatField()  #(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     imagen = models.ImageField(upload_to= 'webapp/images', default='webapp/images/default.jpg')
     habilitado = models.BooleanField(default=False)
     generos = models.ManyToManyField(Genero)

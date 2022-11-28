@@ -1,10 +1,8 @@
-from .models import *
-
-class carrito:
+class Carrito:
     def __init__(self, request):
         self.request = request
         self.session = request.session
-        carrito = self.session["carrito"]
+        carrito = self.session.get("carrito")
         
         if not carrito:
             self.session["carrito"] ={}
@@ -12,8 +10,8 @@ class carrito:
         else:
             self.carrito= carrito
             
-    def agregar(self, id):
-        juego = Juego.objects.get(id = id)
+    def agregar(self, juego):
+        
         jId = str(juego.id)
         
         if jId not in self.carrito.keys():
@@ -22,37 +20,35 @@ class carrito:
                 "titulo" : juego.titulo,
                 "precio" : juego.precio,
                 "cantidad" : 1,
+                
             }
         else:
             self.carrito[jId]["cantidad"] +=1
             self.carrito[jId]["precio"] += juego.precio
-            
-            
         self.guardarCarrito()
         
-    def guargarCarrito(self):
+    def guardarCarrito(self):
         self.session["carrito"] = self.carrito
         self.session.modified = True
         
-    def eliminar(self,id):
-        juego = Juego.objects.get(id = id)
-        id = str(juego.id)
+    def eliminar(self, juego):
         
+        id = str(juego.id)        
         if id in self.carrito:
             del self.carrito[id]
             
-            self.guargarCarrito()
+        self.guardarCarrito()
             
-    def restar(self, id):
-        juego = Juego.objects.get(id = id)
+    def restar(self, juego):
+        
         id = str(juego.id)
         if id in self.carrito.keys():
-            self.carrito[id]["catidad"] -=1
+            self.carrito[id]["cantidad"] -=1
             self.carrito[id]["precio"]-= juego.precio
             
             if self.carrito[id]["cantidad"] <=0: 
-                self.eliminar(id)
-        self.guargarCarrito()    
+                self.eliminar(juego)
+        self.guardarCarrito()    
         
     
     def limpiar (self):
