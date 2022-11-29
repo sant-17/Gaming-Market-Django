@@ -6,3 +6,7 @@ Install django
 
 > pip Install django
 
+Install passlib 
+
+>> pip Install passlib
+

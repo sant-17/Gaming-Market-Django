@@ -17,6 +17,16 @@ from django.core.paginator import Paginator
 #Almacenamiento de archivos
 from django.core.files.storage import FileSystemStorage
 
+#Libreria para encripación
+from passlib.context import CryptContext
+# Round: Iteraciones para reducir la posibilidad de cracking.
+contexto = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    default="pbkdf2_sha256",
+    pbkdf2_sha256__default_rounds=333
+)
+
+
 # Create your views here.
 
 # TIENDA
@@ -24,14 +34,17 @@ def signup(request):
     return render(request, 'webapp/tienda/sign-up.html')
 
 def guardarCliente(request):
+    
     try:
+                
         if request.method == "POST":
             usuario = Usuario(
                 nombre=request.POST['nombre'],
                 apellido=request.POST['apellido'],
                 fecha_nacimiento=request.POST['fecha_nacimiento'],
                 email=request.POST['email'],
-                clave=request.POST['clave'],
+                clave= contexto.hash(request.POST['clave']) ,
+                
             )
             usuario.full_clean()
             if usuario.esMayorDeEdad():
@@ -48,19 +61,20 @@ def guardarCliente(request):
 def login(request):
     if request.method == "POST":
         try:
+            
             email = request.POST['email']
-            clave = request.POST['clave']
-
-            usuario = Usuario.objects.get(email = email, clave = clave)
-
-            request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
+            clavePost = request.POST['clave']
+            clave= contexto.hash(clavePost)
             
-            #arrito = [[],[]]
-            #arrito[0].append()
+            usuario = Usuario.objects.get(email = email)
             
-            
-            # -------------
-            messages.success(request, "Bienvenido")
+            if contexto.verify(clavePost, usuario.clave):
+                request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]       
+                # -------------
+                messages.success(request, "Bienvenido")
+            else:
+                messages.warning(request, "Contraseña incorrecta")
+                
             return redirect('webapp:index')
         except Usuario.DoesNotExist:
             messages.warning(request, "El usuario no existe")
@@ -256,20 +270,24 @@ def formLoginCrud(request):
 def loginCrud(request):
     try:
         if request.method == "POST":
+            
             email = request.POST['email']
-            clave = request.POST['clave']
+            clavePost = request.POST['clave']
+            
+            usuario = Usuario.objects.get(email = email)
+            
+            if contexto.verify(clavePost, usuario.clave):                
+                if usuario.rol == 'C':
+                    messages.error(request, "Este usuario no posee permisos para ingresar")
+                    return redirect('webapp:loginEmpleados')
+                #Crear sesión
+                request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
 
-            usuario = Usuario.objects.get(email = email, clave = clave)
-
-            if usuario.rol == 'C':
-                messages.error(request, "Este usuario no posee permisos para ingresar")
-                return redirect('webapp:loginEmpleados')
-            #Crear sesión
-            request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
-
-            logueo = request.session.get("logueo", False)
-            # -------------
-            return redirect('webapp:inicioCrud')
+                logueo = request.session.get("logueo", False)
+                # -------------
+                return redirect('webapp:inicioCrud')
+            else:
+                 messages.warning(request, "Contraseña incorrecta")
         else:
             messages.warning(request, "Usted no ha enviado datos")
             return redirect('webapp:loginEmpleados')
