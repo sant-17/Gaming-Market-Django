@@ -30,14 +30,14 @@ class Juego(models.Model):
     esrb = models.CharField(max_length=30, choices=ESRB_CHOISES, default='RP')
     multijugador = models.BooleanField(default=False)
     stock = models.PositiveIntegerField()
-    precio = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    precio = models.FloatField()  #(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     imagen = models.ImageField(upload_to= 'webapp/images', default='webapp/images/default.jpg')
     habilitado = models.BooleanField(default=False)
     generos = models.ManyToManyField(Genero)
     proveedor = models.ForeignKey(Proveedor, on_delete= models.DO_NOTHING)
 
     def __str__(self) -> str:
-        return f"{self.titulo}"
+        return f"{self.titulo, self.precio}"
 
 class Usuario(models.Model):
     email = models.EmailField(max_length=100, unique = True)

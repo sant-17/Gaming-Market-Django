@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from webapp.Carrito import Carrito
 from .models import *
 from datetime import date
 from django.db.models import Q
@@ -15,6 +17,16 @@ from django.core.paginator import Paginator
 #Almacenamiento de archivos
 from django.core.files.storage import FileSystemStorage
 
+#Libreria para encripación
+from passlib.context import CryptContext
+# Round: Iteraciones para reducir la posibilidad de cracking.
+contexto = CryptContext(
+    schemes=["pbkdf2_sha256"],
+    default="pbkdf2_sha256",
+    pbkdf2_sha256__default_rounds=333
+)
+
+
 # Create your views here.
 
 # TIENDA
@@ -22,14 +34,17 @@ def signup(request):
     return render(request, 'webapp/tienda/sign-up.html')
 
 def guardarCliente(request):
+    
     try:
+                
         if request.method == "POST":
             usuario = Usuario(
                 nombre=request.POST['nombre'],
                 apellido=request.POST['apellido'],
                 fecha_nacimiento=request.POST['fecha_nacimiento'],
                 email=request.POST['email'],
-                clave=request.POST['clave'],
+                clave= contexto.hash(request.POST['clave']) ,
+                
             )
             usuario.full_clean()
             if usuario.esMayorDeEdad():
@@ -46,15 +61,20 @@ def guardarCliente(request):
 def login(request):
     if request.method == "POST":
         try:
+            
             email = request.POST['email']
-            clave = request.POST['clave']
-
-            usuario = Usuario.objects.get(email = email, clave = clave)
-
-            request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
-            request.session["carrito"] = []
-            # -------------
-            messages.success(request, "Bienvenido")
+            clavePost = request.POST['clave']
+            clave= contexto.hash(clavePost)
+            
+            usuario = Usuario.objects.get(email = email)
+            
+            if contexto.verify(clavePost, usuario.clave):
+                request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]       
+                # -------------
+                messages.success(request, "Bienvenido")
+            else:
+                messages.warning(request, "Contraseña incorrecta")
+                
             return redirect('webapp:index')
         except Usuario.DoesNotExist:
             messages.warning(request, "El usuario no existe")
@@ -69,7 +89,8 @@ def login(request):
 def logout(request):
     try:
         del request.session["logueoCliente"]
-        del request.session["carrito"]
+        carrito = Carrito(request)
+        carrito.limpiar()
         del request.session["final"]
         return redirect('webapp:index')
     except Exception as e:
@@ -101,20 +122,23 @@ def producto(request, id):
     except:
         return render(request, 'webapp/tienda/404.html')
 
+"""Carrito de compras
+Método para agregar los juegos al la lista de compras
+carrito: variable de sesión donde se almacenan las id de las selecciones
+Returns:
+    _type_: _vacio_
+"""
 def agregarAlCarrito(request, id):
+    
     try:
-        cliente = request.session.get('logueoCliente', False)
-        if cliente:
-            carrito = request.session["carrito"]
-            juego = Juego.objects.get(id = id)
-            if carrito.count(id):
-                messages.warning(request, f"{juego.titulo} ya estaba en el carrito")
-            else:
-                request.session['carrito'] += id
-                carrito = request.session["carrito"]
-                messages.warning(request, f"{carrito}")
-        else:
-            messages.warning(request, "Inicie sesión primero")
+        #cliente = request.session.get('logueoCliente')
+        #if cliente:
+        carrito = Carrito(request)
+        juego = Juego.objects.get(id = id)
+        
+        carrito.agregar(juego)
+            
+        messages.warning(request, f"{request.session['carrito']} agregado {juego.titulo}")
     except Exception as e:
         messages.warning(request, f"Error: {e}")
     return redirect('webapp:tienda')
@@ -123,13 +147,15 @@ def verCarrito(request):
     try:
         cliente = request.session.get('logueoCliente', False)
         if cliente:
-            carrito = request.session["carrito"]
-            if len(carrito) > 0:
+            
+            if request.session.get("carrito"):
+                carrito = request.session["carrito"]
+                            
                 juegos = Juego.objects.filter(id__in=carrito)
                 total = 0
                 for juego in juegos:
                     total += juego.precio
-                return render(request, 'webapp/tienda/cart.html', {'juegos': juegos, 'total': total})
+                return render(request, 'webapp/tienda/cart.html')  #{'juegos': juegos, 'total': total})
             else:
                 return render(request, 'webapp/tienda/cart.html')
     except Exception as e:
@@ -140,14 +166,40 @@ def eliminarJuegoDelCarrito(request, id):
     try:
         cliente = request.session.get('logueoCliente', False)
         if cliente:
-            request.session["carrito"].remove(id)
-            request.session.modified = True
+            carrito = Carrito(request)
+            juego = Juego.objects.get(id = id)
+            
+            carrito.eliminar(juego)
+            
             return redirect('webapp:verCarrito')
         else:
             messages.warning(request, "Inicia sesión primero")
             return redirect('webapp:tienda')
     except Exception as e:
         messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def restarJuego(request, id):
+    try:
+        cliente = request.session.get('logueoCliente', False)
+        if cliente:
+            carrito = Carrito(request)
+            juego = Juego.objects.get(id = id)
+            
+            carrito.restar(juego)
+            
+            return redirect('webapp:verCarrito')
+        else:
+            messages.warning(request, "Inicia sesión primero")
+            return redirect('webapp:tienda')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+def vaciarCarrito(request):
+    carrito = Carrito(request)    
+    carrito.limpiar()
+    
     return redirect('webapp:tienda')
 
 def checkout(request):
@@ -179,8 +231,8 @@ def venta(request):
         cliente = request.session.get('logueoCliente', False)
         idsJuegos = request.session.get('final', False)
         if cliente and idsJuegos:
-            del request.session["carrito"]
-            request.session["carrito"] = []
+            #del request.session["carrito"]
+            #request.session["carrito"] = []
             juegos = Juego.objects.filter(id__in=idsJuegos)
             total = 0
             cliente = Usuario.objects.get(id = cliente[0])
@@ -218,20 +270,24 @@ def formLoginCrud(request):
 def loginCrud(request):
     try:
         if request.method == "POST":
+            
             email = request.POST['email']
-            clave = request.POST['clave']
+            clavePost = request.POST['clave']
+            
+            usuario = Usuario.objects.get(email = email)
+            
+            if contexto.verify(clavePost, usuario.clave):                
+                if usuario.rol == 'C':
+                    messages.error(request, "Este usuario no posee permisos para ingresar")
+                    return redirect('webapp:loginEmpleados')
+                #Crear sesión
+                request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
 
-            usuario = Usuario.objects.get(email = email, clave = clave)
-
-            if usuario.rol == 'C':
-                messages.error(request, "Este usuario no posee permisos para ingresar")
-                return redirect('webapp:loginEmpleados')
-            #Crear sesión
-            request.session["logueo"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
-
-            logueo = request.session.get("logueo", False)
-            # -------------
-            return redirect('webapp:inicioCrud')
+                logueo = request.session.get("logueo", False)
+                # -------------
+                return redirect('webapp:inicioCrud')
+            else:
+                 messages.warning(request, "Contraseña incorrecta")
         else:
             messages.warning(request, "Usted no ha enviado datos")
             return redirect('webapp:loginEmpleados')
