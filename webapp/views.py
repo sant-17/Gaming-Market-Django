@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from webapp.Carrito import Carrito
+from webapp.carrito import Carrito
 from .models import *
 from datetime import date
 from django.db.models import Q

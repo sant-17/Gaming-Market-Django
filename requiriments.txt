@@ -8,5 +8,10 @@ Install django
 
 Install passlib 
 
->> pip Install passlib
+> pip Install passlib
 
+Install sphinx
+
+> pip install sphinx
+
+(https://davidcasr.medium.com/c%C3%B3mo-documentar-un-proyecto-django-con-sphinx-80e4a090896e)
