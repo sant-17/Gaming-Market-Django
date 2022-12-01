@@ -69,7 +69,7 @@
 										<a class="shopping-cart" href="{% url 'webapp:verCarrito' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="user" href=""><i class="fas fa-user"></i></a>
                                     	<ul class="sub-menu">
-											<li><a href="">Mi perfil</a></li>
+											<li><a href="{% url 'webapp:perfilCliente' %}">Mi perfil</a></li>
                                         	<li><a href="{% url 'webapp:logout' %}">Cerrar sesión</a></li>
                                     	</ul>
 										{% endif %}

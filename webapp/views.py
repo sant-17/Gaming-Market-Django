@@ -34,7 +34,14 @@ def signup(request):
     return render(request, 'webapp/tienda/sign-up.html')
 
 def guardarCliente(request):
-    
+    """_summary_
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
                 
         if request.method == "POST":
@@ -846,3 +853,45 @@ def buscarEmpleado(request):
     else:
         messages.warning(request, "Inicie sesión primero")
         return redirect('webapp:loginEmpleados')
+    
+#Cliente
+
+def miPerfil(request):
+    login = request.session.get('logueo', False)
+    cliente = Usuario.objects.get(id = login[0])   
+    
+    
+    return render(request, 'webapp/perfil-usuario/misDatos.html', {"cliente": cliente})
+
+
+def editarUsuarioCliente(request):
+    try:
+        login = request.session.get('logueo', False)
+        if login:
+            if login[4] == "C":
+                if request.method == "POST":
+                    usuario = Usuario.objects.get(id = login[0])
+                    usuario.email = request.POST['email']
+                    
+                    #if request.POST['email'] == usuario.email:
+                     #   usuario.email = usuario.email
+                    #elif request.POST['email'] in Usuario.objects.order_by('-habilitado').filter(email = request.POST['email']):
+                     #   messages.success(request, f"El correo ({request.POST['email']}) ya esta en uso")
+                    
+                    usuario.nombre = request.POST['nombre']
+                    usuario.apellido = request.POST['apellido']
+                    usuario.telefono = request.POST['telefono']
+                    usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
+                    usuario.save()
+                    messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
+                else:
+                    messages.warning(request, "Usted no ha enviado datos")
+            else:
+                messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
+                return redirect('webapp:inicioCrud')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:logincrud')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
