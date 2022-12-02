@@ -67,5 +67,5 @@ urlpatterns = [
     
     #CLIENTES
     path('editarCliente/', views.editarUsuarioCliente, name="editarUsuarioCliente"),
-    path('perfilCliente/', views.miPerfil, name="perfilCliente"),
+    path('perfilcliente/', views.miPerfil, name="perfilCliente"),
 ]

@@ -31,16 +31,31 @@ contexto = CryptContext(
 
 # TIENDA
 def signup(request):
-    return render(request, 'webapp/tienda/sign-up.html')
-
-def guardarCliente(request):
-    """_summary_
+    """sigup
+    renderiza el template  
 
     Args:
         request (_type_): _description_
 
     Returns:
-        _type_: _description_
+        _type_:  rendeiza la pagina sig-up.html
+    """
+    return render(request, 'webapp/tienda/sign-up.html')
+
+def guardarCliente(request):
+    """ recive por medio de POST los datos del formulario, con el fin de crear nuevo cliente
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _id_: _PK del cliente seleccionado_
+        _String_: _nombre del cliente_
+        _String_: _apellido del cliente_
+        _Date_: _fecha nacimineto del cliente_
+        _String_: _correoe del cliente_
+        _String_: _clave del cliente_
+        _String_: _nombre del cliente_
     """
     try:
                 
@@ -66,6 +81,14 @@ def guardarCliente(request):
     return redirect('webapp:index')
 
 def login(request):
+    """_summary_
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     if request.method == "POST":
         try:
             
@@ -857,11 +880,16 @@ def buscarEmpleado(request):
 #Cliente
 
 def miPerfil(request):
-    login = request.session.get('logueo', False)
-    cliente = Usuario.objects.get(id = login[0])   
+    try:
+        login = request.session.get('logueo', False)
+        if login:
+            if login[4] == "C":
+                cliente = Usuario.objects.get(id = login[0]) 
+                return render(request, 'webapp:perfilCliente', {"cliente": cliente})
+                
     
-    
-    return render(request, 'webapp/perfil-usuario/misDatos.html', {"cliente": cliente})
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
 
 
 def editarUsuarioCliente(request):
