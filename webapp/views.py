@@ -31,7 +31,8 @@ contexto = CryptContext(
 
 # TIENDA
 def signup(request):
-    """sigup
+    """
+    sigup
     renderiza el template  
 
     Args:
@@ -43,22 +44,18 @@ def signup(request):
     return render(request, 'webapp/tienda/sign-up.html')
 
 def guardarCliente(request):
-    """ recive por medio de POST los datos del formulario, con el fin de crear nuevo cliente
+    """ 
+    **Guardar cliente**
+        Recive por medio de POST los datos del formulario, con el fin de crear nuevo cliente
 
     Args:
-        request (_type_): _description_
+        request (_HttpRequest_): _Datos sobre la sesión en la que estamos trabajando
 
     Returns:
-        _id_: _PK del cliente seleccionado_
-        _String_: _nombre del cliente_
-        _String_: _apellido del cliente_
-        _Date_: _fecha nacimineto del cliente_
-        _String_: _correoe del cliente_
-        _String_: _clave del cliente_
-        _String_: _nombre del cliente_
+        objeto cliente
     """
     try:
-                
+
         if request.method == "POST":
             usuario = Usuario(
                 nombre=request.POST['nombre'],
@@ -81,13 +78,14 @@ def guardarCliente(request):
     return redirect('webapp:index')
 
 def login(request):
-    """_summary_
+    """
+    **Formulario para el logueo de usuarios**
 
     Args:
-        request (_type_): _description_
+        request (_type_): _Datos sobre la sesión en la que estamos trabajando
 
     Returns:
-        _type_: _description_
+        _redirect_: _Redirección a pagina de inicio
     """
     if request.method == "POST":
         try:
@@ -128,6 +126,20 @@ def logout(request):
         return redirect('webapp:index')
 
 def index(request):
+    """Descripción de la función
+
+    Parameters
+    ----------
+    parametro_1 : tipo
+        Descripción del parametro
+    parametro_2 : tipo
+        Descripción del parametro
+
+    Returns
+    -------
+    tipo
+        Descripción de los valores que devuelve
+    """
     juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
     return render(request, 'webapp/tienda/landing-page.html', {"juegos": juegos})
 

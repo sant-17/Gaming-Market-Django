@@ -57,6 +57,8 @@
     </div>
     <!-- Letrero - Final -->
 
+    <!-- Recuadro para representar las alertas-->
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{% if message.tags != 'error' %}{{ message.tags }}{% elif message.tags == 'error' %}danger{% endif %}" role="alert">{{ message }}</div>
@@ -64,7 +66,16 @@
     {% endif %}
 
     <br>
+
     <div class="contact-from-section mb-150">
+        <!-- formulario para permitir el inicio de sesión
+        Args:
+            email (_type_): _correo del cliente_
+            clave (_type_): _clave del cliente_
+        Returns:
+            _redirect_: _Redirección a pagina de inicio_
+        
+        -->
         <div class="container">
             <div class="formulario">
                 <form action="{% url 'webapp:loginCrud' %}" class="needs-validation" method="post">
