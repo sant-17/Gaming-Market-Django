@@ -89,17 +89,17 @@
 								<td>Juego</td>
 								<td>Precio</td>
 							</tr>
-							{% for juego in juegos %}
+							{% for key, value in request.session.carrito.items %}
 							<tr>
-								<td>{{juego.titulo}}</td>
-								<td>${{juego.precio|floatformat:"0g"}}</td>
+								<td>{{value.titulo}}</td>
+								<td>${{value.precio|floatformat:"0g"}}</td>
 							</tr>
 							{% endfor %}
 						</tbody>
 						<tbody class="checkout-details">
 							<tr>
 								<td>Total</td>
-								<td>${{total|floatformat:"0g"}}</td>
+								<td>${{totalCarrito|floatformat:"0g"}}</td>
 							</tr>
 						</tbody>
 					</table>
