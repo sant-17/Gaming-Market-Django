@@ -61,7 +61,7 @@
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 										{% if not request.session.logueoCliente %}
 										<a href="" data-toggle="modal" data-target="#loginModal">Ingresar</a>
-										<a href="{% url 'webapp:perfilCliente' %}">Registrarse</a>
+										<a href="{% url 'webapp:signup' %}">Registrarse</a>
 										{% else %}
 										<a class="shopping-cart" href="{% url 'webapp:verCarrito' %}"><i class="fas fa-shopping-cart"></i></a>
 										<a class="user" href=""><i class="fas fa-user"></i></a>

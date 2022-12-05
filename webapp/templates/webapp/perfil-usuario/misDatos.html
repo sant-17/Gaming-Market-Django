@@ -1,4 +1,4 @@
-{% extends 'webapp/base-crud.html' %}
+{% extends 'webapp/base.html' %}
 {% load static %}
 
 {% block titulo %}Mi Perfil{% endblock titulo %}
@@ -10,30 +10,46 @@
 
 {% block contenedor %}
 
-{% if request.session.logueo %}
-{% if request.session.logueo.4 == 'C' %}
+<!-- Letrero - Inicio -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2 text-center">
+                <div class="breadcrumb-text">
+                    <p>Tu perfil</p>
+                    <h1>{{request.session.logueoCliente.1}}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Letrero - Final -->
+
+{% if request.session.logueoCliente %}
+{% if request.session.logueoCliente.4 == 'Cliente' %}
 <br>
 <div class="contact-from-section mb-150">
     <div class="container">
         <div class="formulario">
-            
-                
-                <p>Nombres 
-                    <input value="{{request.session.logueo.1}}" name="nombre" type="text" placeholder="Nombres" required>
+            <form action="{% url 'webapp:editarUsuarioCliente' %}" class="needs-validation" enctype="multipart/form-data" method="post">{% csrf_token %}
+
+                <p>Nombres
+                    <input value="{{cliente.nombre}}" name="nombre" type="text" placeholder="Nombres"
+                        required>
                 </p>
-                <p>Apellidos 
-                    <input value="{{request.session.logueo.2}}" name="apellido" type="text" placeholder="Apellidos" required>
+                <p>Apellidos
+                    <input value="{{cliente.apellido}}" name="apellido" type="text" placeholder="Apellidos"
+                        required>
                 </p>
                 <p>Fecha de nacimiento
-                    <input value="{{cliente.fecha_nacimiento|date:'Y-m-d'}}" name="fecha_nacimiento" type="date" required>
+                    <input value="{{cliente.fecha_nacimiento|date:'Y-m-d'}}" name="fecha_nacimiento" type="date"
+                        required>
                 </p>
-                <p>Teléfono de contacto
-                    <input value="{{cliente.telefono}}" name="telefono" type="number" placeholder="Número" min="0" oninput="validity.valid||(value='');" required>
+                <p>Email
+                    <input value="{{cliente.email}}" name="email" type="email" placeholder="Email"
+                        pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
                 </p>
-                <p>Email 
-                    <input value="{{request.session.logueo.3}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
-                </p> 
-                <br/>
+                <br />
                 <!-- Botón del enviar formulario-->
                 <div class="form-btns">
                     <button type="submit">Enviar formulario</button>
@@ -41,9 +57,13 @@
                 </div>
             </form>
         </div>
-        
+
     </div>
 </div>
+{% else %}
+CONDICIONAL INTERNA
 {% endif %}
+{% else %}
+CONDICIONAL EXTERNA
 {% endif %}
 {% endblock contenedor %}

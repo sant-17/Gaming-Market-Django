@@ -903,9 +903,9 @@ def miPerfil(request):
 
 def editarUsuarioCliente(request):
     try:
-        login = request.session.get('logueo', False)
+        login = request.session.get('logueoCliente', False)
         if login:
-            if login[4] == "C":
+            if login[4] == "Cliente":
                 if request.method == "POST":
                     usuario = Usuario.objects.get(id = login[0])
                     usuario.email = request.POST['email']
@@ -917,7 +917,6 @@ def editarUsuarioCliente(request):
                     
                     usuario.nombre = request.POST['nombre']
                     usuario.apellido = request.POST['apellido']
-                    usuario.telefono = request.POST['telefono']
                     usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
                     usuario.save()
                     messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
@@ -925,10 +924,10 @@ def editarUsuarioCliente(request):
                     messages.warning(request, "Usted no ha enviado datos")
             else:
                 messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
-                return redirect('webapp:inicioCrud')
+                return redirect('webapp:perfilCliente')
         else:
             messages.warning(request, "Inicie sesión primero")
-            return redirect('webapp:logincrud')
+            return redirect('webapp:index')
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:tienda')
