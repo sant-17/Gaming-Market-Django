@@ -1,0 +1,48 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Actualizando Perfil{% endblock titulo %}
+
+{% block encabezado %}Edición{% endblock encabezado %}
+{% block subencabezado %}Actualizando Cliente{% endblock subencabezado %}
+
+
+{% block contenedor %}
+
+{% if request.session.logueo %}
+{% if request.session.logueo.4 == 'C' %}
+<br>
+<div class="contact-from-section mb-150">
+    <div class="container">
+        <div class="formulario">
+            <form action="{% url 'webapp:editarUsuarioCliente' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+                <input value="{{usuario.id}}" readonly name="id" type="hidden" required>
+                <p>Nombres 
+                    <input value="{{usuario.nombre}}" name="nombre" type="text" placeholder="Nombres" required>
+                </p>
+                <p>Apellidos 
+                    <input value="{{usuario.apellido}}" name="apellido" type="text" placeholder="Apellidos" required>
+                </p>
+                <p>Fecha de nacimiento
+                    <input value="{{usuario.fecha_nacimiento|date:'Y-m-d'}}" name="fecha_nacimiento" type="date" required>
+                </p>
+                <p>Teléfono de contacto
+                    <input value="{{usuario.telefono}}" name="telefono" type="number" placeholder="Número" min="0" oninput="validity.valid||(value='');" required>
+                </p>
+                <p>Email 
+                    <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
+                </p> 
+                <br/>
+                <!-- Botón del enviar formulario-->
+                <div class="form-btns">
+                    <button type="submit">Enviar formulario</button>
+                    <button type="reset">Limpiar formulario</button>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock contenedor %}

@@ -1,0 +1,1143 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="es" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>webapp.views &mdash; documentación de Gaming_market - 1</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/fonts.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/translations.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Índice" href="../../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Gaming_market
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Buscar documentos" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gaming_market</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+<div class="git-ribbon">
+  <a href="http://github.com/SwissDataScienceCenter" rel="me">Join us on GitHub</a>
+</div>
+
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Código de módulo</a> &raquo;</li>
+        
+      <li>webapp.views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Código fuente para webapp.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+
+<span class="kn">from</span> <span class="nn">webapp.carrito</span> <span class="kn">import</span> <span class="n">Carrito</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span>
+
+<span class="c1"># Mensajes tipo cookies temporales</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+
+<span class="c1"># Gestión de errores de base de datos</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">IntegrityError</span>    
+
+<span class="c1"># Paginador</span>
+<span class="kn">from</span> <span class="nn">django.core.paginator</span> <span class="kn">import</span> <span class="n">Paginator</span>
+
+<span class="c1">#Almacenamiento de archivos</span>
+<span class="kn">from</span> <span class="nn">django.core.files.storage</span> <span class="kn">import</span> <span class="n">FileSystemStorage</span>
+
+<span class="c1">#Libreria para encripación</span>
+<span class="kn">from</span> <span class="nn">passlib.context</span> <span class="kn">import</span> <span class="n">CryptContext</span>
+<span class="c1"># Round: Iteraciones para reducir la posibilidad de cracking.</span>
+<span class="n">contexto</span> <span class="o">=</span> <span class="n">CryptContext</span><span class="p">(</span>
+    <span class="n">schemes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pbkdf2_sha256&quot;</span><span class="p">],</span>
+    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;pbkdf2_sha256&quot;</span><span class="p">,</span>
+    <span class="n">pbkdf2_sha256__default_rounds</span><span class="o">=</span><span class="mi">333</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Create your views here.</span>
+
+<span class="c1"># TIENDA</span>
+<div class="viewcode-block" id="signup"><a class="viewcode-back" href="../../index.html#webapp.views.signup">[documentos]</a><span class="k">def</span> <span class="nf">signup</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sigup</span>
+<span class="sd">    renderiza el template  </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (_type_): _description_</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_:  rendeiza la pagina sig-up.html</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/sign-up.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="guardarCliente"><a class="viewcode-back" href="../../index.html#webapp.views.guardarCliente">[documentos]</a><span class="k">def</span> <span class="nf">guardarCliente</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    **Guardar cliente**</span>
+<span class="sd">        Recive por medio de POST los datos del formulario, con el fin de crear nuevo cliente</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (_HttpRequest_): _Datos sobre la sesión en la que estamos trabajando</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        objeto cliente</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="p">(</span>
+                <span class="n">nombre</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                <span class="n">apellido</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;apellido&#39;</span><span class="p">],</span>
+                <span class="n">fecha_nacimiento</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_nacimiento&#39;</span><span class="p">],</span>
+                <span class="n">email</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span>
+                <span class="n">clave</span><span class="o">=</span> <span class="n">contexto</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;clave&#39;</span><span class="p">])</span> <span class="p">,</span>
+                
+            <span class="p">)</span>
+            <span class="n">usuario</span><span class="o">.</span><span class="n">full_clean</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">usuario</span><span class="o">.</span><span class="n">esMayorDeEdad</span><span class="p">():</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Su usuario ha sido creado con éxito&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Lo sentimos, no admitimos menores de edad&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../index.html#webapp.views.login">[documentos]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    **Formulario para el logueo de usuarios**</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (_type_): _Datos sobre la sesión en la que estamos trabajando</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _redirect_: _Redirección a pagina de inicio</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            
+            <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+            <span class="n">clavePost</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;clave&#39;</span><span class="p">]</span>
+            <span class="n">clave</span><span class="o">=</span> <span class="n">contexto</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">clavePost</span><span class="p">)</span>
+            
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">contexto</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">clavePost</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">clave</span><span class="p">):</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueoCliente&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">get_rol_display</span><span class="p">()]</span>       
+                <span class="c1"># -------------</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Bienvenido&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Contraseña incorrecta&quot;</span><span class="p">)</span>
+                
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;El usuario no existe&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">logout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueoCliente&quot;</span><span class="p">]</span>
+        <span class="n">carrito</span> <span class="o">=</span> <span class="n">Carrito</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">carrito</span><span class="o">.</span><span class="n">limpiar</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;final&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:index&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="index"><a class="viewcode-back" href="../../index.html#webapp.views.index">[documentos]</a><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Descripción de la función</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    parametro_1 : tipo</span>
+<span class="sd">        Descripción del parametro</span>
+<span class="sd">    parametro_2 : tipo</span>
+<span class="sd">        Descripción del parametro</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tipo</span>
+<span class="sd">        Descripción de los valores que devuelve</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id&#39;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/landing-page.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;juegos&quot;</span><span class="p">:</span> <span class="n">juegos</span><span class="p">})</span></div>
+
+<span class="k">def</span> <span class="nf">tienda</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">juegos</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+    <span class="n">juegos</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/shop.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;juegos&quot;</span><span class="p">:</span> <span class="n">juegos</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">producto</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">generoPrincipal</span> <span class="o">=</span> <span class="n">juego</span><span class="o">.</span><span class="n">generos</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="n">recomendaciones</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">generos__id__contains</span><span class="o">=</span><span class="n">generoPrincipal</span><span class="o">.</span><span class="n">id</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">cantidad</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">generos__id__contains</span><span class="o">=</span><span class="n">generoPrincipal</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="n">recomendacion</span> <span class="o">=</span> <span class="s2">&quot;similares&quot;</span>
+        <span class="k">if</span> <span class="n">cantidad</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">recomendaciones</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-id&#39;</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">recomendacion</span> <span class="o">=</span> <span class="s2">&quot;nuevos&quot;</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/single-product.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;juego&#39;</span><span class="p">:</span> <span class="n">juego</span><span class="p">,</span> <span class="s1">&#39;recomendacion&#39;</span><span class="p">:</span> <span class="n">recomendacion</span><span class="p">,</span>  <span class="s1">&#39;recomendaciones&#39;</span><span class="p">:</span> <span class="n">recomendaciones</span><span class="p">})</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/404.html&#39;</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;Carrito de compras</span>
+<span class="sd">Método para agregar los juegos al la lista de compras</span>
+<span class="sd">carrito: variable de sesión donde se almacenan las id de las selecciones</span>
+<span class="sd">Returns:</span>
+<span class="sd">    _type_: _vacio_</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">agregarAlCarrito</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1">#cliente = request.session.get(&#39;logueoCliente&#39;)</span>
+        <span class="c1">#if cliente:</span>
+        <span class="n">carrito</span> <span class="o">=</span> <span class="n">Carrito</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        
+        <span class="n">carrito</span><span class="o">.</span><span class="n">agregar</span><span class="p">(</span><span class="n">juego</span><span class="p">)</span>
+            
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s1">&#39;carrito&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> agregado </span><span class="si">{</span><span class="n">juego</span><span class="o">.</span><span class="n">titulo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">verCarrito</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cliente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueoCliente&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;carrito&quot;</span><span class="p">):</span>
+                <span class="n">carrito</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;carrito&quot;</span><span class="p">]</span>
+                            
+                <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">carrito</span><span class="p">)</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">juego</span> <span class="ow">in</span> <span class="n">juegos</span><span class="p">:</span>
+                    <span class="n">total</span> <span class="o">+=</span> <span class="n">juego</span><span class="o">.</span><span class="n">precio</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/cart.html&#39;</span><span class="p">)</span>  <span class="c1">#{&#39;juegos&#39;: juegos, &#39;total&#39;: total})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/cart.html&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">eliminarJuegoDelCarrito</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cliente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueoCliente&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span><span class="p">:</span>
+            <span class="n">carrito</span> <span class="o">=</span> <span class="n">Carrito</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+            
+            <span class="n">carrito</span><span class="o">.</span><span class="n">eliminar</span><span class="p">(</span><span class="n">juego</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:verCarrito&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicia sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">restarJuego</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cliente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueoCliente&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span><span class="p">:</span>
+            <span class="n">carrito</span> <span class="o">=</span> <span class="n">Carrito</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+            <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+            
+            <span class="n">carrito</span><span class="o">.</span><span class="n">restar</span><span class="p">(</span><span class="n">juego</span><span class="p">)</span>
+            
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:verCarrito&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicia sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">vaciarCarrito</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">carrito</span> <span class="o">=</span> <span class="n">Carrito</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>    
+    <span class="n">carrito</span><span class="o">.</span><span class="n">limpiar</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">checkout</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cliente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueoCliente&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span><span class="p">:</span>
+            <span class="n">carrito</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;carrito&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">carrito</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;final&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;carrito&quot;</span><span class="p">]</span>
+                
+                <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">carrito</span><span class="p">)</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">juego</span> <span class="ow">in</span> <span class="n">juegos</span><span class="p">:</span>
+                    <span class="n">total</span> <span class="o">+=</span> <span class="n">juego</span><span class="o">.</span><span class="n">precio</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">cliente</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/tienda/checkout.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;juegos&#39;</span><span class="p">:</span> <span class="n">juegos</span><span class="p">,</span> <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span> <span class="s1">&#39;cliente&#39;</span><span class="p">:</span> <span class="n">usuario</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:verCarrito&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicia sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;final&quot;</span><span class="p">]</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">venta</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cliente</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueoCliente&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">idsJuegos</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span> <span class="ow">and</span> <span class="n">idsJuegos</span><span class="p">:</span>
+            <span class="c1">#del request.session[&quot;carrito&quot;]</span>
+            <span class="c1">#request.session[&quot;carrito&quot;] = []</span>
+            <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">id__in</span><span class="o">=</span><span class="n">idsJuegos</span><span class="p">)</span>
+            <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">cliente</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">cliente</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">juego</span> <span class="ow">in</span> <span class="n">juegos</span><span class="p">:</span>
+                <span class="n">total</span> <span class="o">+=</span> <span class="n">juego</span><span class="o">.</span><span class="n">precio</span>
+            <span class="n">venta</span> <span class="o">=</span> <span class="n">Venta</span><span class="p">(</span>
+                <span class="n">id_usuario</span> <span class="o">=</span> <span class="n">cliente</span><span class="p">,</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="n">total</span>
+            <span class="p">)</span>
+            <span class="n">venta</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">juego</span> <span class="ow">in</span> <span class="n">juegos</span><span class="p">:</span>
+                <span class="n">venta_detalle</span> <span class="o">=</span> <span class="n">Venta_detalle</span><span class="p">(</span>
+                    <span class="n">id_juego</span> <span class="o">=</span> <span class="n">juego</span><span class="p">,</span>
+                    <span class="n">id_venta</span> <span class="o">=</span> <span class="n">venta</span><span class="p">,</span>
+                    <span class="n">precio</span> <span class="o">=</span> <span class="n">juego</span><span class="o">.</span><span class="n">precio</span>
+                <span class="p">)</span>
+                <span class="n">venta_detalle</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;final&quot;</span><span class="p">]</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Tu compra ha sido un éxito&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cliente</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">idsJuegos</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Complete la compra a travez del checkout&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idsJuegos</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">cliente</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;final&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+
+<span class="c1"># CRUD</span>
+
+<span class="k">def</span> <span class="nf">formLoginCrud</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/crud/login.html&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loginCrud</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+            
+            <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+            <span class="n">clavePost</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;clave&#39;</span><span class="p">]</span>
+            
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">contexto</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">clavePost</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">clave</span><span class="p">):</span>                
+                <span class="k">if</span> <span class="n">usuario</span><span class="o">.</span><span class="n">rol</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Este usuario no posee permisos para ingresar&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+                <span class="c1">#Crear sesión</span>
+                <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">usuario</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">usuario</span><span class="o">.</span><span class="n">get_rol_display</span><span class="p">()]</span>
+
+                <span class="n">logueo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;logueo&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="c1"># -------------</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                 <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Contraseña incorrecta&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">DoesNotExist</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;El usuario no existe&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">logoutCrud</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="p">[</span><span class="s2">&quot;logueo&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">inicioCrud</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/crud/index.html&#39;</span><span class="p">)</span>
+
+<span class="c1"># PROVEEDORES</span>
+<span class="k">def</span> <span class="nf">listarProveedores</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">proveedores</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-habilitado&#39;</span><span class="p">)</span>
+        <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">proveedores</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+
+        <span class="c1">#Sobreescribiendo la salida de la consulta</span>
+        <span class="n">proveedores</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;proveedores&quot;</span><span class="p">:</span> <span class="n">proveedores</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/proveedor/listar_proveedores.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">formularioProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/proveedor/formulario_proveedor.html&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">guardarProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="p">(</span>
+                    <span class="n">nombre</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                    <span class="n">email</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span>
+                    <span class="n">telefono</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">],</span>
+                <span class="p">)</span>
+                <span class="n">proveedor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Proveedor (</span><span class="si">{</span><span class="n">proveedor</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) creado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">deshabilitarProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+            <span class="n">proveedor</span><span class="o">.</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">proveedor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Proveedor (</span><span class="si">{</span><span class="n">proveedor</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) deshabilitado exitosamente&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">habilitarProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+            <span class="n">proveedor</span><span class="o">.</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">proveedor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Proveedor (</span><span class="si">{</span><span class="n">proveedor</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) habilitado exitosamente&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">edicionProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/proveedor/edicion_proveedor.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;proveedor&#39;</span><span class="p">:</span> <span class="n">proveedor</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">editarProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                <span class="n">proveedor</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span>
+                <span class="n">proveedor</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+                <span class="n">proveedor</span><span class="o">.</span><span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">]</span>
+                <span class="n">proveedor</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Proveedor (</span><span class="si">{</span><span class="n">proveedor</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) editado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">buscarProveedor</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]</span>
+                <span class="n">proveedores</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-habilitado&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">nombre__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">email__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">telefono__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">))</span>
+                <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">proveedores</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+                <span class="n">proveedores</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+                <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;proveedores&quot;</span> <span class="p">:</span> <span class="n">proveedores</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/proveedor/listar_proveedores_ajax.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No envió datos&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarProveedores&#39;</span><span class="p">)</span>
+    
+        
+<span class="c1"># GENEROS</span>
+<span class="k">def</span> <span class="nf">listarGeneros</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">generos</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">generos</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        <span class="n">generos</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+        <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;generos&quot;</span><span class="p">:</span> <span class="n">generos</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/genero/listar_generos.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">formularioGenero</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/genero/formulario_genero.html&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">guardarGenero</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">genero</span> <span class="o">=</span> <span class="n">Genero</span><span class="p">(</span>
+                    <span class="n">nombre</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                <span class="p">)</span>
+                <span class="n">genero</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Genero (</span><span class="si">{</span><span class="n">genero</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) creado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarGeneros&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">eliminarGenero</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="n">genero</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+                <span class="n">genero_nombre</span> <span class="o">=</span> <span class="n">genero</span><span class="o">.</span><span class="n">nombre</span>
+                <span class="n">genero</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Genero (</span><span class="si">{</span><span class="n">genero_nombre</span><span class="si">}</span><span class="s2">) eliminado con éxito&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarGeneros&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No puede eliminar este genero ya que está relacionado con otros registros&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarGeneros&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">edicionGenero</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">genero</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/genero/edicion_genero.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;genero&#39;</span><span class="p">:</span> <span class="n">genero</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">editarGenero</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">genero</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                <span class="n">genero</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span>
+                <span class="n">genero</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Genero (</span><span class="si">{</span><span class="n">genero</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) editado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarGeneros&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># JUEGOS</span>
+<span class="k">def</span> <span class="nf">listarJuegos</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-habilitado&#39;</span><span class="p">)</span>
+        <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">juegos</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+        <span class="n">juegos</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/juego/listar_juegos.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;juegos&#39;</span><span class="p">:</span> <span class="n">juegos</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">formularioJuego</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">generos</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">proveedores</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/juego/formulario_juego.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;generos&quot;</span><span class="p">:</span> <span class="n">generos</span><span class="p">,</span> <span class="s2">&quot;proveedores&quot;</span><span class="p">:</span> <span class="n">proveedores</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">guardarJuego</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                    <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;imagen&quot;</span><span class="p">]</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;webapp/images/&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;webapp/images/default.jpg&#39;</span>
+
+                <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;proveedor&quot;</span><span class="p">])</span>
+                <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="p">(</span>
+                    <span class="n">titulo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;titulo&#39;</span><span class="p">],</span>
+                    <span class="n">fecha_lanzamiento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_lanzamiento&#39;</span><span class="p">],</span>
+                    <span class="n">desarrollador</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;desarrollador&#39;</span><span class="p">],</span>
+                    <span class="n">editor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;editor&#39;</span><span class="p">],</span>
+                    <span class="n">descripcion</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;descripcion&#39;</span><span class="p">],</span>
+                    <span class="n">esrb</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;esrb&#39;</span><span class="p">],</span>
+                    <span class="n">multijugador</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;multijugador&#39;</span><span class="p">],</span>
+                    <span class="n">stock</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;stock&#39;</span><span class="p">],</span>
+                    <span class="n">precio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;precio&#39;</span><span class="p">],</span>
+                    <span class="n">habilitado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;habilitado&#39;</span><span class="p">],</span>
+                    <span class="n">proveedor</span> <span class="o">=</span> <span class="n">proveedor</span><span class="p">,</span>
+                    <span class="n">imagen</span> <span class="o">=</span> <span class="n">file</span>
+
+                <span class="p">)</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">generos</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;generos&#39;</span><span class="p">)</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">generos</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">generos</span><span class="p">)</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Juego (</span><span class="si">{</span><span class="n">juego</span><span class="o">.</span><span class="n">titulo</span><span class="si">}</span><span class="s2">) guardado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">eliminarJuego</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+                <span class="n">juego_titulo</span> <span class="o">=</span> <span class="n">juego</span><span class="o">.</span><span class="n">titulo</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Genero (</span><span class="si">{</span><span class="n">juego_titulo</span><span class="si">}</span><span class="s2">) creado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">IntegrityError</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No puede eliminar este juego ya que está relacionado con otros registros&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">edicionJuego</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="n">generos</span> <span class="o">=</span> <span class="n">Genero</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="n">proveedores</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/juego/edicion_juego.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;juego&#39;</span><span class="p">:</span> <span class="n">juego</span><span class="p">,</span> <span class="s1">&#39;generos&#39;</span><span class="p">:</span> <span class="n">generos</span><span class="p">,</span> <span class="s2">&quot;proveedores&quot;</span><span class="p">:</span> <span class="n">proveedores</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">editarJuego</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">:</span>
+                    <span class="n">fss</span> <span class="o">=</span> <span class="n">FileSystemStorage</span><span class="p">()</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s2">&quot;imagen&quot;</span><span class="p">]</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="n">fss</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;webapp/images/&quot;</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">juegoTemp</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="n">juegoTemp</span><span class="o">.</span><span class="n">imagen</span>
+                <span class="n">proveedor</span> <span class="o">=</span> <span class="n">Proveedor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;proveedor&quot;</span><span class="p">])</span>
+                <span class="n">juego</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">titulo</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;titulo&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">fecha_lanzamiento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_lanzamiento&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">desarrollador</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;desarrollador&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">editor</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;editor&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">esrb</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;esrb&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">multijugador</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;multijugador&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;stock&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">precio</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;precio&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">imagen</span> <span class="o">=</span> <span class="n">file</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">habilitado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;habilitado&#39;</span><span class="p">]</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">proveedor</span> <span class="o">=</span> <span class="n">proveedor</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">generos</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                <span class="n">generos</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;generos&#39;</span><span class="p">)</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">generos</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">generos</span><span class="p">)</span>
+                <span class="n">juego</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Juego (</span><span class="si">{</span><span class="n">juego</span><span class="o">.</span><span class="n">titulo</span><span class="si">}</span><span class="s2">) editado exitosamente&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">buscarJuego</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]</span>
+                <span class="n">juegos</span> <span class="o">=</span> <span class="n">Juego</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">titulo__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">desarrollador__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">editor__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">))</span>
+                <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">juegos</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+                <span class="n">juegos</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+                <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;juegos&quot;</span> <span class="p">:</span> <span class="n">juegos</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/juego/listar_juegos_ajax.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No envió datos&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarJuegos&#39;</span><span class="p">)</span>
+
+
+<span class="c1"># USUARIO-EMPLEADOS</span>
+<span class="k">def</span> <span class="nf">listarUsuariosEmpleados</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Administrador&quot;</span><span class="p">:</span>
+            <span class="n">usuarios</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-habilitado&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">rol</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+            <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">usuarios</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+            <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+            <span class="n">usuarios</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/usuario-empleado/listar_empleados.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;usuarios&#39;</span><span class="p">:</span> <span class="n">usuarios</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">formularioUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/usuario-empleado/formulario_empleado.html&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">guardarUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                    <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="p">(</span>
+                        <span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">],</span>
+                        <span class="n">clave</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;clave&#39;</span><span class="p">],</span>
+                        <span class="n">rol</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span>
+                        <span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">],</span>
+                        <span class="n">apellido</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;apellido&#39;</span><span class="p">],</span>
+                        <span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">],</span>
+                        <span class="n">fecha_nacimiento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_nacimiento&#39;</span><span class="p">],</span>
+                    <span class="p">)</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Empleado (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) guardado exitosamente&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">deshabilitarUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Empleado (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) deshabilitado exitosamente&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">habilitarUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">habilitado</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Empleado (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) habilitado exitosamente&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">edicionUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+            <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/usuario-empleado/edicion_empleado.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;usuario&#39;</span><span class="p">:</span> <span class="n">usuario</span><span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">editarUsuarioEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                    <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;apellido&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">fecha_nacimiento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_nacimiento&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Usuario (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span><span class="si">}</span><span class="s2">) editado exitosamente&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">buscarEmpleado</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;A&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                <span class="n">resultado</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s2">&quot;buscar&quot;</span><span class="p">]</span>
+                <span class="n">empleados</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-habilitado&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Q</span><span class="p">(</span><span class="n">email__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">nombre__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">)</span> <span class="o">|</span> <span class="n">Q</span><span class="p">(</span><span class="n">apellido__icontains</span> <span class="o">=</span> <span class="n">resultado</span><span class="p">))</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">rol</span> <span class="o">=</span> <span class="s1">&#39;E&#39;</span><span class="p">)</span>
+                <span class="n">paginator</span> <span class="o">=</span> <span class="n">Paginator</span><span class="p">(</span><span class="n">empleados</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+                <span class="n">page_number</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;page&#39;</span><span class="p">)</span>
+                <span class="n">empleados</span> <span class="o">=</span> <span class="n">paginator</span><span class="o">.</span><span class="n">get_page</span><span class="p">(</span><span class="n">page_number</span><span class="p">)</span>
+                <span class="n">contexto</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;usuarios&quot;</span> <span class="p">:</span> <span class="n">empleados</span><span class="p">}</span>
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp/usuario-empleado/listar_empleados_ajax.html&#39;</span><span class="p">,</span> <span class="n">contexto</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No envió datos&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:listarEmpleados&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:loginEmpleados&#39;</span><span class="p">)</span>
+    
+<span class="c1">#Cliente</span>
+
+<span class="k">def</span> <span class="nf">miPerfil</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+                <span class="n">cliente</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">login</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> 
+                <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;webapp:perfilCliente&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;cliente&quot;</span><span class="p">:</span> <span class="n">cliente</span><span class="p">})</span>
+                
+    
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">editarUsuarioCliente</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">login</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logueo&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">login</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;C&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+                    <span class="n">usuario</span> <span class="o">=</span> <span class="n">Usuario</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">login</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+                    
+                    <span class="c1">#if request.POST[&#39;email&#39;] == usuario.email:</span>
+                     <span class="c1">#   usuario.email = usuario.email</span>
+                    <span class="c1">#elif request.POST[&#39;email&#39;] in Usuario.objects.order_by(&#39;-habilitado&#39;).filter(email = request.POST[&#39;email&#39;]):</span>
+                     <span class="c1">#   messages.success(request, f&quot;El correo ({request.POST[&#39;email&#39;]}) ya esta en uso&quot;)</span>
+                    
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;nombre&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;apellido&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">telefono</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;telefono&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">fecha_nacimiento</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;fecha_nacimiento&#39;</span><span class="p">]</span>
+                    <span class="n">usuario</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Usuario (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">nombre</span><span class="si">}</span><span class="s2">) (</span><span class="si">{</span><span class="n">usuario</span><span class="o">.</span><span class="n">apellido</span><span class="si">}</span><span class="s2">) editado exitosamente&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Usted no ha enviado datos&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;No posee los permisos para hacer esa acción. Contacte un administrador&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:inicioCrud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Inicie sesión primero&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:logincrud&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;webapp:tienda&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Derechos de autor 2022, Santiago Garcia, Orley Serna, Sebastian Betancur.
+
+    </p>
+  </div>
+    
+    
+    
+    Construido con <a href="https://www.sphinx-doc.org/">Sphinx</a> usando un
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">tema</a>
+    
+    proporcionado por <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -11,6 +11,11 @@ class Carrito:
             self.carrito= carrito
             
     def agregar(self, juego):
+        """Agrega elementos al diccionario
+
+        Args:
+            juego (_type_): _description_
+        """
         
         jId = str(juego.id)
         
