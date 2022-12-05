@@ -20,7 +20,7 @@
 <!-- end breadcrumb section -->
 
 
-
+{% if carrito %}	
 <!-- cart -->
 <br>
 <div class="cart-section">
@@ -56,7 +56,7 @@
 								<td colspan="3">Total</td>
 								<td>${{totalCarrito|floatformat:"0g"}}</td>
 							</tr>
-							
+							{% endif %}
 						</tbody>
 					</table>
 					<div class="cart-buttons">

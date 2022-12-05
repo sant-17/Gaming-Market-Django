@@ -202,7 +202,7 @@ def verCarrito(request):
                 return render(request, 'webapp/tienda/cart.html')
     except Exception as e:
         messages.warning(request, f"Error: {e}")
-    return redirect('webapp:tienda')
+    return redirect('webapp:verCarrito')
 
 def eliminarJuegoDelCarrito(request, id):
     try:
