@@ -185,6 +185,21 @@ def agregarAlCarrito(request, id):
         messages.warning(request, f"Error: {e}")
     return redirect('webapp:tienda')
 
+def aumentarEnCarrito(request, id):
+    
+    try:
+        #cliente = request.session.get('logueoCliente')
+        #if cliente:
+        carrito = Carrito(request)
+        juego = Juego.objects.get(id = id)
+        
+        carrito.agregar(juego)
+            
+        messages.warning(request, f"{request.session['carrito']} agregado {juego.titulo}")
+    except Exception as e:
+        messages.warning(request, f"Error: {e}")
+    return redirect('webapp:verCarrito')
+
 def verCarrito(request):
     try:
         cliente = request.session.get('logueoCliente', False)
