@@ -893,15 +893,12 @@ def buscarEmpleado(request):
 
 def miPerfil(request):
     try:
-        login = request.session.get('logueo', False)
+        login = request.session.get('logueoCliente', False)
         if login:
-            if login[4] == "C":
-                cliente = Usuario.objects.get(id = login[0]) 
-                return render(request, 'webapp:perfilCliente', {"cliente": cliente})
-                
-    
+            cliente = Usuario.objects.get(id = login[0])
     except Exception as e:
         messages.error(request, f"Error: {e}")
+    return render(request, 'webapp/perfil-usuario/misDatos.html', {"cliente": cliente})
 
 
 def editarUsuarioCliente(request):
