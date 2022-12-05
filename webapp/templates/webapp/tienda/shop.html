@@ -49,7 +49,15 @@
                         <a href="{% url 'webapp:producto' juego.id %}"><img src="{{juego.imagen.url}}" alt=""></a>
                     </div>
                     <h3> {{juego.titulo}}</h3>
-                    <p class="product-price"><span>Precio</span> ${{juego.precio|floatformat:"0g"}} </p>
+                    <p class="product-price"><span>
+                        {% for genero in juego.generos.all %}
+                        {% if genero.id == juego.generos.last.id %}
+                        {{genero}}
+                        {% else %}
+                        {{genero}},
+                        {% endif %}
+                        {% endfor %}
+                    </span>${{juego.precio|floatformat:"0g"}} </p>
                     <a href="{% url 'webapp:agregarAlCarrito' juego.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Agregar al carrito</a>
                 </div>
             </div>

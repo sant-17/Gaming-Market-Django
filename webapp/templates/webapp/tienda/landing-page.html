@@ -4,99 +4,110 @@
 {% block titulo %}Gaming Market{% endblock titulo %}
 
 {% block contenedor %}
-	<!-- CARRUSEL - INICIO -->
-	<div class="homepage-slider">
-		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-1">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
-						<div class="hero-text">
-							<div class="hero-text-tablecell">
-								<p class="subtitle">Bueno, bonito y barato</p>
-								<h1>Disfruta de los mejores precios</h1>
-								<div class="hero-btns">
-									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ir a los juegos</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-2">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-10 offset-lg-1 text-center">
-						<div class="hero-text">
-							<div class="hero-text-tablecell">
-								<p class="subtitle">Nuevos juegos</p>
-								<h1>Disfruta de lo nuevo</h1>
-								<div class="hero-btns">
-									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Visitar la tienda</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- single home slider -->
-		<div class="single-homepage-slider homepage-bg-3">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-10 offset-lg-1 text-right">
-						<div class="hero-text">
-							<div class="hero-text-tablecell">
-								<p class="subtitle">Adquiere lo nuevo</p>
-								<h1>Juega con tus amigos</h1>
-								<div class="hero-btns">
-									<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ver juegos</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- CARRUSEL - FIN -->
-
-	<!-- ULTIMOS JUEGOS AGREGADOS - INICIO -->
-	<div class="product-section mt-150 mb-150">
+<!-- CARRUSEL - INICIO -->
+<div class="homepage-slider">
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-1">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="section-title">	
-						<h3><span class="orange-text">Nuevos</span> Juegos</h3>
-						<p>Conoce los últimos juegos que hemos agregado. Estamos seguros de que te gustarán</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				{% for juego in juegos %}
-				<div class="col-lg-4 col-md-6 text-center">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="{% url 'webapp:producto' juego.id %}"><img src="{{juego.imagen.url}}" alt=""></a>
+				<div class="col-md-12 col-lg-7 offset-lg-1 offset-xl-0">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Bueno, bonito y barato</p>
+							<h1>Disfruta de los mejores precios</h1>
+							<div class="hero-btns">
+								<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ir a los juegos</a>
+							</div>
 						</div>
-						<h3> {{juego.titulo}}</h3>
-						<p class="product-price"><span>Precio</span> ${{juego.precio|floatformat:"0g"}} </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
 					</div>
 				</div>
-				{% endfor %}
 			</div>
 		</div>
 	</div>
-	<!-- ULTIMOS JUEGOS AGREGADOS - FIN -->
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-2">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 text-center">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Nuevos juegos</p>
+							<h1>Disfruta de lo nuevo</h1>
+							<div class="hero-btns">
+								<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Visitar la tienda</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- single home slider -->
+	<div class="single-homepage-slider homepage-bg-3">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 offset-lg-1 text-right">
+					<div class="hero-text">
+						<div class="hero-text-tablecell">
+							<p class="subtitle">Adquiere lo nuevo</p>
+							<h1>Juega con tus amigos</h1>
+							<div class="hero-btns">
+								<a href="{% url 'webapp:tienda' %}" class="boxed-btn">Ver juegos</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- CARRUSEL - FIN -->
 
-	
-	
-	<!-- advertisement section -->
-	<!--
+<!-- ULTIMOS JUEGOS AGREGADOS - INICIO -->
+<div class="product-section mt-150 mb-150">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2 text-center">
+				<div class="section-title">
+					<h3><span class="orange-text">Nuevos</span> Juegos</h3>
+					<p>Conoce los últimos juegos que hemos agregado. Estamos seguros de que te gustarán</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			{% for juego in juegos %}
+			<div class="col-lg-4 col-md-6 text-center">
+				<div class="single-product-item">
+					<div class="product-image">
+						<a href="{% url 'webapp:producto' juego.id %}"><img src="{{juego.imagen.url}}" alt=""></a>
+					</div>
+					<h3> {{juego.titulo}}</h3>
+					<p class="product-price">
+						<span>
+							{% for genero in juego.generos.all %}
+							{% if genero.id == juego.generos.last.id %}
+							{{genero}}
+							{% else %}
+							{{genero}},
+							{% endif %}
+							{% endfor %}
+						</span>
+						${{juego.precio|floatformat:"0g"}}
+					</p>
+					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<!-- ULTIMOS JUEGOS AGREGADOS - FIN -->
+
+
+
+<!-- advertisement section -->
+<!--
 	<div class="abt-section mb-150">
 		<div class="container">
 			<div class="row">
@@ -118,15 +129,15 @@
 		</div>
 	</div>
 	-->
-	<!-- end advertisement section -->
+<!-- end advertisement section -->
 
-	<!-- shop banner -->
-	<section class="shop-banner">
-    	<div class="container">
-        	<h3>Nuevos juegos <br> llegan en <span class="orange-text">Diciembre!</span></h3>
-            <div class="sale-percent"><span>Mira la tienda y descubre nuevos juegos</span></div>
-            <a href="{% url 'webapp:tienda' %}" class="cart-btn btn-lg">Ir Ahora</a>
-        </div>
-    </section>
-	<!-- end shop banner -->
+<!-- shop banner -->
+<section class="shop-banner">
+	<div class="container">
+		<h3>Nuevos juegos <br> llegan en <span class="orange-text">Diciembre!</span></h3>
+		<div class="sale-percent"><span>Mira la tienda y descubre nuevos juegos</span></div>
+		<a href="{% url 'webapp:tienda' %}" class="cart-btn btn-lg">Ir Ahora</a>
+	</div>
+</section>
+<!-- end shop banner -->
 {% endblock contenedor %}
