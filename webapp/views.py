@@ -71,10 +71,12 @@ def guardarCliente(request):
                 messages.success(request, f"Su usuario ha sido creado con éxito")
             else:
                 messages.warning(request, "Lo sentimos, no admitimos menores de edad")
+                return redirect('webapp:signup')
         else:
             messages.warning(request, "Usted no ha enviado datos")
     except Exception as e:
-        messages.error(request, f"Error: {e}")
+        messages.error(request, f"Error: Ya existe un usuario con este correo")
+        return redirect('webapp:signup')
     return redirect('webapp:index')
 
 def login(request):
