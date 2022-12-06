@@ -65,7 +65,7 @@
 							<input type="number" placeholder="1" value="1" min="1" oninput="validity.valid||(value='');">
 						</form>-->
 						
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Añadir al carrito</a>
+						<a href="{% url 'webapp:agregarAlCarrito' juego.id %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Añadir al carrito</a>
 					</div>
 				</div>
 			</div>

@@ -287,8 +287,10 @@ def venta(request):
     try:
         cliente = request.session.get('logueoCliente', False)
         idsJuegos = request.session.get('final', False)
+        carrito = request.session["carrito"]
+        
         if cliente and idsJuegos:
-            #del request.session["carrito"]
+            ''' #del request.session["carrito"]
             #request.session["carrito"] = []
             juegos = Juego.objects.filter(id__in=idsJuegos)
             total = 0
@@ -304,9 +306,33 @@ def venta(request):
                 venta_detalle = Venta_detalle(
                     id_juego = juego,
                     id_venta = venta,
+                    cantidad = carrito['cantidad'],
                     precio = juego.precio
-                )
+                ) '''
+            cliente = Usuario.objects.get(id = cliente[0])
+            totalV =0
+            for key, value in request.session["carrito"].items():
+                   totalV += float(value["precio"])
+                   
+            venta = Venta(
+                id_usuario = cliente,
+                total = totalV
+            )
+            venta.save()
+            print("---------------------------")
+            for clave, valor in carrito.items():
+                print("Imprimiendo ----------->", valor["cantidad"])
+                juego = Juego.objects.get(id = valor["juegoId"])
+                venta_detalle = Venta_detalle(
+                    id_juego = juego,
+                    id_venta = venta,
+                    cantidad = valor["cantidad"],
+                    precio = valor["precio"]
+                    )
                 venta_detalle.save()
+            
+            carrito = Carrito(request)
+            carrito.limpiar()
             del request.session["final"]
             messages.success(request, "Tu compra ha sido un éxito")
         if cliente and not idsJuegos:
