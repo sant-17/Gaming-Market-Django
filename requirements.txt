@@ -1,0 +1,22 @@
+virtualenv
+
+#> virtualenv env
+
+django
+
+#> pip Install django
+
+passlib 
+
+#> pip Install passlib
+
+pillow
+
+#> pip install pillow
+
+sphinx
+
+#> pip install sphinx
+
+#> pip install renku-sphinx-theme
+
