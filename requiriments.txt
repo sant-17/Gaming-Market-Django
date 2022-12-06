@@ -10,13 +10,13 @@ Install passlib
 
 > pip Install passlib
 
+Install pillow
+
+> pip install pillow
+
 Install sphinx
 
 > pip install sphinx
 
-(https://davidcasr.medium.com/c%C3%B3mo-documentar-un-proyecto-django-con-sphinx-80e4a090896e
-https://jmspinelliok.medium.com/armar-validar-testear-documentar-y-publicar-una-librer%C3%ADa-51b5bc2794c9
-https://martinber.github.io/guia-sphinx/instalacion.html
+> pip install renku-sphinx-theme
 
-pip install renku-sphinx-theme
-)
