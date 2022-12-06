@@ -95,7 +95,7 @@
 						</span>
 						${{juego.precio|floatformat:"0g"}}
 					</p>
-					<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+					<a href="{% url 'webapp:producto' juego.id %}" class="cart-btn">Ver detalles</a>
 				</div>
 			</div>
 			{% endfor %}
