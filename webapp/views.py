@@ -323,6 +323,9 @@ def venta(request):
             for clave, valor in carrito.items():
                 print("Imprimiendo ----------->", valor["cantidad"])
                 juego = Juego.objects.get(id = valor["juegoId"])
+                #RESTAR CANTIDAD DEL STOCK DEL JUEGO
+                #VERIFICAR QUE HAYA SUFICIENTE CANTIDAD DE UN PRODUCTO
+                #SI EL STOCK QUEDA = 0 ENTONCES CAMBIAR ESTADO A DESHABILITADO
                 venta_detalle = Venta_detalle(
                     id_juego = juego,
                     id_venta = venta,
