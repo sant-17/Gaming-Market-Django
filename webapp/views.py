@@ -796,7 +796,7 @@ def listarUsuariosEmpleados(request):
 def formularioUsuarioEmpleado(request):
     login = request.session.get('logueo', False)
     if login:
-        if login[4] == "A":
+        if login[4] == "Administrador":
             return render(request, 'webapp/usuario-empleado/formulario_empleado.html')
         else:
             messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
@@ -877,7 +877,7 @@ def habilitarUsuarioEmpleado(request, id):
 def edicionUsuarioEmpleado(request, id):
     login = request.session.get('logueo', False)
     if login:
-        if login[4] == "A":
+        if login[4] == "Administrador":
             usuario = Usuario.objects.get(id = id)
             return render(request, 'webapp/usuario-empleado/edicion_empleado.html', {'usuario': usuario})
         else:
