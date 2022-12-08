@@ -1012,3 +1012,29 @@ def editarUsuarioCliente(request):
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:tienda')
+
+def buscarJuegoCli(request):
+    
+    try:
+        login = request.session.get('logueoCliente', False)
+        if login:
+            if request.method == "POST":
+                resultado = request.POST["buscar"]
+                juegos = Juego.objects.filter(Q(titulo__icontains = resultado) | Q(desarrollador__icontains = resultado) | Q(editor__icontains = resultado))
+                paginator = Paginator(juegos, 10)
+                page_number = request.GET.get('page')
+                juegos = paginator.get_page(page_number)
+                contexto = {"juegos" : juegos}
+                return render(request, 'webapp/tienda/shop_ajax.html', contexto)
+            else:
+                messages.error(request, "No envió datos")
+                return redirect('webapp:tienda')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:login')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+
+
+        

@@ -55,6 +55,7 @@ urlpatterns = [
     path('juegos/actualizar/<id>', views.edicionJuego, name="edicionJuego"),
     path('editarJuego/', views.editarJuego, name="editarJuego"),
     path('buscarJuego/', views.buscarJuego, name="buscarJuego"),
+    path('buscarJuegocli/', views.buscarJuegoCli, name="buscarJuegoCli"),
 
     # EMPLEADOS
     path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
@@ -69,4 +70,5 @@ urlpatterns = [
     #CLIENTES
     path('editarCliente/', views.editarUsuarioCliente, name="editarUsuarioCliente"),
     path('perfilcliente/', views.miPerfil, name="perfilCliente"),
+    
 ]
