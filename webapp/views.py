@@ -32,11 +32,7 @@ contexto = CryptContext(
 # TIENDA
 def signup(request):
     """
-    sigup
-    renderiza el template  
-
-    Args:
-        request (_type_): _description_
+    **inicio de sesión**
 
     Returns:
         _type_:  rendeiza la pagina sig-up.html
@@ -84,7 +80,7 @@ def login(request):
     **Formulario para el logueo de usuarios**
 
     Args:
-        request (_type_): _Datos sobre la sesión en la que estamos trabajando
+        request (_type_): Datos sobre la sesión en la que estamos trabajando
 
     Returns:
         _redirect_: _Redirección a pagina de inicio
@@ -117,6 +113,19 @@ def login(request):
         return redirect('webapp:index')
 
 def logout(request):
+    """ 
+    **Cerrar seción**
+        Reinicia las variables de seción de modo que borra los datos de la seción
+
+    Args:
+        request (_HttpRequest_): _Datos sobre la seción en la que estamos trabajando
+        logueoCliente (request.session): seción actual
+        carrito (request.session): carrito de compras
+        
+    Returns:
+        logueoCliente: vacio
+        carrito: vacio
+    """
     try:
         del request.session["logueoCliente"]
         carrito = Carrito(request)
@@ -128,24 +137,27 @@ def logout(request):
         return redirect('webapp:index')
 
 def index(request):
-    """Descripción de la función
+    """Pagina de inicio
 
-    Parameters
-    ----------
-    parametro_1 : tipo
-        Descripción del parametro
-    parametro_2 : tipo
-        Descripción del parametro
+    Args:
+        request (_type_): _seción actual_
 
-    Returns
-    -------
-    tipo
-        Descripción de los valores que devuelve
+    Returns:
+        
+        html: landin page con los juegos(lista) más recientes
     """
     juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
     return render(request, 'webapp/tienda/landing-page.html', {"juegos": juegos})
 
 def tienda(request):
+    """Vista donde estan los juegos disponibles para comprar
+
+    Args:
+        request (_type_): _seción actual_
+
+    Returns:
+        html: landin page con los juegos(lista) habilitados
+    """
     juegos = Juego.objects.filter(habilitado = True)
     paginator = Paginator(juegos, 15)
     page_number = request.GET.get('page')
@@ -153,6 +165,15 @@ def tienda(request):
     return render(request, 'webapp/tienda/shop.html', {"juegos": juegos})
 
 def producto(request, id):
+    """Al momento de crear un nuevo juego, genera recomendaciones en vase a los generos 
+
+    Args:
+        request (_type_): _seción actual_
+        id (int): identificador del juego
+
+    Returns:
+        _html_: _template con la lista de juegos similares y lista de recomendados_
+    """
     try:
         juego = Juego.objects.get(id = id)
         generoPrincipal = juego.generos.first()
@@ -166,14 +187,16 @@ def producto(request, id):
     except:
         return render(request, 'webapp/tienda/404.html')
 
-"""Carrito de compras
-Método para agregar los juegos al la lista de compras
-carrito: variable de sesión donde se almacenan las id de las selecciones
-Returns:
-    _type_: _vacio_
-"""
+
 def agregarAlCarrito(request, id):
-    
+    """Carrito de compras
+        Método para agregar los juegos al la lista de compras
+        Args:
+            request (_type_): _seción actual_
+            id (int): identificador del juego
+        Returns:
+            _type_: _vacio_
+    """
     try:
         #cliente = request.session.get('logueoCliente')
         #if cliente:
@@ -188,7 +211,15 @@ def agregarAlCarrito(request, id):
     return redirect('webapp:tienda')
 
 def aumentarEnCarrito(request, id):
-    
+    """Aumenta en el carrito 1 unidad
+
+    Args:
+        request (_type_): _seción actual_
+        id (int): identificador del juego
+
+    Returns:
+        _html_: _aumento de 1 unidad_
+    """
     try:
         #cliente = request.session.get('logueoCliente')
         #if cliente:
@@ -211,10 +242,12 @@ def verCarrito(request):
                 carrito = request.session["carrito"]
                             
                 juegos = Juego.objects.filter(id__in=carrito)
-                total = 0
-                for juego in juegos:
-                    total += juego.precio
-                return render(request, 'webapp/tienda/cart.html')  #{'juegos': juegos, 'total': total})
+                
+                total = 0                
+                for key, value in request.session["carrito"].items():
+                   total += float(value["precio"])
+                   
+                return render(request, 'webapp/tienda/cart.html',{ 'total': total})
             else:
                 return render(request, 'webapp/tienda/cart.html')
     except Exception as e:
@@ -271,9 +304,11 @@ def checkout(request):
                 
                 juegos = Juego.objects.filter(id__in=carrito)
                 total = 0
-                for juego in juegos:
-                    total += juego.precio
+                
+                for key, value in request.session["carrito"].items():
+                   total += float(value["precio"])
                 usuario = Usuario.objects.get(id = cliente[0])
+                
                 return render(request, 'webapp/tienda/checkout.html', {'juegos': juegos, 'total': total, 'cliente': usuario})
             else:
                 return redirect('webapp:verCarrito')
