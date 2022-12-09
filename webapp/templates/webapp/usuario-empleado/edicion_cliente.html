@@ -1,12 +1,12 @@
 {% extends 'webapp/base-crud.html' %}
 {% load static %}
 
-{% block titulo %}Actualizando Empleado{% endblock titulo %}
+{% block titulo %}Actualizando Cliente{% endblock titulo %}
 
 {% block encabezado %}Edición{% endblock encabezado %}
-{% block subencabezado %}Actualizando Empleado{% endblock subencabezado %}
-{% block agregarUrl %}{% url 'webapp:formularioUsuarioEmpleado' %}{% endblock agregarUrl %}
-{% block btnTitulo %}Agregar empleado{% endblock btnTitulo %}
+{% block subencabezado %}Actualizando Cliente{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioEditarCliente' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar Cliente{% endblock btnTitulo %}
 
 {% block contenedor %}
 
@@ -16,12 +16,12 @@
 <div class="contact-from-section mb-150">
     <div class="container">
         <div class="formulario">
-            <form action="{% url 'webapp:editarUsuarioEmpleado' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
+            <form action="{% url 'webapp:formularioEditarCliente' %}" class="needs-validation" novalidate="" method="post">{% csrf_token %}
                 <input value="{{usuario.id}}" readonly name="id" type="hidden" required>
-                <p>Nombres del empleado
+                <p>Nombres del cliente
                     <input value="{{usuario.nombre}}" name="nombre" type="text" placeholder="Nombres" required>
                 </p>
-                <p>Apellidos del empleado
+                <p>Apellidos del cliente
                     <input value="{{usuario.apellido}}" name="apellido" type="text" placeholder="Apellidos" required>
                 </p>
                 <p>Fecha de nacimiento
@@ -30,8 +30,8 @@
                 <p>Teléfono de contacto
                     <input value="{{usuario.telefono}}" name="telefono" type="number" placeholder="Número" min="0" oninput="validity.valid||(value='');" required>
                 </p>
-                <p>Email del empleado
-                    <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
+                <p>Email del cliente
+                    <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" disabled>
                 </p> 
                 <br/>
                 <!-- Botón del enviar formulario-->

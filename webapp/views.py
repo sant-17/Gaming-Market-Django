@@ -981,40 +981,107 @@ def miPerfil(request):
         messages.error(request, f"Error: {e}")
     return render(request, 'webapp/perfil-usuario/misDatos.html', {"cliente": cliente})
 
-
+def edicionUsuarioCliente(request, id):
+    login = request.session.get('logueo', False)
+    if login:
+        if login[4] == "Administrador":
+            usuario = Usuario.objects.get(id = id)
+            return render(request, 'webapp/usuario-empleado/edicion_cliente.html', {'usuario': usuario})
+        else:
+            messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
+            return redirect('webapp:inicioCrud')
+    else:
+        messages.warning(request, "Inicie sesión primero")
+        return redirect('webapp:loginEmpleados')
+    
 def editarUsuarioCliente(request):
+    """Permite guardar la edición del usuario dependiendo del rol
+
+    Args:
+        request (_type_): sesión actual
+
+    Returns:
+        _type_: _description_
+    """
     try:
         login = request.session.get('logueoCliente', False)
+        
+        
         if login:
+            
             if login[4] == "Cliente":
+                
                 if request.method == "POST":
                     usuario = Usuario.objects.get(id = login[0])
                     usuario.email = request.POST['email']
-                    
-                    #if request.POST['email'] == usuario.email:
-                     #   usuario.email = usuario.email
-                    #elif request.POST['email'] in Usuario.objects.order_by('-habilitado').filter(email = request.POST['email']):
-                     #   messages.success(request, f"El correo ({request.POST['email']}) ya esta en uso")
-                    
                     usuario.nombre = request.POST['nombre']
                     usuario.apellido = request.POST['apellido']
                     usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
                     usuario.save()
                     messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
+                    
                 else:
                     messages.warning(request, "Usted no ha enviado datos")
+        
+           
             else:
-                messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
-                return redirect('webapp:perfilCliente')
+                messages.warning(request, "Inicie sesión primero")
+                return redirect('webapp:index')
         else:
-            messages.warning(request, "Inicie sesión primero")
-            return redirect('webapp:index')
+            messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
+            return redirect('webapp:perfilCliente')
+        
+        
     except Exception as e:
         messages.error(request, f"Error: {e}")
     return redirect('webapp:tienda')
 
+def editarCliente(request):
+     #Administrador
+    try:
+        log = request.session.get('logueo', False)
+        if log:
+            if log[4] == "Administrador":
+                
+                #if request.POST['email'] != usuario.email:
+                 #       usuario.email = request.POST['email']
+                #elif request.POST['email'] in Usuario.objects.order_by('-habilitado').filter(email = request.POST['email']):
+                 #       messages.success(request, f"El correo ({request.POST['email']}) ya esta en uso")
+                if request.method == "POST":
+                    iden = request.POST['id']
+                    usuario = Usuario.objects.get(id = iden)
+                    usuario.nombre = request.POST['nombre']
+                    usuario.apellido = request.POST['apellido']
+                    usuario.telefono = request.POST['telefono']
+                    usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
+                    #usuario.rol = request.POST['rol']
+                    #usuario.habilitado = request.POST['estado']
+                    usuario.save()
+                    messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
+                    
+                else:
+                    messages.warning(request, "Usted no ha enviado datos")
+            else:
+                messages.warning(request, "Inicie sesión primero")
+                return redirect('webapp:listarClientes')
+        else:
+            messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
+            return redirect('webapp:loginEmpleados')
+        
+        
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarClientes')
+
 def buscarJuegoCli(request):
-    
+    """Buscador de juegos para vista de cliente
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _html_: template con lista que cumple la condición buscada
+    """
     try:
         login = request.session.get('logueoCliente', False)
         if login:
@@ -1037,4 +1104,26 @@ def buscarJuegoCli(request):
     return redirect('webapp:tienda')
 
 
-        
+def listarClientes(request):
+    """Permite listar los clientes desde la seción del administrador
+
+    Args:
+        request (_type_): sesión actual
+
+    Returns:
+        list: lista de usuarios que cumplen con la condición de ser clientes
+    """
+    login = request.session.get('logueo', False)
+    if login:
+        if login[4] == "Administrador":
+            usuarios = Usuario.objects.filter(rol = 'C')
+            paginator = Paginator(usuarios, 10)
+            page_number = request.GET.get('page')
+            usuarios = paginator.get_page(page_number)
+            return render(request, 'webapp/usuario-empleado/listar_clientes.html', {'usuarios': usuarios})
+        else:
+            messages.warning(request, f"{login[4]}")
+            return redirect('webapp:inicioCrud')
+    else:
+        messages.warning(request, "Inicie sesión primero")
+        return redirect('webapp:loginEmpleados')

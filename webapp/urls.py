@@ -68,7 +68,10 @@ urlpatterns = [
     path('buscarEmpleado/', views.buscarEmpleado, name="buscarEmpleado"),
     
     #CLIENTES
+    path('clientes/', views.listarClientes, name="listarClientes"),
+    path('cliente/actualizar/<id>', views.edicionUsuarioCliente, name="edicionUsuarioCliente"),
     path('editarCliente/', views.editarUsuarioCliente, name="editarUsuarioCliente"),
     path('perfilcliente/', views.miPerfil, name="perfilCliente"),
+    path('formularioEditarCliente/', views.editarCliente, name="formularioEditarCliente"),
     
 ]

@@ -1,0 +1,63 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Clientes{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Clientes{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioUsuarioEmpleado' %}{% endblock agregarUrl %}
+
+
+{% block contenedor %}
+
+{% if usuarios %}
+{% if request.session.logueo %}
+{% if request.session.logueo.4 == 'A' %}
+
+
+<div class="listar-generos-juegos mt-50 mb-150 pl-5 pr-5" id="respuesta">
+    <div class="contenedor">
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Estado</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td> {{usuario.id}} </td>
+                        <td> {{usuario.email}} </td>
+                        <td> {{usuario.nombre}} </td>
+                        <td> {{usuario.apellido}} </td>
+                        <td> {{usuario.telefono}} </td>
+                        <td> {{usuario.fecha_nacimiento}} </td>
+                        <td> {% if usuario.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
+                        <td>
+                            <a href="{% url 'webapp:edicionUsuarioCliente' usuario.id %}" class="btn btn-info">Editar</a>
+                            {% if usuario.habilitado %}
+                            <a href="{% url 'webapp:deshabilitarEmpleado' usuario.id %}" class="btn btn-danger">Deshabilitar</a>
+                            {% else %}
+                            <a href="{% url 'webapp:habilitarEmpleado' usuario.id %}" class="btn btn-danger">Habilitar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+       
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+{% endblock contenedor %}

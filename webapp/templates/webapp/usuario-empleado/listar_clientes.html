@@ -1,0 +1,85 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Clientes{% endblock titulo %}
+
+{% block encabezado %}Listado{% endblock encabezado %}
+{% block subencabezado %}Clientes{% endblock subencabezado %}
+{% block agregarUrl %}{% url 'webapp:formularioUsuarioEmpleado' %}{% endblock agregarUrl %}
+{% block btnTitulo %}Agregar cliente{% endblock btnTitulo %}
+
+{% block contenedor %}
+
+{% if usuarios %}
+<form action="{% url 'webapp:buscarEmpleado' %}" method="post">
+    {% csrf_token %}
+    <div class="search-bar">
+        <div class="search-bar-tablecell">
+            <input onkeyup="busqueda_ajax('{% url 'webapp:buscarEmpleado' %}');" type="search" placeholder="Buscar" id="buscar" name="buscar">
+        </div>
+    </div>
+</form>
+
+
+<div class="listar-generos-juegos mt-50 mb-150 pl-5 pr-5" id="respuesta">
+    <div class="contenedor">
+        <div class="table-responsive">
+            <table id="lista" class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Estado</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td> {{usuario.id}} </td>
+                        <td> {{usuario.email}} </td>
+                        <td> {{usuario.nombre}} </td>
+                        <td> {{usuario.apellido}} </td>
+                        <td> {{usuario.telefono}} </td>
+                        <td> {{usuario.fecha_nacimiento}} </td>
+                        <td> {% if usuario.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
+                        <td>
+                            <a href="{% url 'webapp:edicionUsuarioCliente' usuario.id %}" class="btn btn-info">Editar</a>
+                            {% if usuario.habilitado %}
+                            <a href="{% url 'webapp:deshabilitarEmpleado' usuario.id %}" class="btn btn-danger">Deshabilitar</a>
+                            {% else %}
+                            <a href="{% url 'webapp:habilitarEmpleado' usuario.id %}" class="btn btn-danger">Habilitar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="pagination-wrap mb-100">
+                    <ul>
+                        <li><a href="?page=1">&laquo;</a></li>
+                        <li><a {% if usuarios.has_previous %} href="?page={{ usuarios.previous_page_number }}" {% endif %}>Anterior</a></li>
+
+                        {% for i in "x"|rjust:usuarios.paginator.num_pages|make_list %}
+                        <li><a {% if forloop.counter == usuarios.number %} class="active" {% endif %} href="?page={{ forloop.counter }}"> {{ forloop.counter }} </a></li>
+                        {% endfor %}
+
+                        <li><a {% if usuarios.has_next %} href="?page={{usuarios.next_page_number }}" {% endif %}>Siguiente</a></li>
+                        <li><a {% if usuarios.has_next %} href="?page={{usuarios.paginator.num_pages }}" {% endif %}>&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+No hay datos
+{% endif %}
+{% endblock contenedor %}
