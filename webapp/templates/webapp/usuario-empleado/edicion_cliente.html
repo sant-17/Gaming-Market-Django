@@ -33,11 +33,25 @@
                 <p>Email del cliente
                     <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" disabled>
                 </p> 
+                <br>
+                <label for="habilitadoCliente">Estado</label>
+                <br>
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="estado" {% if usuario.habilitado %} checked {% endif %} value="True">Habilitar
+                        </label>
+                        </div>
+                        <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="estado" {% if not usuario.habilitado %} checked {% endif %}value="False">Deshabilitar
+                        </label>
+                    </div>
+                    <br>
                 <br/>
                 <!-- Botón del enviar formulario-->
                 <div class="form-btns">
-                    <button type="submit">Enviar formulario</button>
                     <button type="reset">Limpiar formulario</button>
+                    <button type="submit">Enviar formulario</button>
                 </div>
             </form>
         </div>

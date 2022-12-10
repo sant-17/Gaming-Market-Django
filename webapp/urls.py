@@ -61,8 +61,8 @@ urlpatterns = [
     path('empleados/', views.listarUsuariosEmpleados, name="listarEmpleados"),
     path('empleados/nuevo', views.formularioUsuarioEmpleado, name="formularioUsuarioEmpleado"),
     path('guardarEmpleado/', views.guardarUsuarioEmpleado, name="guardarUsuarioEmpleado"),
-    path('deshabilitarEmpleado/<id>', views.deshabilitarUsuarioEmpleado, name="deshabilitarEmpleado"),
-    path('habilitarEmpleado/<id>', views.habilitarUsuarioEmpleado, name="habilitarEmpleado"),
+    path('deshabilitarEmpleado/<id>', views.deshabilitarUsuario, name="deshabilitarUsuario"),
+    path('habilitarEmpleado/<id>', views.habilitarUsuario, name="habilitarUsuario"),
     path('empleados/actualizar/<id>', views.edicionUsuarioEmpleado, name="edicionUsuarioEmpleado"),
     path('editarEmpleado/', views.editarUsuarioEmpleado, name="editarUsuarioEmpleado"),
     path('buscarEmpleado/', views.buscarEmpleado, name="buscarEmpleado"),
@@ -73,5 +73,9 @@ urlpatterns = [
     path('editarCliente/', views.editarUsuarioCliente, name="editarUsuarioCliente"),
     path('perfilcliente/', views.miPerfil, name="perfilCliente"),
     path('formularioEditarCliente/', views.editarCliente, name="formularioEditarCliente"),
+    
+    #VENTAS
+    path('ventas/<id>', views.listarVentas, name="listarVentas"),
+    path('verVentas/<id>', views.verVenta, name="adquiridos"),
     
 ]

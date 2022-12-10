@@ -42,11 +42,12 @@
                         <td> {{usuario.fecha_nacimiento}} </td>
                         <td> {% if usuario.habilitado %} Habilitado {% else %} Deshabilitado {% endif %}</td>
                         <td>
+                            <a href="{% url 'webapp:listarVentas' usuario.id %}" class="btn btn-info">Ver compras</a>
                             <a href="{% url 'webapp:edicionUsuarioCliente' usuario.id %}" class="btn btn-info">Editar</a>
                             {% if usuario.habilitado %}
-                            <a href="{% url 'webapp:deshabilitarEmpleado' usuario.id %}" class="btn btn-danger">Deshabilitar</a>
+                            <a href="{% url 'webapp:deshabilitarUsuario' usuario.id %}" class="btn btn-danger">Deshabilitar</a>
                             {% else %}
-                            <a href="{% url 'webapp:habilitarEmpleado' usuario.id %}" class="btn btn-danger">Habilitar</a>
+                            <a href="{% url 'webapp:habilitarUsuario' usuario.id %}" class="btn btn-danger">Habilitar</a>
                             {% endif %}
                         </td>
                     </tr>

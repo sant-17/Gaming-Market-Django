@@ -31,8 +31,21 @@
                     <input value="{{usuario.telefono}}" name="telefono" type="number" placeholder="Número" min="0" oninput="validity.valid||(value='');" required>
                 </p>
                 <p>Email del empleado
-                    <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
+                    <input value="{{usuario.email}}" name="email" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>                    
                 </p> 
+                <label for="habilitadoCliente">Estado</label>
+                <br>
+                    <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="estado" {% if usuario.habilitado %} checked {% endif %} value="True">Habilitar
+                        </label>
+                        </div>
+                        <div class="form-check-inline">
+                        <label class="form-check-label">
+                            <input type="radio" class="form-check-input" name="estado" {% if not usuario.habilitado %} checked {% endif %}value="False">Deshabilitar
+                        </label>
+                    </div>
+                    <br>
                 <br/>
                 <!-- Botón del enviar formulario-->
                 <div class="form-btns">

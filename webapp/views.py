@@ -816,7 +816,7 @@ def listarUsuariosEmpleados(request):
     login = request.session.get('logueo', False)
     if login:
         if login[4] == "Administrador":
-            usuarios = Usuario.objects.order_by('-habilitado').filter(rol = 'E')
+            usuarios = Usuario.objects.filter(Q(rol = 'E') | Q(rol ='A'))
             paginator = Paginator(usuarios, 10)
             page_number = request.GET.get('page')
             usuarios = paginator.get_page(page_number)
@@ -844,7 +844,7 @@ def guardarUsuarioEmpleado(request):
     try:
         login = request.session.get('logueo', False)
         if login:
-            if login[4] == "A":
+            if login[4] == "Administrador":
                 if request.method == "POST":
                     usuario = Usuario(
                         email = request.POST['email'],
@@ -869,16 +869,20 @@ def guardarUsuarioEmpleado(request):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
 
-def deshabilitarUsuarioEmpleado(request, id):
+def deshabilitarUsuario(request, id):
     try:
         login = request.session.get('logueo', False)
         if login:
-            if login[4] == "A":
+            if login[4] == "Administrador":
                 usuario = Usuario.objects.get(id = id)
                 usuario.habilitado = False
                 usuario.save()
-                messages.success(request, f"Empleado ({usuario.nombre}) deshabilitado exitosamente")
-                return redirect('webapp:listarEmpleados')
+                messages.success(request, f"Usuario ({usuario.nombre}) deshabilitado exitosamente")
+                
+                if usuario.rol=="C":
+                    return redirect('webapp:listarClientes')
+                else:
+                    return redirect('webapp:listarEmpleados')
             else:
                 messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
                 return redirect('webapp:inicioCrud')
@@ -889,16 +893,19 @@ def deshabilitarUsuarioEmpleado(request, id):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarEmpleados')
 
-def habilitarUsuarioEmpleado(request, id):
+def habilitarUsuario(request, id):
     try:
         login = request.session.get('logueo', False)
         if login:
-            if login[4] == "A":
+            if login[4] == "Administrador":
                 usuario = Usuario.objects.get(id = id)
                 usuario.habilitado = True
                 usuario.save()
-                messages.success(request, f"Empleado ({usuario.nombre}) habilitado exitosamente")
-                return redirect('webapp:listarEmpleados')
+                messages.success(request, f"Usuario ({usuario.nombre}) habilitado exitosamente")
+                if usuario.rol=="C":
+                    return redirect('webapp:listarClientes')
+                else:
+                    return redirect('webapp:listarEmpleados')
             else:
                 messages.warning(request, "No posee los permisos para hacer esa acción. Contacte un administrador")
                 return redirect('webapp:inicioCrud')
@@ -926,7 +933,7 @@ def editarUsuarioEmpleado(request):
     try:
         login = request.session.get('logueo', False)
         if login:
-            if login[4] == "A":
+            if login[4] == "Administrador":
                 if request.method == "POST":
                     usuario = Usuario.objects.get(id = request.POST['id'])
                     usuario.email = request.POST['email']
@@ -934,6 +941,7 @@ def editarUsuarioEmpleado(request):
                     usuario.apellido = request.POST['apellido']
                     usuario.telefono = request.POST['telefono']
                     usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
+                    usuario.habilitado = request.POST['estado']
                     usuario.save()
                     messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
                 else:
@@ -995,7 +1003,7 @@ def edicionUsuarioCliente(request, id):
         return redirect('webapp:loginEmpleados')
     
 def editarUsuarioCliente(request):
-    """Permite guardar la edición del usuario dependiendo del rol
+    """Permite al cliente guardar los datos de la edición 
 
     Args:
         request (_type_): sesión actual
@@ -1055,7 +1063,7 @@ def editarCliente(request):
                     usuario.telefono = request.POST['telefono']
                     usuario.fecha_nacimiento = request.POST['fecha_nacimiento']
                     #usuario.rol = request.POST['rol']
-                    #usuario.habilitado = request.POST['estado']
+                    usuario.habilitado = request.POST['estado']
                     usuario.save()
                     messages.success(request, f"Usuario ({usuario.nombre}) ({usuario.apellido}) editado exitosamente")
                     
@@ -1113,17 +1121,82 @@ def listarClientes(request):
     Returns:
         list: lista de usuarios que cumplen con la condición de ser clientes
     """
-    login = request.session.get('logueo', False)
-    if login:
-        if login[4] == "Administrador":
-            usuarios = Usuario.objects.filter(rol = 'C')
-            paginator = Paginator(usuarios, 10)
-            page_number = request.GET.get('page')
-            usuarios = paginator.get_page(page_number)
-            return render(request, 'webapp/usuario-empleado/listar_clientes.html', {'usuarios': usuarios})
+    try:    
+        login = request.session.get('logueo', False)
+        if login:
+            if login[4] == "Administrador":
+                usuarios = Usuario.objects.filter(rol = 'C')
+                paginator = Paginator(usuarios, 10)
+                page_number = request.GET.get('page')
+                usuarios = paginator.get_page(page_number)
+                return render(request, 'webapp/usuario-empleado/listar_clientes.html', {'usuarios': usuarios})
+            else:
+                messages.warning(request, f"{login[4]}")
+                return redirect('webapp:inicioCrud')
         else:
-            messages.warning(request, f"{login[4]}")
-            return redirect('webapp:inicioCrud')
-    else:
-        messages.warning(request, "Inicie sesión primero")
-        return redirect('webapp:loginEmpleados')
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:loginEmpleados')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:tienda')
+    
+def listarVentas(request, id):
+    """Permite listar las ventas desde la seción del administrador
+
+    Args:
+        request (_type_): sesión actual
+        id():identificador del cliente a consultar las ventas
+    Returns:
+        list: lista de ventas que cumplen con la condición 
+    """
+    try:
+        login = request.session.get('logueo', False)
+        if login:
+            if login[4] == "Administrador":
+                
+                ventas = Venta.objects.filter(id_usuario__id = id)
+                paginator = Paginator(ventas, 10)
+                page_number = request.GET.get('page')
+                ventas = paginator.get_page(page_number)
+                
+                return render(request, 'webapp/ventas/listar_ventas.html', {'ventas': ventas})
+            else:
+                messages.warning(request, f"{login[4]} error")
+                return redirect('webapp:inicioCrud')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:loginEmpleados')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarClientes')
+    
+def verVenta (request, id):
+    """Permite ver resumen de la venta, productos adquiridos y relaciones
+
+    Args:
+        request (_type_): sesión actual
+    Returns:
+        _list_: lista de juegos adquiridos en la compra
+    """
+    try:
+        login = request.session.get('logueo', False)
+        if login:
+            if login[4] == "Administrador":
+                
+                ventas = Venta_detalle.objects.filter(id_venta__id = id)
+                paginator = Paginator(ventas, 10)
+                page_number = request.GET.get('page')
+                ventas = paginator.get_page(page_number)
+                
+                return render(request, 'webapp/ventas/ventas.html', {'ventas': ventas})
+            else:
+                messages.warning(request, f"{login[4]} error")
+                return redirect('webapp:inicioCrud')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:loginEmpleados')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:listarClientes')
+    
+    
