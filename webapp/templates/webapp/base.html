@@ -96,7 +96,8 @@
                         <h2>Logueate</h2>
                     </div>
                     <div class="d-flex flex-column text-center">
-                        <form action="{% url 'webapp:login' %}" method="post">{% csrf_token %}
+                        <form  method="post" action="{% url 'webapp:login' %}"> 
+							{% csrf_token %}
                             <div class="form-group">
                                 <input type="email" name="email" class="form-control" id="email" placeholder="Tu correo...">
                             </div>

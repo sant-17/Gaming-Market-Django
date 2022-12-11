@@ -29,7 +29,7 @@ contexto = CryptContext(
 )
 #para la gestión de correos
 from django.core.mail import send_mail, EmailMultiAlternatives
-
+from email.policy import HTTP
 
 # Create your views here.
 
@@ -187,7 +187,7 @@ def cambiarClave(request, id):
     Returns:
         _type_: _description_
     """
-    return render(request, 'webapp/resetClave/clave_reset_confirmacion', {"id":id})
+    return render(request, 'webapp/resetClave/clave_reset_confirmacion.html', {"id":id})
 
 
 
@@ -203,7 +203,8 @@ def cambiarPws (request):
     try:
         if request.method == "POST":
             usuario = Usuario.objects.get(id = request.POST['id'])
-            usuario.clave = contexto.hash(request.POST['clave'])
+            clave = request.POST['clave']
+            usuario.clave = contexto.hash(clave)
             usuario.save()
             
             messages.success(request, "Cambio de contraseña exitoso ")
@@ -214,6 +215,8 @@ def cambiarPws (request):
         messages.error(request, f"error: {e}")
     
     return redirect('webapp:index')
+
+
 
 def restablecer(request):
     """Recibe el correo al cual se enviara el enlace de recuperación
@@ -226,13 +229,13 @@ def restablecer(request):
     """
     try:
         if request.method == "POST":
-            emailRecuperation = request.POST["email"]
+            emailRecuperation = request.POST["correo"]
             usuario = Usuario.objects.get(email = emailRecuperation)
-
+            #contexto.verify(clavePost, usuario.clave)
             #message = "Atraves del siguiente enlace podra restablecer su contraseña: \n"+"{config('protocol')}://{ config('domain')}{%'webapp/resetClave/clave_reset_confirmacion.html' uidb64=uid token=token%}"+str(usuario.pk)
         
-            subjet = 'Solisitud de cambio de contraseña'
-            message = "Atraves del siguiente enlace podra restablecer su contraseña: \n"+"http://127.0.0.1:8000/reset/clave/"+str(usuario.pk)
+            subjet = 'Solicitud de cambio de contraseña'
+            message = "A traves del siguiente enlace podra restablecer su contraseña: \n"+"http://127.0.0.1:8000/webapp/reset/clave/"+str(usuario.pk)
             email_from = settings.EMAIL_HOST_USER 
             recipient_list = [emailRecuperation]  
             
@@ -1295,3 +1298,23 @@ def verVenta (request, id):
     return redirect('webapp:listarClientes')
     
     
+    
+    #REPORTES
+    
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+
+from webapp.forms import ReportForm
+
+
+class ReportSaleView(TemplateView):
+    template_name = 'webapp/informes/reporte.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reporte de Ventas'
+        context['entity'] = 'Reportes'
+        context['list_url'] = reverse_lazy('sale_report')
+        context['form'] = ReportForm()
+        return context
+

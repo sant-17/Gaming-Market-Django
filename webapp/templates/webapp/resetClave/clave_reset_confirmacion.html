@@ -13,16 +13,16 @@
     <div class="container">
         <div class="formulario">
 
-            <form method="post" >
+            <form method="post" action="{% url 'webapp:restablecer' %}" >
                 {% csrf_token%}
+                <input type=hidden  value= "{{id}}" name='id'>
+                <br>
+                 
+                <p>Nueva contraseña:
+                    <input value="" name="clave" type="password" placeholder="clave" required>
+                </p>
 
-                {{ form.new_pasword1.errors }}
-                <label for= "id_new_pasword1">Nueva contraseña: </label> 
-                {{form.new_pasword1 }}
-
-                {{ form.new_pasword2.errors }}
-                <label for= "id_new_pasword2">Confirme contraseña: </label> 
-                {{form.new_pasword2 }}
+        
 
                 <input type= "submit" value = "Restablecer contraseña" />
             
@@ -31,8 +31,6 @@
     </div>
 </div>
 
-{% else%}
-<h1 class= "text-center"> ENLACE INVALIDO: este enlace ya ha sido utilizado </h1>
 
-{% endif %}
+
 {% endblock contenedor %}
