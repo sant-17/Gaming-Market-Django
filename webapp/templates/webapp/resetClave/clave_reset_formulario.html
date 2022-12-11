@@ -1,17 +1,30 @@
-{% extends 'webapp/base.html' %}
+{% extends 'webapp/base-crud.html' %}
 {% load static %}
 
 {% block titulo %}Actualizando{% endblock titulo %}
 
 {% block encabezado %}Recuperar Contraseña{% endblock encabezado %}
-
+{% block subencabezado %}.{% endblock subencabezado %}
 {% block contenedor %}
-<form method="post">
-    {% csrf_token%}
-    <label for= "id_email">Correo </label> {{form.email}}
-    <input type= "submit" value = "Enviar" />
 
-</form>
+
+
+
+<div class="contact-from-section mb-150" style="text-align: center;">
+    <div class="container">
+        <div class="formulario">
+            <form method="post" class="needs-validation" novalidate="" action= "{% url 'webapp:restablecer' %}">
+                {% csrf_token%}
+                <p>Email
+                    <input value="correo..." name="email" type="email" placeholder="Email"
+                        pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
+                </p>
+                <input type= "submit" value = "Enviar" />
+
+            </form>
+        </div>
+    </div>
+</div>
 
 
 

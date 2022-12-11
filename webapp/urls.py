@@ -29,6 +29,12 @@ urlpatterns = [
     path('logout-crud/', views.logoutCrud, name = 'logoutCrud'),
     path('inicio-crud/', views.inicioCrud, name = 'inicioCrud'),
 
+    #RECUPERACIÓN DE CONTRASEÑA
+    path('reset/restablecer', views.mostrarRestablecer, name= 'mostrarRestablecer'),
+    path('reset/claveCorreo', views.restablecer, name= 'restablecer'),
+    path('reset/clave/<id>', views.cambiarClave, name= 'cambiarClave'),
+    path('reset/cambiar', views.cambiarPws, name= 'cambiarPwd'),
+
     # PROVEEDORES
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
     path('proveedores/nuevo', views.formularioProveedor, name="formularioProveedor"),
@@ -77,5 +83,6 @@ urlpatterns = [
     #VENTAS
     path('ventas/<id>', views.listarVentas, name="listarVentas"),
     path('verVentas/<id>', views.verVenta, name="adquiridos"),
+    
     
 ]

@@ -4,6 +4,8 @@ from webapp.carrito import Carrito
 from .models import *
 from datetime import date
 from django.db.models import Q
+from gaming_market import settings
+from decouple import config
 
 # Mensajes tipo cookies temporales
 from django.contrib import messages
@@ -25,6 +27,8 @@ contexto = CryptContext(
     default="pbkdf2_sha256",
     pbkdf2_sha256__default_rounds=333
 )
+#para la gestión de correos
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 
 # Create your views here.
@@ -97,9 +101,20 @@ def login(request):
             if contexto.verify(clavePost, usuario.clave):
                 request.session["logueoCliente"] = [usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]       
                 # -------------
+                cliente = request.session.get('logueoCliente', False)
+                cliente[2] 
+                subjet = 'Inicio de sesión'
+                message = "Bienbenido"+" "+ cliente[2]
+                email_from = settings.EMAIL_HOST_USER 
+                recipient_list = ["osernam@gmail.com"]  
+                
+                send_mail(subjet, message, email_from, recipient_list )
+                
                 messages.success(request, "Bienvenido")
             else:
                 messages.warning(request, "Contraseña incorrecta")
+                
+            
                 
             return redirect('webapp:index')
         except Usuario.DoesNotExist:
@@ -149,6 +164,86 @@ def index(request):
     juegos = Juego.objects.filter(habilitado = True).order_by('-id')[:3]
     return render(request, 'webapp/tienda/landing-page.html', {"juegos": juegos})
 
+#RESTABLECER CLAVE
+
+def  mostrarRestablecer(request):
+    """Renderiza el formulario para ingresar el correo de restablecimiento
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    return render(request, 'webapp/resetClave/clave_reset_formulario.html')
+
+def cambiarClave(request, id):
+    """Recive el id del cliente desde el correo y renderiza el formulario para actualizar la clave
+
+    Args:
+        request (_type_): _description_
+        id (_int_): id del cliente
+
+    Returns:
+        _type_: _description_
+    """
+    return render(request, 'webapp/resetClave/clave_reset_confirmacion', {"id":id})
+
+
+
+def cambiarPws (request):
+    """Recive la nueva clave
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    try:
+        if request.method == "POST":
+            usuario = Usuario.objects.get(id = request.POST['id'])
+            usuario.clave = contexto.hash(request.POST['clave'])
+            usuario.save()
+            
+            messages.success(request, "Cambio de contraseña exitoso ")
+        else:
+            messages.warning(request, "No se enviaron los datos correctamente ")
+            
+    except Exception as e:
+        messages.error(request, f"error: {e}")
+    
+    return redirect('webapp:index')
+
+def restablecer(request):
+    """Recibe el correo al cual se enviara el enlace de recuperación
+
+    Args:
+        request (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    try:
+        if request.method == "POST":
+            emailRecuperation = request.POST["email"]
+            usuario = Usuario.objects.get(email = emailRecuperation)
+
+            #message = "Atraves del siguiente enlace podra restablecer su contraseña: \n"+"{config('protocol')}://{ config('domain')}{%'webapp/resetClave/clave_reset_confirmacion.html' uidb64=uid token=token%}"+str(usuario.pk)
+        
+            subjet = 'Solisitud de cambio de contraseña'
+            message = "Atraves del siguiente enlace podra restablecer su contraseña: \n"+"http://127.0.0.1:8000/reset/clave/"+str(usuario.pk)
+            email_from = settings.EMAIL_HOST_USER 
+            recipient_list = [emailRecuperation]  
+            
+            send_mail(subjet, message, email_from, recipient_list, fail_silently=False)
+            messages.info(request,'Correo enviado, revisa tu bandeja de entrada')
+    except Exception as e:
+        messages.error(request, f"error: {e}")
+    
+    return redirect('webapp:index')
+    
+    
 def tienda(request):
     """Vista donde estan los juegos disponibles para comprar
 

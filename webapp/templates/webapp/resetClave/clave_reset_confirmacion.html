@@ -6,23 +6,30 @@
 {% block encabezado %}Cambiar Contraseña{% endblock encabezado %}
 
 {% block contenedor %}
-{% if validlink%}
+
 
 <h1> Nueva contraseña </h1>
-<form method="post">
-    {% csrf_token%}
+<div class="contact-from-section mb-150">
+    <div class="container">
+        <div class="formulario">
 
-    {{ form.new_pasword1.errors }}
-    <label for= "id_new_pasword1">Nueva contraseña: </label> 
-    {{form.new_pasword1 }}
+            <form method="post" >
+                {% csrf_token%}
 
-    {{ form.new_pasword2.errors }}
-    <label for= "id_new_pasword2">Confirme contraseña: </label> 
-    {{form.new_pasword2 }}
+                {{ form.new_pasword1.errors }}
+                <label for= "id_new_pasword1">Nueva contraseña: </label> 
+                {{form.new_pasword1 }}
 
-    <input type= "submit" value = "Restablecer contraseña" />
+                {{ form.new_pasword2.errors }}
+                <label for= "id_new_pasword2">Confirme contraseña: </label> 
+                {{form.new_pasword2 }}
 
-</form>
+                <input type= "submit" value = "Restablecer contraseña" />
+            
+            </form>
+        </div>
+    </div>
+</div>
 
 {% else%}
 <h1 class= "text-center"> ENLACE INVALIDO: este enlace ya ha sido utilizado </h1>
