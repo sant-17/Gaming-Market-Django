@@ -32,10 +32,10 @@ urlpatterns = [
     #RECUPERACIÓN DE CONTRASEÑA
     path('reset/restablecer', views.mostrarRestablecer, name= 'mostrarRestablecer'),
     path('reset/claveCorreo', views.restablecer, name= 'restablecer'),
-    path('reset/clave/<id>', views.cambiarClave, name= 'cambiarClave'),
+    path('reset/clave/<int:id>', views.cambiarClave, name= 'cambiarClave'),
     path('reset/cambiar', views.cambiarPws, name= 'cambiarPwd'),
 
-    # PROVEEDORES
+    # PROVEEDORES 
     path('proveedores/', views.listarProveedores, name="listarProveedores"),
     path('proveedores/nuevo', views.formularioProveedor, name="formularioProveedor"),
     path('guardarProveedor/', views.guardarProveedor, name="guardarProveedor"),
@@ -83,6 +83,9 @@ urlpatterns = [
     #VENTAS
     path('ventas/<id>', views.listarVentas, name="listarVentas"),
     path('verVentas/<id>', views.verVenta, name="adquiridos"),
+    
+    
+    #INFORMES
     
     
 ]
