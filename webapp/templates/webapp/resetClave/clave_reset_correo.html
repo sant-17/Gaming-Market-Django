@@ -1,0 +1,5 @@
+Estimado: {{user.get_username}} solicitaste restablecer tu contraseña.
+Accede al siguiente link para continuar con el proceso:
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% 'password_reset_confirm' uidb64=uid token=token%}
+{% endblock %}

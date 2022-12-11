@@ -2,6 +2,7 @@ from email.policy import default
 from django.db import models
 from django.core.validators import MinValueValidator
 from datetime import date
+from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
 class Proveedor(models.Model):

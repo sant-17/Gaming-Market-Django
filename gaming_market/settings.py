@@ -128,3 +128,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR / 'uploads'
 MEDIA_URL = 'uploads/'
 STATIC_ROOT = 'static/'
+
+#Config para envio de correos
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'oserna86@misena.edu.co'
+EMAIL_HOST_PASSWORD = 'bolxevzpguodeniw'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

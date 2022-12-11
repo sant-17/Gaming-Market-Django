@@ -1,0 +1,18 @@
+{% extends 'webapp/base.html' %}
+{% load static %}
+
+{% block titulo %}Actualizando{% endblock titulo %}
+
+{% block encabezado %}Recuperar Contraseña{% endblock encabezado %}
+
+{% block contenedor %}
+<form method="post">
+    {% csrf_token%}
+    <label for= "id_email">Correo </label> {{form.email}}
+    <input type= "submit" value = "Enviar" />
+
+</form>
+
+
+
+{% endblock contenedor %}
