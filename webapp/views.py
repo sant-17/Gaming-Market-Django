@@ -175,9 +175,9 @@ def logout(request):
     """
     try:
         
-        if request.session["logueoCliente"]:
-            del request.session["logueoCliente"]
         
+        del request.session["logueoCliente"]
+        del request.session["logueo"]
         carrito = Carrito(request)
         carrito.limpiar()
         del request.session["final"]
@@ -380,6 +380,8 @@ def aumentarEnCarrito(request, id):
 
         carrito.agregar(juego)
 
+        if carrito.stocks(juego):   
+            messages.warning( request, f"No hay stock de {juego.titulo}")
         messages.warning(
             request, f"{request.session['carrito']} agregado {juego.titulo}")
     except Exception as e:
@@ -519,16 +521,31 @@ def venta(request):
             for clave, valor in carrito.items():
                 print("Imprimiendo ----------->", valor["cantidad"])
                 juego = Juego.objects.get(id=valor["juegoId"])
-                # RESTAR CANTIDAD DEL STOCK DEL JUEGO
                 # VERIFICAR QUE HAYA SUFICIENTE CANTIDAD DE UN PRODUCTO
+                
+                # RESTAR CANTIDAD DEL STOCK DEL JUEGO
+                if juego.stock >= valor["cantidad"]:
+                    juego.stock= juego.stock - valor["cantidad"]
+                    
+                    if juego.stock == 0:
+                        juego.habilitado = False
+                    juego.save()
                 # SI EL STOCK QUEDA = 0 ENTONCES CAMBIAR ESTADO A DESHABILITADO
-                venta_detalle = Venta_detalle(
-                    id_juego=juego,
-                    id_venta=venta,
-                    cantidad=valor["cantidad"],
-                    precio=valor["precio"]
-                )
+                    venta_detalle = Venta_detalle(
+                        id_juego=juego,
+                        id_venta=venta,
+                        cantidad=valor["cantidad"],
+                        precio=valor["precio"]
+                    )
                 venta_detalle.save()
+
+                cliente = request.session.get('logueoCliente', False)
+                subjet = 'Resumen de compra:'
+                message = 'Resumen de compra: \n' +' '
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [cliente[3]]
+
+                send_mail(subjet, message, email_from, recipient_list)
 
             carrito = Carrito(request)
             carrito.limpiar()

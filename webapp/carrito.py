@@ -25,11 +25,14 @@ class Carrito:
                 "titulo" : juego.titulo,
                 "precio" : juego.precio,
                 "cantidad" : 1,
+                "stock":juego.stock -1,
                 
             }
         else:
-            self.carrito[jId]["cantidad"] +=1
-            self.carrito[jId]["precio"] += juego.precio
+            if self.carrito[jId]["stock"] >= self.carrito[jId]["cantidad"] :
+                self.carrito[jId]["cantidad"] +=1
+                self.carrito[jId]["precio"] += juego.precio
+                self.carrito[jId]["stock"] -=1
         self.guardarCarrito()
         
     def guardarCarrito(self):
@@ -49,12 +52,25 @@ class Carrito:
         id = str(juego.id)
         if id in self.carrito.keys():
             self.carrito[id]["cantidad"] -=1
+            self.carrito[id]["stock"] +=1
             self.carrito[id]["precio"]-= juego.precio
             
             if self.carrito[id]["cantidad"] <=0: 
                 self.eliminar(juego)
         self.guardarCarrito()    
         
+    def stocks(self, juego):
+        """verifica disponibilidad
+
+        Args:
+            juego (Juego): objeto de clase Juego
+
+        Returns:
+            bool: si no hay stock
+        """
+        id = str(juego.id)
+        if self.carrito[id]["stock"] == 0:
+            return True
     
     def limpiar (self):
         self.session["carrito"] ={}
