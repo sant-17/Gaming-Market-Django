@@ -247,10 +247,10 @@ def cambiarPws(request):
     """
     try:
         if request.method == "POST":
-            usuario = Usuario.objects.get(id=request.POST['id'])
-            clave = request.POST['clave']
-            usuario.clave = contexto.hash(clave)
-            usuario.save()
+            usuari = Usuario.objects.get(id=request.POST["id"])
+            clave = request.POST["clave"]
+            usuari.clave = contexto.hash(clave)
+            usuari.save(clave)
 
             messages.success(request, "Cambio de contraseña exitoso ")
         else:
@@ -509,8 +509,10 @@ def venta(request):
                 ) '''
             cliente = Usuario.objects.get(id=cliente[0])
             totalV = 0
+            jue=""
             for key, value in request.session["carrito"].items():
                 totalV += float(value["precio"])
+                jue = jue + value["titulo"]+"    "+ str(value["cantidad"])+"     "+ str(value["precio"])+" \n"
 
             venta = Venta(
                 id_usuario=cliente,
@@ -541,11 +543,13 @@ def venta(request):
 
                 cliente = request.session.get('logueoCliente', False)
                 subjet = 'Resumen de compra:'
-                message = 'Resumen de compra: \n' +' '
+                message = jue
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = [cliente[3]]
 
                 send_mail(subjet, message, email_from, recipient_list)
+                
+                
 
             carrito = Carrito(request)
             carrito.limpiar()
