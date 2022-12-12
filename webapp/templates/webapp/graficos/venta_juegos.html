@@ -1,0 +1,57 @@
+{% extends 'webapp/base-crud.html' %}
+{% load static %}
+
+{% block titulo %}Juegos{% endblock titulo %}
+
+{% block encabezado %}Ventas de juegos{% endblock encabezado %}
+{% block subencabezado %}Relación de ventas{% endblock subencabezado %}
+{% block agregarUrl %}""{% endblock agregarUrl %}
+
+
+{% block contenedor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<div class="contact-from-section mb-150">
+    <div class="container">
+        <div class="formulario">
+            <div id="container" style="width: 75%;">
+                <canvas id="pie-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ data|safe }},
+          backgroundColor: [
+            "#b91d47",
+            "#00aba9",
+            "#2b5797",
+            "#e8c3b9",
+            "#1e7145"
+          ],
+          label: 'Precios'
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+
+
+{% endblock contenedor %}

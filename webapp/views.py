@@ -1301,20 +1301,35 @@ def verVenta (request, id):
     
     #REPORTES
     
-from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+def ventasjuegos (request):
+    labels = []
+    data = []
 
-from webapp.forms import ReportForm
+    juegos = Juego.objects.order_by('precio')[:5]
+    for juego in juegos:
+        labels.append(juego.titulo)
+        data.append(juego.precio)
+
+    return render(request, 'webapp/graficos/venta_juegos.html', {
+        'labels': labels,
+        'data': data,
+    })
+    
+def cantidadVentas (request):
+    labels = []
+    data = []
+
+    juegos = Venta_detalle.objects.order_by('id_juego')
+    for juego in juegos:
+        
+        labels.append(juego.id_juego.titulo)
+        data.append(juego.cantidad)
+
+    return render(request, 'webapp/graficos/venta_juegos.html', {
+        'labels': labels,
+        'data': data,
+    })
+    
 
 
-class ReportSaleView(TemplateView):
-    template_name = 'webapp/informes/reporte.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Reporte de Ventas'
-        context['entity'] = 'Reportes'
-        context['list_url'] = reverse_lazy('sale_report')
-        context['form'] = ReportForm()
-        return context
-
+    

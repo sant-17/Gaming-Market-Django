@@ -69,6 +69,14 @@
 								<li>
                                     <a href="{% url 'webapp:listarClientes' %}">Clientes</a>
                                 </li>
+								<li>
+                                    <a href="{% url 'webapp:ventasJuegos' %}">Graficos</a>
+									<ul class="sub-menu">
+										<li><a href="{% url 'webapp:ventasJuegos' %}">Relación de ventas</a></li>
+										<li><a href="{% url 'webapp:cantidadVentas' %}">Cantidad ventas</a></li>
+									</ul>
+
+                                </li>
 
 								
 								{% endif %}					

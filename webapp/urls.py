@@ -84,8 +84,8 @@ urlpatterns = [
     path('ventas/<id>', views.listarVentas, name="listarVentas"),
     path('verVentas/<id>', views.verVenta, name="adquiridos"),
     
-    
     #INFORMES
-    
+    path('graficos/ventaJuegos', views.ventasjuegos, name="ventasJuegos"),
+    path('graficos/cantidadVentas', views.cantidadVentas, name="cantidadVentas"),
     
 ]

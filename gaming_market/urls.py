@@ -23,9 +23,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('webapp/', include('webapp.urls')),
-    path('reset/clave', auth_views.PasswordResetView.as_view(template_name = "resetClave/clave_reset_formulario.html"), {'email_template':'resetClave/clave_reset_correo.html'}, name= 'password_reset'),
-    path('reset/reset_done',auth_views.PasswordResetDoneView.as_view(),{'template_name':'resetClave/clave_reset_done.html'}, name='password_reset_done'),
-    path('reset/<uidb64>/<token>', auth_views.PasswordResetConfirmView.as_view(),{'template_name':'resetClave/clave_reset_confirmacion.html'}, name='password_reset_confirm' ),
-    path('reset/done', auth_views.PasswordResetCompleteView.as_view(), {'template_name':'resetClave/clave_reset_completado.html'}, name='password_reset_complete' ),
-] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    
+   ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
