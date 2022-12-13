@@ -360,7 +360,7 @@ def agregarAlCarrito(request, id):
             carrito.agregar(juego)
         else:
             
-        
+             return redirect('webapp:tienda')
         messages.warning(
             request, f"{request.session['carrito']} agregado {juego.titulo}")
     except Exception as e:
