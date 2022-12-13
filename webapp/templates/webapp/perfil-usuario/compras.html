@@ -9,7 +9,7 @@
 
 {% block contenedor %}
 
-{% if ventas %}
+
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
         <div class="row">
@@ -43,7 +43,7 @@
                         <td> {{venta.fecha}} </td>
                         <td> {{venta.id_usuario}}</td>
                         <td> {{venta.total}}</td>
-                        <td> <a href="{% url 'webapp:adquiridosCliente' venta.id %}" class="btn btn-info">Ver</a></td>
+                        <td> <a href="{% url 'webapp:adquiridosCliente' %}" class="btn btn-info">Ver</a></td>
                         
                     </tr>
                     {% endfor %}
@@ -70,8 +70,6 @@
     </div>
 </div>
 
-{% else %}
-No hay datos
-{% endif %}
+
 
 {% endblock contenedor %}

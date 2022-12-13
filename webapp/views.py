@@ -351,13 +351,16 @@ def agregarAlCarrito(request, id):
             _type_: _vacio_
     """
     try:
-        #cliente = request.session.get('logueoCliente')
-        # if cliente:
-        carrito = Carrito(request)
-        juego = Juego.objects.get(id=id)
+        cliente = request.session.get('logueoCliente')
+        if cliente:
+        
+            carrito = Carrito(request)
+            juego = Juego.objects.get(id=id)
 
-        carrito.agregar(juego)
-
+            carrito.agregar(juego)
+        else:
+            
+        
         messages.warning(
             request, f"{request.session['carrito']} agregado {juego.titulo}")
     except Exception as e:
@@ -1473,7 +1476,7 @@ def listarVentasCliente(request):
                 paginator = Paginator(ventas, 10)
                 page_number = request.GET.get('page')
                 ventas = paginator.get_page(page_number)
-
+                   
                 return render(request, 'webapp/perfil-usuario/compras.html', {'ventas': ventas})
             else:
                 messages.warning(request, f"{login[4]} error")
@@ -1483,7 +1486,7 @@ def listarVentasCliente(request):
             return redirect('webapp:login')
     except Exception as e:
         messages.error(request, f"Error: {e}")
-    return redirect('webapp:perfilClientes')
+    return redirect('webapp:perfilCliente')
 
 
 def verVentaC(request):
