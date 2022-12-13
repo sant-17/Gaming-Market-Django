@@ -54,8 +54,14 @@
                                 <li>
                                     <a href="{% url 'webapp:index' %}">Inicio</a>
                                 </li>
-								<li><a href="{% url 'webapp:tienda' %}">Juegos</a></li>
 								<li>
+									<a href="{% url 'webapp:tienda' %}">Juegos</a></li>
+								<li>
+									{% if request.session.logueo %}
+								<li>
+									<a href="{% url 'webapp:inicioCrud' %}">Juegos</a></li>
+								<li>
+									{% else %}
 									
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>

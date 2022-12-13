@@ -3,6 +3,7 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 from django.shortcuts import render, redirect
 
 from webapp.carrito import Carrito
+from webapp.crypt import claveEncriptada
 from .models import *
 from datetime import date
 from django.db.models import Q
@@ -65,7 +66,7 @@ def guardarCliente(request):
                 apellido=request.POST['apellido'],
                 fecha_nacimiento=request.POST['fecha_nacimiento'],
                 email=request.POST['email'],
-                clave=contexto.hash(request.POST['clave']),
+                clave=request.POST['clave'],
 
             )
             usuario.full_clean()
@@ -100,12 +101,13 @@ def login(request):
             user = Usuario.objects.get(email=request.POST['email'])
             if user.rol == 'C':
                 email = request.POST['email']
-                clavePost = request.POST['clave']
+                clavePost = claveEncriptada(request.POST['clave'])
+                
                 clave = contexto.hash(clavePost)
 
                 usuario = Usuario.objects.get(email=email)
 
-                if contexto.verify(clavePost, usuario.clave):
+                if clavePost== usuario.clave:
                     request.session["logueoCliente"] = [
                         usuario.id, usuario.nombre, usuario.apellido, usuario.email, usuario.get_rol_display()]
                     # -------------
@@ -129,7 +131,7 @@ def login(request):
 
                     usuario = Usuario.objects.get(email=email)
 
-                    if contexto.verify(clavePost, usuario.clave):
+                    if clavePost== usuario.clave:
                         if usuario.rol == 'C':
                             messages.error(
                                 request, "Este usuario no posee permisos para ingresar")
@@ -233,7 +235,8 @@ def cambiarClave(request, id):
     Returns:
         _type_: _description_
     """
-    return render(request, 'webapp/resetClave/clave_reset_confirmacion.html', {"id": id})
+    cont = {"id": id}
+    return render(request, 'webapp/resetClave/clave_reset_confirmacion.html', cont)
 
 
 def cambiarPws(request):
@@ -247,10 +250,10 @@ def cambiarPws(request):
     """
     try:
         if request.method == "POST":
-            usuari = Usuario.objects.get(id=request.POST["id"])
-            clave = request.POST["clave"]
-            usuari.clave = contexto.hash(clave)
-            usuari.save(clave)
+            usuari = Usuario.objects.get(id=request.POST['id'])
+            clave = request.POST['clave']
+            usuari.clave = clave
+            usuari.save()
 
             messages.success(request, "Cambio de contraseña exitoso ")
         else:
@@ -1450,6 +1453,70 @@ def verVenta(request, id):
         messages.error(request, f"Error: {e}")
     return redirect('webapp:listarClientes')
 
+
+
+def listarVentasCliente(request):
+    """Permite listar las ventas desde la seción del cliente
+
+    Args:
+        request (_type_): sesión actual
+        id():identificador del cliente a consultar las ventas
+    Returns:
+        list: lista de ventas que cumplen con la condición 
+    """
+    try:
+        login = request.session.get('logueoCliente', False)
+        if login:
+            if login[4] == "Cliente":
+
+                ventas = Venta.objects.filter(id_usuario__id= login[0])
+                paginator = Paginator(ventas, 10)
+                page_number = request.GET.get('page')
+                ventas = paginator.get_page(page_number)
+
+                return render(request, 'webapp/perfil-usuario/compras.html', {'ventas': ventas})
+            else:
+                messages.warning(request, f"{login[4]} error")
+                return redirect('webapp:perfilCliente')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:login')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:perfilClientes')
+
+
+def verVentaC(request):
+    """Permite ver resumen de la venta, productos adquiridos y relaciones
+
+    Args:
+        request (_type_): sesión actual
+    Returns:
+        _list_: lista de juegos adquiridos en la compra
+    """
+    try:
+        login = request.session.get('logueoCliente', False)
+        if login:
+            if login[4] == "Cliente":
+
+                ventas = Venta_detalle.objects.filter(id_venta__id=login[0])
+                paginator = Paginator(ventas, 10)
+                page_number = request.GET.get('page')
+                ventas = paginator.get_page(page_number)
+
+                return render(request, 'webapp/perfil-usuario/ventas.html', {'ventas': ventas})
+            else:
+                messages.warning(request, f"{login[4]} error")
+                return redirect('webapp:perfilCliente')
+        else:
+            messages.warning(request, "Inicie sesión primero")
+            return redirect('webapp:login')
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+    return redirect('webapp:perfilClientes')
+
+
+
     # REPORTES
 
 
@@ -1469,14 +1536,18 @@ def ventasjuegos(request):
 
 
 def cantidadVentas(request):
+    from django.db.models import Avg, Count, Min, Sum
     labels = []
     data = []
-
-    juegos = Venta_detalle.objects.order_by('id_juego')
+    
+    juegos = Venta_detalle.objects.order_by('id_juego','cantidad').annotate(cant=Sum('cantidad'))
+    #juegos = Venta_detalle.objects.filter("id_juego").annotate(sumaC=Sum('cantidad'))
+    print (juegos)
     for juego in juegos:
-
         labels.append(juego.id_juego.titulo)
         data.append(juego.cantidad)
+    
+   
 
     return render(request, 'webapp/graficos/venta_juegos.html', {
         'labels': labels,

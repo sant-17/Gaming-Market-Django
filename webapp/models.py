@@ -50,18 +50,14 @@ class Usuario(models.Model):
     fecha_nacimiento = models.DateField()
     habilitado = models.BooleanField(default = True)
 
-    def save(self,*arg,**kwargs):
-        # Libreria para encripación
-        from passlib.context import CryptContext
-        # Round: Iteraciones para reducir la posibilidad de cracking.
-        contexto = CryptContext(
-            schemes=["pbkdf2_sha256"],
-            default="pbkdf2_sha256",
-            pbkdf2_sha256__default_rounds=333
-        )
+    def save(self, *args, **kwargs):
         
-        self.clave = contexto.hash(self.clave)
-        super(Usuario, self).save(*arg,**kwargs)
+        #Cifrado de claves
+        from .crypt import claveEncriptada
+        
+        self.clave = claveEncriptada(self.clave)
+        super(Usuario, self).save(*args, **kwargs)
+        
         
     def esMayorDeEdad(self):
         hoy = date.today()

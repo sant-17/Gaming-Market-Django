@@ -83,6 +83,8 @@ urlpatterns = [
     #VENTAS
     path('ventas/<id>', views.listarVentas, name="listarVentas"),
     path('verVentas/<id>', views.verVenta, name="adquiridos"),
+    path('cliente/ventas/', views.listarVentasCliente, name="listarVentasCliente"),
+    path('clientes/verVentas/', views.verVentaC, name="adquiridosCliente"),
     
     #INFORMES
     path('graficos/ventaJuegos', views.ventasjuegos, name="ventasJuegos"),

@@ -73,23 +73,18 @@
     <br>
 
     <div class="contact-from-section mb-150">
-        <!-- formulario para permitir el inicio de sesión
-        Args:
-            email (_type_): _correo del cliente_
-            clave (_type_): _clave del cliente_
-        Returns:
-            _redirect_: _Redirección a pagina de inicio_
         
-        -->
         <div class="contact-from-section mb-150" style="text-align: center;">
             <div class="container">
                 <div class="formulario">
                     <form method="post" class="needs-validation" novalidate="" action= "{% url 'webapp:restablecer' %}">
                         {% csrf_token%}
-                        <p>Email registrado
-                            <input value="" name="correo" type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required>
-                        </p>
-                        <input type= "submit" value = "Enviar" />
+                        
+
+                        <label for="correo" id="exampleModalLabel" >Correo</label>
+                        <input class="form-control" id="correo" name="correo"  type="email" placeholder="Email" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}" required><br>
+                        <input class="btn btn-info" type="submit" value="Enviar">
+
         
                     </form>
                 </div>

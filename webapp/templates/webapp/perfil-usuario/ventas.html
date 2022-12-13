@@ -1,49 +1,45 @@
 {% extends 'webapp/base.html' %}
 {% load static %}
 
-{% block titulo %}ventas{% endblock titulo %}
+{% block titulo %}Compras{% endblock titulo %}
 
 {% block encabezado %}Listado{% endblock encabezado %}
-{% block subencabezado %}ventas{% endblock subencabezado %}
+{% block subencabezado %}Títulos adquiridos{% endblock subencabezado %}
 
 
 {% block contenedor %}
 
 {% if ventas %}
-<div class="breadcrumb-section breadcrumb-bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 offset-lg-2 text-center">
-                <div class="breadcrumb-text">
-                    <p>GAMING MARKET</p>
-                    <h1>Mi Historial</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    
+<p> Resumen de compra: 
+    <h3>Titulo </h3>
+    <h3>Cantidad </h3>
+    <h3>Valor </h3>
+</p>
 
-
+<label> 
 <div class="listar-generos-juegos mt-50 mb-150 pl-5 pr-5" id="respuesta">
     <div class="contenedor">
+        
         <div class="table-responsive">
             <table id="lista" class="table table-striped table-hover">
+                
                 <thead>
                     <tr>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
+                        <th>Título</th>
+                        <th>Unidades</th>
+                        <th>Valor</th>
                         <th>Total</th>
-                        <th>Ver</th>
                         
                     </tr>
                 </thead>
                 <tbody>
                     {% for venta in ventas %}
                     <tr>
-                        <td> {{venta.fecha}} </td>
-                        <td> {{venta.id_usuario}}</td>
-                        <td> {{venta.total}}</td>
-                        <td> <a href="{% url 'webapp:adquiridosCliente' venta.id %}" class="btn btn-info">Ver</a></td>
+                        <td> {{venta.id_juego.titulo}} </td>
+                        <td> {{venta.cantidad}}</td>
+                        <td> {{venta.precio}}</td>
+                        
                         
                     </tr>
                     {% endfor %}
@@ -69,7 +65,6 @@
         </div>
     </div>
 </div>
-
 {% else %}
 No hay datos
 {% endif %}
